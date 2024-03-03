@@ -1,5 +1,5 @@
 #include "pch.h"
-#include <Collisions/CollcionTestResult/CollisionTestResultBuilder.h>
+#include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
 
 Barta::CollisionTestResultBuilder::CollisionTestResultBuilder() noexcept :
 	collisionDetected(false),

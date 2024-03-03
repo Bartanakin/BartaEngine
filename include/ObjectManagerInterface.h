@@ -15,10 +15,6 @@ namespace Barta{
 
 		virtual ObjectList getList() noexcept = 0;
 
-		virtual void addCollidableObject(CollisionAwareInterface* const collidableObject) = 0;
-
-		virtual const CollisionAwareInterface::CollidableList& getCollidableList() const noexcept = 0;
-
 		virtual void addDynamicsObject(DynamicsAwareInterface* const dynamicsObject) = 0;
 
 		virtual DynamicsAwareInterface::DynamicsAwareList& getDynamicsList() noexcept = 0;

@@ -1,30 +1,30 @@
 #pragma once
 #include "../../pch.h"
 #include "CollisionTestResult.h"
-#include "../StaticCollisionAware.h"
+#include "../CollisionAware.h"
 
 namespace Barta {
 
-    template<StaticCollisionAware T1, StaticCollisionAware T2>
-	struct SExtendedCollisionResult {
+    template<CollisionAware T1, CollisionAware T2>
+	struct ExtendedCollisionResult {
         CollisionTestResult collisionTestResult;
         T1* object1;
         T2* object2;
 	
-        SExtendedCollisionResult() noexcept :
+        ExtendedCollisionResult() noexcept :
             collisionTestResult({}),
             object1(nullptr),
             object2(nullptr)
         {}
 		
         // shallow copy
-        SExtendedCollisionResult(const SExtendedCollisionResult& second) noexcept :
+        ExtendedCollisionResult(const ExtendedCollisionResult& second) noexcept :
             collisionTestResult(second.collisionTestResult),
             object1(second.object1),
             object2(second.object2)
 		{}
 		
-        SExtendedCollisionResult(
+        ExtendedCollisionResult(
             CollisionTestResult collisionTestResult,
             T1* object1,
             T2* object2
@@ -34,7 +34,7 @@ namespace Barta {
             object2(object2)
 		{}
 
-        SExtendedCollisionResult& operator=(const SExtendedCollisionResult& second) noexcept {
+        ExtendedCollisionResult& operator=(const ExtendedCollisionResult& second) noexcept {
             this->collisionTestResult = second.collisionTestResult;
             this->object1 = second.object1;
             this->object2 = second.object2;
@@ -42,7 +42,7 @@ namespace Barta {
             return *this;
         }
 
-        bool operator==(const SExtendedCollisionResult& second) const noexcept {
+        bool operator==(const ExtendedCollisionResult& second) const noexcept {
             return this->collisionTestResult == second.collisionTestResult
                 && (
                     (

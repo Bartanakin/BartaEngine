@@ -7,6 +7,7 @@
 #include "Dynamics/TimerInterface.h"
 #include "Dynamics/DynamicsUpdateStrategyInterface.h"
 #include "Collisions/CollisionDetectionStrategyInterface.h"
+#include <Predefines.h>
 
 namespace Barta{
 	class Application{
@@ -14,11 +15,9 @@ namespace Barta{
 		Application(
             std::string windowName,
 			std::unique_ptr<BartaGraphicsBridgeInterface> graphicsBridge,
-			std::unique_ptr<BartaEventLoggerInterface> eventLogger,
-			std::unique_ptr<BartaEventLoggerInterface> postDynamicsEventLogger,
-			std::unique_ptr<ObjectManagerInterface> objectManager,
-			std::unique_ptr<TimerInterface> timer,
-			std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy
+			TimerInterface& timer,
+			std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy,
+            std::unique_ptr<Barta::CollisionDetectionStrategyInterface> collisionDetectionStrategy
 		);
         Application(const Application&) = delete;
         Application(Application&&) = delete;
@@ -42,8 +41,11 @@ namespace Barta{
 		std::unique_ptr<BartaEventLoggerInterface> eventLogger;
 		std::unique_ptr<BartaEventLoggerInterface> postDynamicsEventLogger;
 		std::unique_ptr<ObjectManagerInterface> objectManager;
-		std::unique_ptr<TimerInterface> timer;
-		std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy; 
+        TimerInterface& timer;
+		std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy;
+        CollisionEventsLogger collisionEventsLogger;
+        CollisionCoreExecutor collisionExecutor;
+        ListManager objectLists;
     };
 
 

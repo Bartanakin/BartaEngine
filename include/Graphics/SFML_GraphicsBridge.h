@@ -1,4 +1,6 @@
 #pragma once
+
+#include <Graphics/SFML_Bridge/NullResourceContainer.h>
 #include "BartaGraphicsBridgeInterface.h"
 #include "SFML_Bridge/ResourceContainerInterface.h"
 #include "SFML_Bridge/ResourceMatcherInterface.h"
@@ -8,8 +10,8 @@ namespace Barta{
         public BartaGraphicsBridgeInterface{
     public:
         SFML_GraphicsBridge(
-            std::unique_ptr<Barta::ResourceContainerInterface> resourceContainer,
-            const std::string repositoryDir
+            std::unique_ptr<Barta::ResourceContainerInterface> resourceContainer = std::make_unique<NullResourceContainer>(),
+            const std::string& repositoryDir = ""
         ) noexcept;
         SFML_GraphicsBridge( const SFML_GraphicsBridge& ) noexcept = delete;
         SFML_GraphicsBridge(SFML_GraphicsBridge&&) noexcept = delete;
@@ -21,6 +23,8 @@ namespace Barta{
         bool logEvents( BartaEventLoggerInterface& eventLogger ) override;
 
         static const sf::Transformable convertTransformable( const TransformableInterface& myTransformable );
+
+        static std::unique_ptr<Barta::TransformableInterface> createNewTransformableInstance();
     private:
         void handleCustomeResource(BartaObjectInterface& object);
 

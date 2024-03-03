@@ -159,7 +159,8 @@ Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateNormVector(cons
 			this->circle.getCenter() + this->dynamicsDifference.velocity + 0.5f * this->dynamicsDifference.acceleration * delta_time
 		);
 		if (seg.calculateRelationToPoint(vertices[i]) == Segment::Relation::RIGHT) {
-			if (seg.calculateRelationToPoint(vertices[(i + 1) % 4]) == Segment::Relation::LEFT) {
+            auto relationToNext = seg.calculateRelationToPoint(vertices[(i + 1) % 4]);
+            if (relationToNext == Segment::Relation::LEFT || relationToNext == Segment::Relation::COLINEAR) {
 				return possibleNormalVectors[i];
 			}
 		}

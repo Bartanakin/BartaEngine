@@ -6,14 +6,14 @@
 namespace Barta {
 
     template<typename CollisionEventType>
-	class StaticCollisionResponseSubscriber : public EventSubscriber<CollisionEventType> {
+	class CollisionResponseSubscriber : public EventSubscriber<CollisionEventType> {
 		public:
 		constexpr static const float COEFFICIENT_OF_ELISTICITY = 1.f;
 
-		StaticCollisionResponseSubscriber(BartaEventLoggerInterface& eventLogger)
+		CollisionResponseSubscriber(BartaEventLoggerInterface& eventLogger)
         	: eventLogger(eventLogger) {}
 
-		~StaticCollisionResponseSubscriber() noexcept = default;
+		~CollisionResponseSubscriber() noexcept = default;
 
 		bool handle(CollisionEventType& event) override {
             auto& testResult = event.getTestResult().collisionTestResult;
@@ -52,7 +52,7 @@ namespace Barta {
             return true;
         }
 
-		bool isValid() const noexcept { return true; };
+		bool isValid() const noexcept override { return true; };
 
 		private:
 
@@ -77,5 +77,5 @@ namespace Barta {
 	};
 
     template<typename T1, typename T2>
-    using StaticCollisionResponseSubscriberType = StaticCollisionResponseSubscriber<SCollisionEvent<T1, T2>>;
+    using StaticCollisionResponseSubscriberType = CollisionResponseSubscriber<CollisionEvent<T1, T2>>;
 }

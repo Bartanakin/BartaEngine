@@ -3,7 +3,6 @@
 
 Barta::BartaObjectManager::BartaObjectManager() noexcept
 :   objectList({}),
-    collidableList({}),
     dynamicsList({})
 {}
 
@@ -29,14 +28,6 @@ void Barta::BartaObjectManager::addNewObject( BartaObjectInterface* const newObj
 	this->objectList.push_back( newObject );
 }
 
-void Barta::BartaObjectManager::addCollidableObject(CollisionAwareInterface* const collidableObject) {
-	this->collidableList.push_back(collidableObject);
-}
-
-const Barta::CollisionAwareInterface::CollidableList& Barta::BartaObjectManager::getCollidableList() const noexcept {
-	return this->collidableList;
-}
-
 void Barta::BartaObjectManager::addDynamicsObject(DynamicsAwareInterface* const dynamicsObject) {
 	this->dynamicsList.push_back(dynamicsObject);
 }
@@ -46,7 +37,6 @@ Barta::DynamicsAwareInterface::DynamicsAwareList& Barta::BartaObjectManager::get
 }
 
 void Barta::BartaObjectManager::reduceDeleted(){
-	this->collidableList.reduce();
 	this->dynamicsList.reduce();
 
 	auto newList = ObjectList();

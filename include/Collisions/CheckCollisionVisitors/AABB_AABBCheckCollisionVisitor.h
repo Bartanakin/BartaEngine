@@ -1,4 +1,7 @@
 #pragma once
+
+#include <Collisions/CollisionTestResult/CollisionTestResult.h>
+#include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
 #include "../../pch.h"
 #include "../CheckCollisionVisitorInterface.h"
 #include "../../Geometrics/BartaShapes/AABB.h"

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <Collisions/CollisionDetectionStrategies/StaticCollisionDetectionStrategy.h>
+#include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
 
 Barta::StaticCollisionDetectionStrategy::StaticCollisionDetectionStrategy( std::unique_ptr<MathLibraryInterface> mathLibrary ) :
     mathLibrary(std::move(mathLibrary))

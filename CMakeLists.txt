@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
+
 # Library Name
 set(PROJECT_NAME "BartaEngine")
 set(LIBRARY_NAME "BartaEngine_lib")
@@ -23,13 +24,6 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_subdirectory(lib)
-
-#add_executable(${PROJECT_NAME} lib/main.cpp
-#        lib/BartaEngine/Events/Subscribers/HitboxPositionCheckSubscriberProxy.h
-#        lib/BartaEngine/Graphics/SpriteBuilder/StringSpriteBuilder.cpp
-#        lib/BartaEngine/Graphics/SpriteBuilder/StringSpriteBuilder.h
-#        lib/BartaEngine/Graphics/SpriteBuilder/StringSprite.h
-#)
 target_link_libraries(
         ${LIBRARY_NAME}
         PUBLIC

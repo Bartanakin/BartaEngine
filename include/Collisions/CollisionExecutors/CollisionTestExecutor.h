@@ -2,31 +2,31 @@
 
 #include "../../pch.h"
 #include "../../ReduceableList.h"
-#include "../StaticCollisionAware.h"
-#include "../CollcionTestResult/SExtendedCollisionResult.h"
+#include "../CollisionAware.h"
+#include <Collisions/CollisionTestResult/ExtendedCollisionResult.h>
 
 namespace Barta {
-    template<StaticCollisionAware T1, StaticCollisionAware T2>
-    using ResultList = std::list<SExtendedCollisionResult<T1, T2>>;
+    template<CollisionAware T1, CollisionAware T2>
+    using ResultList = std::list<ExtendedCollisionResult<T1, T2>>;
 
     template<typename T>
     using ObjectList = std::vector<T>;
 
     template<typename Interface, typename T1, typename T2>
-    concept StaticCollisionTestExecutorConcept = requires(Interface interface, ReducibleList<ObjectList<T1*>> t1, ReducibleList<ObjectList<T2*>> t2) {
+    concept CollisionTestExecutorConcept = requires(Interface interface, ReducibleList<ObjectList<T1*>> t1, ReducibleList<ObjectList<T2*>> t2) {
         { interface.template executeTests<T1, T2>(t1, t2) } -> std::same_as<ResultList<T1, T2>>;
     };
 
-	class StaticCollisionTestExecutor {
+	class CollisionTestExecutor {
 		public:
-		StaticCollisionTestExecutor(std::unique_ptr<CollisionDetectionStrategyInterface> collisionDetectionStrategy) noexcept:
+		CollisionTestExecutor(std::unique_ptr<CollisionDetectionStrategyInterface> collisionDetectionStrategy) noexcept:
             collisionDetectionStrategy(std::move(collisionDetectionStrategy)) {
         }
-        StaticCollisionTestExecutor(StaticCollisionTestExecutor&& second) = default;
+        CollisionTestExecutor(CollisionTestExecutor&& second) = default;
 
-		virtual ~StaticCollisionTestExecutor() noexcept = default;
+		virtual ~CollisionTestExecutor() noexcept = default;
 
-        template<StaticCollisionAware T1, StaticCollisionAware T2> 
+        template<CollisionAware T1, CollisionAware T2>
 		ResultList<T1, T2> executeTests(ReducibleList<ObjectList<T1*>>& list1, ReducibleList<ObjectList<T2*>>& list2) {
             ResultList<T1, T2>  collisionResults;
 
@@ -51,7 +51,7 @@ namespace Barta {
             return collisionResults;
         }
 
-        template<StaticCollisionAware T> 
+        template<CollisionAware T>
 		ResultList<T, T> executeTestsForSame(ReducibleList<ObjectList<T*>>& list) {
             ResultList<T, T>  collisionResults;
 
@@ -83,26 +83,26 @@ namespace Barta {
 		std::unique_ptr<CollisionDetectionStrategyInterface> collisionDetectionStrategy;
 	};
 
-    template<StaticCollisionTestExecutorConcept<StaticCollisionAwareStub, StaticCollisionAwareStub> Decorated>
+    template<CollisionTestExecutorConcept<CollisionAwareStub, CollisionAwareStub> Decorated>
     class FilterNoCollisionDecorator {
 		public:
 		FilterNoCollisionDecorator(Decorated&& decorated) noexcept : decorated(std::forward<Decorated>(decorated)) {}
         FilterNoCollisionDecorator(FilterNoCollisionDecorator&& second) = default;
 		~FilterNoCollisionDecorator() noexcept = default;
 
-        template<StaticCollisionAware T1, StaticCollisionAware T2> 
+        template<CollisionAware T1, CollisionAware T2>
 		ResultList<T1, T2> executeTests(ReducibleList<ObjectList<T1*>>& list1, ReducibleList<ObjectList<T2*>>& list2) {
             return this->filterList<T1, T2>(this->decorated.template executeTests<T1, T2>(list1, list2));
         }
 
-        template<StaticCollisionAware T> 
+        template<CollisionAware T>
 		ResultList<T, T> executeTestsForSame(ReducibleList<ObjectList<T*>>& list) {
             return this->filterList<T, T>(this->decorated.template executeTestsForSame<T>(list));
         }
 
 		private:
 
-        template<StaticCollisionAware T1, StaticCollisionAware T2>
+        template<CollisionAware T1, CollisionAware T2>
         ResultList<T1, T2> filterList(ResultList<T1, T2> resultsList) {
             auto i = resultsList.begin();
             while (i != resultsList.end()) {
@@ -121,33 +121,33 @@ namespace Barta {
 		Decorated decorated;
 	};
 
-    template<StaticCollisionTestExecutorConcept<StaticCollisionAwareStub, StaticCollisionAwareStub> Decorated>
-    class SFilterCollisionsOvertimeDecorator {
+    template<CollisionTestExecutorConcept<CollisionAwareStub, CollisionAwareStub> Decorated>
+    class FilterCollisionsOvertimeDecorator {
 		public:
-		SFilterCollisionsOvertimeDecorator(
+		FilterCollisionsOvertimeDecorator(
             Decorated&& decorated,
 	        TimerInterface& timer
         ) noexcept :
             decorated(std::forward<Decorated>(decorated)),
             timer(timer)
         {}
-		~SFilterCollisionsOvertimeDecorator() noexcept = default;
+		~FilterCollisionsOvertimeDecorator() noexcept = default;
 
-        template<StaticCollisionAware T1, StaticCollisionAware T2> 
+        template<CollisionAware T1, CollisionAware T2>
 		ResultList<T1, T2> executeTests(ReducibleList<ObjectList<T1*>>& list1, ReducibleList<ObjectList<T2*>>& list2) {
             return this->filterList<T1, T2>(this->decorated.template executeTests<T1, T2>(list1, list2));
         }
 
-        template<StaticCollisionAware T> 
+        template<CollisionAware T>
 		ResultList<T, T> executeTestsForSame(ReducibleList<ObjectList<T*>>& list) {
             return this->filterList<T, T>(this->decorated.template executeTestsForSame<T>(list));
         }
 
 #define COLLISION_EPS 0.00001f
 		private:
-        template<StaticCollisionAware T1, StaticCollisionAware T2>
+        template<CollisionAware T1, CollisionAware T2>
         ResultList<T1, T2> filterList(ResultList<T1, T2> resultsList) {
-            static SExtendedCollisionResult<T1, T2> lastCollisionResult = {};
+            static ExtendedCollisionResult<T1, T2> lastCollisionResult = {};
             if (resultsList.empty()) {
                 return resultsList;
             }

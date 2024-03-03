@@ -16,18 +16,19 @@ add_subdirectory(Events/Subscribers)
 add_subdirectory(Geometrics)
 add_subdirectory(Graphics)
 add_subdirectory(Hitbox)
+add_subdirectory(Objects)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
-if(${ENABLE_WARNINGS})
-    target_set_warnings(
-        TARGET
-        ${PROJECT_NAME}
-        ENABLE
-        ${ENABLE_WARNINGS}
-        AS_ERRORS
-        ${ENABLE_WARNINGS_AS_ERRORS})
-endif()
+#if(${ENABLE_WARNINGS})
+#    target_set_warnings(
+#        TARGET
+#        ${PROJECT_NAME}
+#        ENABLE
+#        ${ENABLE_WARNINGS}
+#        AS_ERRORS
+#        ${ENABLE_WARNINGS_AS_ERRORS})
+#endif()
 
 # if(${ENABLE_LTO})
 #     target_enable_lto(

@@ -2,8 +2,8 @@
 #include "../pch.h"
 #include "../Dynamics/TimerInterface.h"
 #include "../Geometrics/Math/MathLibraryInterface.h"
-#include "CollcionTestResult/CollisionTestResult.h"
-#include "CollcionTestResult/CollisionTestResultBuilder.h"
+#include <Collisions/CollisionTestResult/CollisionTestResult.h>
+#include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
 
 namespace Barta{
 	class CheckCollisionVisitorInterface{

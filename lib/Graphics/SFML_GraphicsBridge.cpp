@@ -1,15 +1,18 @@
 #include <Graphics/SFML_GraphicsBridge.h>
 #include <Graphics/SFML_Bridge/SpriteResourceMatcher.h>
+#include <Geometrics/SFML_Transformable.h>
 
 Barta::SFML_GraphicsBridge::SFML_GraphicsBridge(
     std::unique_ptr<Barta::ResourceContainerInterface> resourceContainer,
-    const std::string repositoryDir
+    const std::string& repositoryDir
 ) noexcept
 	: sf_window( nullptr ),
 	resourceMatcher(std::make_unique<Barta::SpriteResourceMatcher>(std::move(resourceContainer))),
       arialFont(std::make_unique<sf::Font>())
 {
-    arialFont->loadFromFile(repositoryDir  + "\\fonts\\arial.ttf");
+    if (!repositoryDir.empty()) {
+        arialFont->loadFromFile(repositoryDir  + "\\fonts\\arial.ttf");
+    }
 }
 
 Barta::SFML_GraphicsBridge::~SFML_GraphicsBridge(){
@@ -211,4 +214,8 @@ void Barta::SFML_GraphicsBridge::handleCustomeResource(
             dataOffset += 3 + 1 + 64;
         }
     }
+}
+
+std::unique_ptr<Barta::TransformableInterface> Barta::SFML_GraphicsBridge::createNewTransformableInstance(){
+    return std::unique_ptr<Barta::TransformableInterface>(new Barta::SFML_Transformable());
 }

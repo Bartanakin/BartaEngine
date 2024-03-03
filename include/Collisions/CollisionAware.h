@@ -7,12 +7,12 @@
 
 namespace Barta {
     template<typename T>
-    concept StaticCollisionAware = requires (T t) {
+    concept CollisionAware = requires (T t) {
         { t.getHitbox() } -> std::same_as<std::unique_ptr<const HitboxInterface>>;
         { t.getDynamicsDTO() } -> std::same_as<const DynamicsDTO&>;
     };
 
-    struct StaticCollisionAwareStub {
+    struct CollisionAwareStub {
         std::unique_ptr<const HitboxInterface> getHitbox();
         const DynamicsDTO& getDynamicsDTO();
     };

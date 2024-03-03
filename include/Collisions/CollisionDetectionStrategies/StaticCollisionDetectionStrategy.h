@@ -1,4 +1,6 @@
 #pragma once
+
+#include <Collisions/CollisionTestResult/CollisionTestResult.h>
 #include "../../pch.h"
 #include"../CollisionDetectionStrategyInterface.h"
 #include "../../Geometrics/Math/MathLibraryInterface.h"

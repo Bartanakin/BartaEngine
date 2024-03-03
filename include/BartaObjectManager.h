@@ -13,10 +13,6 @@ namespace Barta{
 
 		virtual ObjectList getList() noexcept override;
 
-		virtual void addCollidableObject(CollisionAwareInterface* const collidableObject) override;
-
-		virtual const CollisionAwareInterface::CollidableList& getCollidableList() const noexcept override;
-
 		virtual void addDynamicsObject(DynamicsAwareInterface* const dynamicsObject) override;
 
 		virtual DynamicsAwareInterface::DynamicsAwareList& getDynamicsList() noexcept override;
@@ -25,7 +21,6 @@ namespace Barta{
 
 	private:
 		ObjectList objectList;
-		CollisionAwareInterface::CollidableList collidableList;
 		DynamicsAwareInterface::DynamicsAwareList dynamicsList;
 	};
 }
