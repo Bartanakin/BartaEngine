@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
-
 # Library Name
 set(PROJECT_NAME "BartaEngine")
 set(LIBRARY_NAME "BartaEngine_lib")
 set(RUN_TEST_NAME "BartaEngine_runTest")
+
+set(BUILD_SHARED_LIBS FALSE)
 
 project(
         ${PROJECT_NAME}
@@ -30,14 +31,6 @@ target_link_libraries(
         sfml-graphics
 )
 target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
-
-#if(WIN32)
-#    add_custom_command(
-#            TARGET ${PROJECT_NAME}
-#            COMMENT "Copy OpenAL DLL"
-#            PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:${PROJECT_NAME}>
-#            VERBATIM)
-#endif()
 
 install(
         TARGETS ${LIBRARY_NAME}
