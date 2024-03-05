@@ -7,12 +7,15 @@
 namespace Barta {
 	namespace Intersections {
 		auto segmentAndCircle(const Segment& I, const Circle& c) noexcept {
-			auto d = I.getEnd() - I.getBeginning();
-			auto m = I.getBeginning() - c.getCenter();
-			auto eq = QuadraticEquation(d*d, m*d*2.f, m*m - c.getRadius()*c.getRadius());
-			eq.solve();
-			auto sol = eq.getSolutions();
+            // Write your code here ---->
+			auto d = Barta::Vector2f();
+			auto m = Barta::Vector2f();
+			auto eq = QuadraticEquation(0.f, 0.f, 0.f);
+			// <----
+            eq.solve();
+			auto sol = eq.getSolutions(); // Note: solutions will be sorted in ascending order.
 
+            // Why do we need to truncate the results?
 			sol.erase(std::remove_if(sol.begin(), sol.end(), [] (float t) {
 				return t < 0.f || 1.f < t;
 			}), sol.end());

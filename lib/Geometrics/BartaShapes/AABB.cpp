@@ -59,7 +59,10 @@ Barta::AABB::VoronoiRegion Barta::AABB::findVoronoiRegionType(const Vector2f& po
 		VoronoiRegion::LEFT
 	};
 	for (decltype(sides)::size_type i = 0; i < sides.size(); i++) {
-		if (sides[i].calculateRelationToPoint(point) == Segment::Relation::LEFT) {
+        // Write your code here ---->
+        // use function Barta::Segment::calculateRelationToPoint(Barta::Vector2f)
+		if (false) {
+        // <----
 			regionMask = regionMask | regionsMap[i];
 		}
 	}

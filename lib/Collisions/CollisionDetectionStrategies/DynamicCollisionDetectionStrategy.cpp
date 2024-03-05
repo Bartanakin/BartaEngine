@@ -12,5 +12,11 @@ Barta::DynamicCollisionDetectionStrategy::DynamicCollisionDetectionStrategy(
 Barta::CollisionTestResult Barta::DynamicCollisionDetectionStrategy::acceptCheckCollisionVisitor( const CheckCollisionVisitorInterface& checkCollisionVisitor ) const{
     auto builder = CollisionTestResultBuilder();
 
-    return checkCollisionVisitor.checkDynamicCollision(*this->mathLibrary, this->timer.getCurrentDeltaTime(), builder);
+    auto result = checkCollisionVisitor.checkDynamicCollision(*this->mathLibrary, this->timer.getCurrentDeltaTime(), builder);
+
+    if (result.collisionDetected && result.debugInfo[0] != 'A') {
+        std::cout << result.debugInfo << std::endl;
+    }
+
+    return result;
 }

@@ -133,7 +133,7 @@ namespace Barta {
         template<typename EventLogger>
         void logEvent(EventLogger& eventLogger, const float min_time) {
             if (min_time >= this->my_time) {
-                eventLogger.template logEvent(CollisionEvent<T, T>(this->testResult, this->my_time));
+                eventLogger.logEvent(CollisionEvent<T, T>(this->testResult, this->my_time));
             }
         }
 
