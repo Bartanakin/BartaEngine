@@ -23,6 +23,7 @@
 
 // DEBUG
 #include <iomanip>
+#include <stdexcept>
 
 // C++ 20+
 #include <concepts>

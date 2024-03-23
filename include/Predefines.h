@@ -2,6 +2,7 @@
 #include <pch.h>
 #include <Objects/Rigid/RigidObject.h>
 #include <Collisions/CollisionExecutors/CollisionTestExecutor.h>
+#include <Collisions/CollisionExecutors/FilterNoCollisionDecorator.h>
 #include <Collisions/CollisionLogger.h>
 #include <Events/BartaEventLoggerInterface.h>
 #include <ReduceableList.h>
@@ -10,10 +11,8 @@
 namespace Barta {
     typedef ReducibleList<std::vector<RigidObject*>> RigidObjectContainer;
 
-    typedef FilterCollisionsOvertimeDecorator<
-        FilterNoCollisionDecorator<
-            CollisionTestExecutor
-        >
+    typedef FilterNoCollisionDecorator<
+        CollisionTestExecutor
     > CollisionCoreExecutor;
 
     typedef CollisionLogger<

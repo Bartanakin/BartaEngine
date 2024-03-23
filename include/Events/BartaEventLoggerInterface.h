@@ -15,6 +15,8 @@ namespace Barta {
 		using EventMatcher<OtherTypes...>::logEvent;
 		using EventMatcher<EventType>::logSubscriber;
 		using EventMatcher<OtherTypes...>::logSubscriber;
+		using EventMatcher<EventType>::countEvents;
+		using EventMatcher<OtherTypes...>::countEvents;
 
 		void runSubscribers() {
 			EventMatcher<EventType>::runSubscribers();
@@ -24,6 +26,22 @@ namespace Barta {
         void removeInvalid() {
             EventMatcher<EventType>::removeInvalid();
             EventMatcher<OtherTypes...>::removeInvalid();
+        }
+
+        unsigned int countEvents() {
+            return EventMatcher<EventType>::countEvents() + EventMatcher<OtherTypes...>::countEvents();
+        }
+
+        void runSubscribersRecurrently() {
+            int debugCounter = 0;
+            while (this->countEvents() != 0) {
+                this->runSubscribers();
+
+                debugCounter++;
+                if (debugCounter > 1000) {
+                    throw std::runtime_error("Subscribers have been run too many times!");
+                }
+            }
         }
 	};
 
@@ -42,6 +60,10 @@ namespace Barta {
 			this->subscribers.push_back(std::move(subscriber));
 		}
 
+        unsigned int countEvents() {
+            return this->events.size();
+        }
+
         void removeInvalid() {
             auto iSub = this->subscribers.begin();
             while (iSub != this->subscribers.end()) {
@@ -56,7 +78,13 @@ namespace Barta {
         }
 
 		void runSubscribers() {
-			if (this->events.empty() || this->subscribers.empty()) {
+			if (this->events.empty()) {
+				return;
+			}
+
+			if (this->subscribers.empty()) {
+                this->events.clear();
+
 				return;
 			}
 
@@ -86,6 +114,18 @@ namespace Barta {
 
 			this->events.clear();
 		}
+
+        void runSubscribersRecurrently() {
+            int debugCounter = 0;
+            while (this->countEvents() != 0) {
+                this->runSubscribers();
+
+                debugCounter++;
+                if (debugCounter > 1000) {
+                    throw std::runtime_error("Subscribers have been run too many times!");
+                }
+            }
+        }
 
 		private:
 

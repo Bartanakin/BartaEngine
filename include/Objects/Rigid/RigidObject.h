@@ -2,14 +2,12 @@
 
 #include <BartaObject.h>
 #include <Collisions/CollisionAwareInterface.h>
-#include <DeletableObject.h>
 
 namespace Barta {
 
     class RigidObject :
         public BartaObjectInterface,
-        public CollisionAwareInterface,
-        public DeletableObject {
+        public CollisionAwareInterface {
     public:
         RigidObject(
             std::unique_ptr<TransformableInterface> transformable,
@@ -18,7 +16,7 @@ namespace Barta {
         );
         ~RigidObject() noexcept = default;
 
-        bool isToBeDeleted() const override { return DeletableObject::isToBeDeleted(); };
+        bool isToBeDeleted() const override { return false; };
 
         const TransformableInterface& getTransformable() const override;
 

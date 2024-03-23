@@ -6,21 +6,20 @@
 #include <Collisions/CollisionExecutors/CollisionTestExecutor.h>
 
 namespace Barta {
-    // TODO - refactor
     template<CollisionAware T1, CollisionAware T2>
     using ResultList = std::list<ExtendedCollisionResult<T1, T2>>;
 
     template<
-            typename CollisionLogger,
-            typename EventLogger,
-            typename ObjectManager,
-            typename TestExecutor
+        typename CollisionLogger,
+        typename EventLogger,
+        typename ObjectManager,
+        typename TestExecutor
     >
     void executeAndLog(
-            EventLogger& eventLogger,
-            ObjectManager& objectManager,
-            TestExecutor& testExecutor,
-            TimerInterface& timer
+        EventLogger& eventLogger,
+        ObjectManager& objectManager,
+        TestExecutor& testExecutor,
+        TimerInterface& timer
     ) {
         auto staticCollisionLogger = CollisionLogger();
         float delta_time = staticCollisionLogger.execute(objectManager, testExecutor);
@@ -88,23 +87,20 @@ namespace Barta {
                 }
             }
 
-            this->my_time = delta_time;
-
             return delta_time;
         }
 
         template<typename EventLogger>
         void logEvent(EventLogger& eventLogger, const float min_time) {
-            if (min_time >= this->my_time) {
-                for (auto& testResult : this->testResults) {
-                    eventLogger.template logEvent(CollisionEvent<T1, T2>(testResult, this->my_time));
+            for (auto& testResult : this->testResults) {
+                if (min_time + COLLISION_EPS >= testResult.collisionTestResult.timePassed) {
+                    eventLogger.template logEvent(CollisionEvent<T1, T2>(testResult, min_time));
                 }
             }
         }
 
         private:
         std::vector<ExtendedCollisionResult<T1, T2>> testResults;
-        float my_time = 1000.f;
     };
 
     template<CollisionAware T>
@@ -121,24 +117,28 @@ namespace Barta {
             for (const auto& testResult : testResults) {
                 if (testResult.collisionTestResult.timePassed < delta_time && !testResult.collisionTestResult.staticCollision) {
                     delta_time = testResult.collisionTestResult.timePassed;
-                    this->testResult = testResult;
                 }
 			}
 
-            this->my_time = delta_time;
+            for (const auto& testResult : testResults) {
+                if (testResult.collisionTestResult.timePassed < delta_time + COLLISION_EPS && !testResult.collisionTestResult.staticCollision) {
+                    this->testResults.push_back(testResult);
+                }
+            }
 
             return delta_time;
         }
 
         template<typename EventLogger>
         void logEvent(EventLogger& eventLogger, const float min_time) {
-            if (min_time >= this->my_time) {
-                eventLogger.template logEvent(CollisionEvent<T, T>(this->testResult, this->my_time));
+            for (auto& testResult : this->testResults) {
+                if (min_time + COLLISION_EPS >= testResult.collisionTestResult.timePassed) {
+                    eventLogger.template logEvent(CollisionEvent<T, T>(testResult, min_time));
+                }
             }
         }
 
         private:
-        ExtendedCollisionResult<T, T> testResult = {};
-        float my_time = 1000.f;
+        std::vector<ExtendedCollisionResult<T, T>> testResults;
     };
 }

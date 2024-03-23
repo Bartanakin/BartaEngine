@@ -20,10 +20,7 @@ Barta::Application::Application(
 	timer(timer),
 	dynamicsUpdateStrategy(std::move(dynamicsUpdateStrategy)),
     collisionEventsLogger({}),
-    collisionExecutor(
-        {{std::move(collisionDetectionStrategy)}},
-        timer
-    ),
+    collisionExecutor(CollisionCoreExecutor(std::move(collisionDetectionStrategy))),
     objectLists({})
 {
     this->postDynamicsEventLogger->logSubscriber(std::make_unique<Barta::DynamicsChangeSubscriber>());
@@ -54,7 +51,7 @@ void Barta::Application::run(){
             this->collisionEventsLogger.runSubscribers();
 
             // In-build events
-			this->eventLogger->runSubscribers();
+			this->eventLogger->runSubscribersRecurrently();
 			this->dynamicsUpdateStrategy->update(this->objectManager->getDynamicsList(), timer.getCurrentDeltaTime());
 
             this->postDynamicUpdate(); // inheritable
