@@ -33,6 +33,8 @@ namespace Barta{
 
 		Vector2f normalised() const;
 
+        float normSquare() const;
+
         std::string toString() const noexcept;
 
         float operator^(const Vector2f) const noexcept;
