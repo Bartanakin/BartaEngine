@@ -94,7 +94,7 @@ namespace Barta {
         void logEvent(EventLogger& eventLogger, const float min_time) {
             for (auto& testResult : this->testResults) {
                 if (min_time + COLLISION_EPS >= testResult.collisionTestResult.timePassed) {
-                    eventLogger.template logEvent(CollisionEvent<T1, T2>(testResult, min_time));
+                    eventLogger.logEvent(CollisionEvent<T1, T2>(testResult, min_time));
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace Barta {
         void logEvent(EventLogger& eventLogger, const float min_time) {
             for (auto& testResult : this->testResults) {
                 if (min_time + COLLISION_EPS >= testResult.collisionTestResult.timePassed) {
-                    eventLogger.template logEvent(CollisionEvent<T, T>(testResult, min_time));
+                    eventLogger.logEvent(CollisionEvent<T, T>(testResult, min_time));
                 }
             }
         }

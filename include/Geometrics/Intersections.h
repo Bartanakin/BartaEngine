@@ -44,16 +44,24 @@ namespace Barta {
 			return result;
 		}
 
-		auto segmentAndAABB(const Segment& I, const AABB& aabb) noexcept {
+		auto segmentAndAABB(const Segment& I, const AABB& aabb) {
 			decltype(segmentAndSegment(I, I)) intersections;
 			for (const auto& side : aabb.getSides()) {
 				auto sideIntersections = segmentAndSegment(I, side);
 				intersections.insert(intersections.end(), sideIntersections.begin(), sideIntersections.end());
 			}
 
-			std::sort(intersections.begin(), intersections.end(), [](const std::tuple<float, float>& x, const std::tuple<float, float>& y) {
-				return std::get<0>(x) <= std::get<0>(y);
-			});
+            if (intersections.size() == 2) {
+                if (std::get<0>(intersections[0]) > std::get<0>(intersections[1])) {
+                    auto temp = intersections[0];
+                    intersections[0] = intersections[1];
+                    intersections[1] = temp;
+                }
+            }
+
+            if (intersections.size() > 2) {
+                throw std::runtime_error("size too long");
+            }
 
 			return intersections;
 		}
