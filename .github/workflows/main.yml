@@ -1,0 +1,28 @@
+name: Clang Format
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Clang
+        run: sudo apt-get install -y clang-format
+
+      - name: Run clang-format
+        run: |
+          clang-format -i --style=file **/*.cpp **/*.h
+          
+      - name: Check for formatting changes
+        run: |
+          git diff --exit-code || (echo "Code is not formatted correctly" && exit 1)
