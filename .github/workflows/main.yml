@@ -1,0 +1,58 @@
+name: Clang Format
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Download confirmation key
+        run: |
+          wget https://apt.llvm.org/llvm-snapshot.gpg.key
+
+      - name: Add confirmation key
+        run: |
+          sudo apt-key add llvm-snapshot.gpg.key
+
+      - name: Add llvm-19 repository
+        run: |
+          sudo add-apt-repository 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble-19 main'
+
+      - name: Update
+        run: |
+          sudo apt update
+
+      - name: Set up Clang
+        run: |
+          sudo apt-get install -y clang-format-19
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        
+      - name: Save all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          echo "Checked files:" 
+          for file in ${ALL_CHANGED_FILES}; do
+            if [[ "$file" == *.h || "$file" == *.cpp ]]; then
+              echo $file
+              echo $file >> "changed_files.txt"
+            else
+          done
+
+      - name: Run clang-format
+        run: |
+          clang-format-19 -i --files=changed_files.txt
+          
+      - name: Check for formatting changes
+        run: |
+          git diff --exit-code || (echo "Code is not formatted correctly" && exit 1)
