@@ -17,11 +17,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Clang
-        run: sudo apt-get install -y clang-format
+        run: sudo apt-get install -y clang-format-19
 
       - name: Run clang-format
         run: |
-          clang-format -i --style=file **/*.cpp **/*.h
+          clang-format-19 -i --style=file **/*.cpp **/*.h
           
       - name: Check for formatting changes
         run: |
