@@ -8,7 +8,7 @@ Barta::SFML_GraphicsBridge::SFML_GraphicsBridge(
 ) noexcept
 	: sf_window( nullptr ),
 	resourceMatcher(std::make_unique<Barta::SpriteResourceMatcher>(std::move(resourceContainer))),
-      arialFont(std::make_unique<sf::Font>())
+    arialFont(std::make_unique<sf::Font>())
 {
     if (!repositoryDir.empty()) {
         arialFont->loadFromFile(repositoryDir  + "\\fonts\\arial.ttf");

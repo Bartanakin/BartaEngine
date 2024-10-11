@@ -1,30 +1,28 @@
 #include <Graphics/SpriteBuilder/SpriteMerger.h>
 
-Barta::SpriteMerger::SpriteMerger() noexcept :
+Barta::SpriteMerger::SpriteMerger() noexcept:
     data({}),
-    types({})
-{}
+    types({}) {}
 
-Barta::SpriteMerger *Barta::SpriteMerger::addRectanglewithColors(
-    const RectangleWithColorsSprite &addRectanglewithColors
+Barta::SpriteMerger* Barta::SpriteMerger::addRectanglewithColors(
+    const RectangleWithColorsSprite& addRectanglewithColors
 ) {
     this->types.push_back(SpriteType::RECTABGLE_WITH_COLORS);
 
-    for (const auto& vector : {
-        addRectanglewithColors.aabb.getLeftTop(),
-        addRectanglewithColors.aabb.getWidthHeight(),
-    }) {
+    for (const auto& vector: {
+             addRectanglewithColors.aabb.getLeftTop(),
+             addRectanglewithColors.aabb.getWidthHeight(),
+         }) {
         this->data.push_back(vector.getX());
         this->data.push_back(vector.getY());
         this->data.push_back(0.f);
     }
 
-    for (const auto& color : {
-        addRectanglewithColors.leftTopColor,
-        addRectanglewithColors.rightTopColor,
-        addRectanglewithColors.rightBottomColor,
-        addRectanglewithColors.leftBottomColor
-    }) {
+    for (const auto& color:
+         {addRectanglewithColors.leftTopColor,
+          addRectanglewithColors.rightTopColor,
+          addRectanglewithColors.rightBottomColor,
+          addRectanglewithColors.leftBottomColor}) {
         this->data.push_back(color.r);
         this->data.push_back(color.g);
         this->data.push_back(color.b);
@@ -34,7 +32,9 @@ Barta::SpriteMerger *Barta::SpriteMerger::addRectanglewithColors(
     return this;
 }
 
-Barta::SpriteMerger* Barta::SpriteMerger::addCircleSprite(const CircleSprite & circleSprite) {
+Barta::SpriteMerger* Barta::SpriteMerger::addCircleSprite(
+    const CircleSprite& circleSprite
+) {
     this->types.push_back(SpriteType::CIRCLE);
 
     this->data.push_back(circleSprite.circle.getCenter().getX());
@@ -50,7 +50,9 @@ Barta::SpriteMerger* Barta::SpriteMerger::addCircleSprite(const CircleSprite & c
     return this;
 }
 
-Barta::SpriteMerger* Barta::SpriteMerger::addString(const Barta::StringSprite& stringSprite) {
+Barta::SpriteMerger* Barta::SpriteMerger::addString(
+    const Barta::StringSprite& stringSprite
+) {
     this->types.push_back(SpriteType::VARCHAR256);
     this->data.push_back(stringSprite.origin.x);
     this->data.push_back(stringSprite.origin.y);
@@ -67,12 +69,10 @@ Barta::SpriteMerger* Barta::SpriteMerger::addString(const Barta::StringSprite& s
     return this;
 }
 
-Barta::BartaSprite Barta::SpriteMerger::merge(bool reloadCache) {
-    auto sprite = BartaSprite(
-        reloadCache,
-        std::move(this->data),
-        std::move(this->types)
-    );
+Barta::BartaSprite Barta::SpriteMerger::merge(
+    bool reloadCache
+) {
+    auto sprite = BartaSprite(reloadCache, std::move(this->data), std::move(this->types));
 
     this->data = {};
     this->types = {};
