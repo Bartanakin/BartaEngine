@@ -1,4 +1,7 @@
 #pragma once
+#include <BartaObjectManager.h>
+#include <ObjectManagerInterface.h>
+
 #include "Collisions/CollisionDetectionStrategyInterface.h"
 #include "Dynamics/DynamicsUpdateStrategyInterface.h"
 #include "Dynamics/TimerInterface.h"
@@ -7,6 +10,7 @@
 #include <BartaObjectManager.h>
 #include <ObjectManagerInterface.h>
 #include <Predefines.h>
+
 
 namespace Barta {
 
@@ -19,7 +23,7 @@ public:
         TimerInterface& timer,
         std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy,
         std::unique_ptr<Barta::CollisionDetectionStrategyInterface> collisionDetectionStrategy
-    ):
+        ):
         windowName(std::move(windowName)),
         graphicsBridge(std::move(graphicsBridge)),
         eventLogger(std::make_unique<BartaEventLoggerInterface>()),
@@ -28,8 +32,11 @@ public:
         dynamicsUpdateStrategy(std::move(dynamicsUpdateStrategy)),
         collisionEventsLogger({}),
         collisionExecutor(CollisionCoreExecutor(std::move(collisionDetectionStrategy))),
-        objectLists({}) {}
-
+        objectLists({}) {
+        // this->collisionEventsLogger.logSubscriber(std::unique_ptr<Subscribers::RigidObjectRigidObject>(
+        //     new Barta::StaticCollisionResponseSubscriberType<RigidObjectInterface, RigidObjectInterface>(*this->postDynamicsEventLogger)
+        // ));
+    }
     Application(const Application&) = delete;
     Application(Application&&) = delete;
     Application& operator=(const Application&) = delete;
