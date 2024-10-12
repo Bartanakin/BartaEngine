@@ -1,25 +1,22 @@
 #pragma once
 
-#include <BartaObjectInterface.h>
 #include "Graphics/GraphicsDataAwareInterface.h"
+#include <BartaObjectInterface.h>
 
 namespace Barta {
 
-    class SimpleObject :
-        public GraphicsDataAwareInterface {
-    public:
-        SimpleObject(
-            GraphicsData graphicsData
-        );
-        ~SimpleObject() noexcept = default;
+class SimpleObject: public GraphicsDataAwareInterface {
+public:
+    SimpleObject(GraphicsData graphicsData);
+    ~SimpleObject() noexcept override = default;
 
-        bool isToBeDeleted() const override { return false; };
+    bool isToBeDeleted() const override { return false; }
 
-        GraphicsDataList getGraphicsData() override;
+    GraphicsDataList getGraphicsData() override;
 
-        void move(Vector2f shift);
+    void move(Vector2f shift);
 
-    protected:
-        GraphicsData graphicsData;
-    };
+protected:
+    GraphicsData graphicsData;
+};
 }

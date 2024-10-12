@@ -8,21 +8,25 @@ Barta::RigidObject::RigidObject(
     GraphicsData graphicsData,
     std::unique_ptr<HitboxInterface> hitbox,
     DynamicsDTO dynamicsDto
-) :
+):
     graphicsData(std::move(graphicsData)),
     hitbox(std::move(hitbox)),
-    dynamicsDTO(dynamicsDto)
-{}
+    dynamicsDTO(dynamicsDto) {}
 
-std::unique_ptr<const Barta::HitboxInterface> Barta::RigidObject::getHitbox() const{
+std::unique_ptr<const Barta::HitboxInterface> Barta::RigidObject::getHitbox() const {
     return this->hitbox->getTransformedHitbox(*this->graphicsData.transformable);
 }
 
-void Barta::RigidObject::rotate(float angle, Barta::Vector2f axis) {
+void Barta::RigidObject::rotate(
+    float angle,
+    Vector2f axis
+) {
     this->graphicsData.transformable->rotate(angle, axis);
 }
 
-void Barta::RigidObject::move(const Barta::Vector2f& shift){
+void Barta::RigidObject::move(
+    const Vector2f& shift
+) {
     this->graphicsData.transformable->move(shift);
 }
 

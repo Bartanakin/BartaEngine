@@ -2,12 +2,12 @@
 #include "Geometrics/TransformableInterface.h"
 #include "Graphics/BartaSprite.h"
 
-namespace Barta{
+namespace Barta {
 
-	class BartaObjectInterface {
-	public:
-        virtual ~BartaObjectInterface() noexcept = default;
+class BartaObjectInterface {
+public:
+    virtual ~BartaObjectInterface() noexcept = default;
 
-		virtual bool isToBeDeleted() const = 0;
-	};
+    virtual bool isToBeDeleted() const = 0;
+};
 }

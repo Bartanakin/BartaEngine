@@ -6,12 +6,9 @@
 
 namespace Barta {
 
-    class RigidObjectInterface :
-        public virtual GraphicsDataAwareInterface,
-        public virtual CollisionAwareInterface
-    {
-    public:
-        RigidObjectInterface() = default;
-        virtual ~RigidObjectInterface() = default;
-    };
+class RigidObjectInterface: public virtual GraphicsDataAwareInterface, public virtual CollisionAwareInterface {
+public:
+    RigidObjectInterface() = default;
+    virtual ~RigidObjectInterface() = default;
+};
 }

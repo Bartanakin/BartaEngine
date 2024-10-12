@@ -1,20 +1,18 @@
 #pragma once
-#include "Geometrics/TransformableInterface.h"
-#include "Graphics/BartaSprite.h"
 #include "Graphics/GraphicsData.h"
 #include "ReduceableList.h"
+#include <BartaObjectInterface.h>
 
-namespace Barta{
+namespace Barta {
 
-    class GraphicsDataAwareInterface
-        : public virtual BartaObjectInterface {
-    public:
-        using GraphicsDataList = std::vector<GraphicsData*>;
+class GraphicsDataAwareInterface: public virtual BartaObjectInterface {
+public:
+    using GraphicsDataList = std::vector<GraphicsData*>;
 
-        using GraphicsDataAwareList= ReducibleList<std::list<GraphicsDataAwareInterface*>>;
+    using GraphicsDataAwareList = ReducibleList<std::list<GraphicsDataAwareInterface*>>;
 
-        virtual ~GraphicsDataAwareInterface() noexcept = default;
+    virtual ~GraphicsDataAwareInterface() noexcept = default;
 
-        virtual GraphicsDataList getGraphicsData() = 0;
-    };
+    virtual GraphicsDataList getGraphicsData() = 0;
+};
 }
