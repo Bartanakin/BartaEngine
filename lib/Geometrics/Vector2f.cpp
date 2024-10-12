@@ -70,6 +70,10 @@ Barta::Vector2f Barta::Vector2f::normalised() const {
     return *this * (1.f / std::sqrt(this->squareOfDistance(Vector2f())));
 }
 
+float Barta::Vector2f::normSquare() const {
+    return this->squareOfDistance(*this);
+}
+
 std::string Barta::Vector2f::toString() const noexcept {
     std::stringstream ss;
 
