@@ -3,6 +3,8 @@
 namespace Barta {
 
     enum class BartaKeyMap {
+        W,
+        S,
         D,
         A,
         SPACEBAR,

@@ -4,14 +4,14 @@ Barta::SpriteMerger::SpriteMerger() noexcept:
     data({}),
     types({}) {}
 
-Barta::SpriteMerger* Barta::SpriteMerger::addRectanglewithColors(
-    const RectangleWithColorsSprite& addRectanglewithColors
+Barta::SpriteMerger* Barta::SpriteMerger::addRectangleWithColors(
+    const RectangleWithColorsSprite& addRectangleWithColors
 ) {
-    this->types.push_back(SpriteType::RECTABGLE_WITH_COLORS);
+    this->types.push_back(SpriteType::RECTANGLE_WITH_COLORS);
 
     for (const auto& vector: {
-             addRectanglewithColors.aabb.getLeftTop(),
-             addRectanglewithColors.aabb.getWidthHeight(),
+             addRectangleWithColors.aabb.getLeftTop(),
+             addRectangleWithColors.aabb.getWidthHeight(),
          }) {
         this->data.push_back(vector.getX());
         this->data.push_back(vector.getY());
@@ -19,10 +19,10 @@ Barta::SpriteMerger* Barta::SpriteMerger::addRectanglewithColors(
     }
 
     for (const auto& color:
-         {addRectanglewithColors.leftTopColor,
-          addRectanglewithColors.rightTopColor,
-          addRectanglewithColors.rightBottomColor,
-          addRectanglewithColors.leftBottomColor}) {
+         {addRectangleWithColors.leftTopColor,
+          addRectangleWithColors.rightTopColor,
+          addRectangleWithColors.rightBottomColor,
+          addRectangleWithColors.leftBottomColor}) {
         this->data.push_back(color.r);
         this->data.push_back(color.g);
         this->data.push_back(color.b);
@@ -65,6 +65,31 @@ Barta::SpriteMerger* Barta::SpriteMerger::addString(
 
     this->data.insert(this->data.end(), 64, 0.f);
     std::copy(stringSprite.string.begin(), stringSprite.string.end(), this->data.end() - 64);
+
+    return this;
+}
+
+Barta::SpriteMerger* Barta::SpriteMerger::addTriangle(
+    const TriangleSprite& triangleSprite
+) {
+    this->types.push_back(SpriteType::TRIANGLE);
+
+    for (const auto& vector: {triangleSprite.triangle.p1, triangleSprite.triangle.p2, triangleSprite.triangle.p3}) {
+        this->data.push_back(vector.getX());
+        this->data.push_back(vector.getY());
+        this->data.push_back(0.f);
+    }
+
+    for (const auto& color: {
+             triangleSprite.color1,
+             triangleSprite.color2,
+             triangleSprite.color3
+         }) {
+        this->data.push_back(color.r);
+        this->data.push_back(color.g);
+        this->data.push_back(color.b);
+        this->data.push_back(color.a);
+    }
 
     return this;
 }
