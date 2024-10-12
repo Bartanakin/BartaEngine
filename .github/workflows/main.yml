@@ -36,9 +36,17 @@ jobs:
         run: |
           sudo apt-get install -y clang-format-19
 
+      - name: Get changed files
+        id: changed_files
+        run: |
+          git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+          git diff --name-only origin/${{ github.base_ref }} ${{ github.sha }} > changed_files.txt
+          echo "Changed files:"
+          cat changed_files.txt
+
       - name: Run clang-format
         run: |
-          clang-format-19 -i --style=file **/*.cpp **/*.h
+          clang-format-19 -i --style=file **/*.cpp **/*.h --files=changed_files.txt
           
       - name: Check for formatting changes
         run: |
