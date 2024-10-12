@@ -2,7 +2,6 @@ add_library(${LIBRARY_NAME}
     Application.cpp
     BartaObjectManager.cpp
     pch.cpp
-    DeleteWatchSingleton.cpp
 )
 
 # target_precompile_headers(${PROJECT_NAME} PUBLIC

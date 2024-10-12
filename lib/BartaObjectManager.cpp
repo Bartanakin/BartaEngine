@@ -1,61 +1,75 @@
-#include <pch.h>
 #include <BartaObjectManager.h>
+#include <pch.h>
 
-Barta::BartaObjectManager::BartaObjectManager() noexcept
-:   objectList({}),
-    dynamicsList({})
-{}
+Barta::BartaObjectManager::BartaObjectManager() noexcept:
+    objectList({}),
+    dynamicsList({}),
+    graphicsList({}) {}
 
 Barta::BartaObjectManager::~BartaObjectManager() {
     auto i = this->objectList.begin();
-	while( i != this->objectList.end() ){
-		auto objectPtr = ( *i );
-		delete objectPtr;
+    while (i != this->objectList.end()) {
+        auto objectPtr = (*i);
+        delete objectPtr;
 
-		i++;
-	}
-}
-
-void Barta::BartaObjectManager::addNewObject( BartaObjectInterface* const newObject ){
-    for (auto it = this->objectList.begin(); it != this->objectList.end(); it++) {
-        if ((*it)->getZIndex() >= newObject->getZIndex()) {
-            this->objectList.insert(it, newObject);
-
-            return;
-        }
+        i++;
     }
-
-	this->objectList.push_back( newObject );
 }
 
-void Barta::BartaObjectManager::addDynamicsObject(DynamicsAwareInterface* const dynamicsObject) {
-	this->dynamicsList.push_back(dynamicsObject);
+void Barta::BartaObjectManager::addNewObject(
+    BartaObjectInterface* newObject
+) {
+    this->objectList.push_back(newObject);
+}
+
+void Barta::BartaObjectManager::addDynamicsObject(
+    DynamicsAwareInterface* dynamicsObject
+) {
+    this->dynamicsList.push_back(dynamicsObject);
 }
 
 Barta::DynamicsAwareInterface::DynamicsAwareList& Barta::BartaObjectManager::getDynamicsList() noexcept {
-	return this->dynamicsList;
+    return this->dynamicsList;
 }
 
-void Barta::BartaObjectManager::reduceDeleted(){
-	this->dynamicsList.reduce();
+void Barta::BartaObjectManager::addGraphicsObject(
+    GraphicsDataAwareInterface* newGraphicsObject
+) {
+    for (auto it = this->graphicsList.begin(); it != this->graphicsList.end(); it++) {
+        // if ((*it)->getGraphicsData().z_index >= newGraphicsObject->getGraphicsData().z_index) {
+        this->graphicsList.insert(it, newGraphicsObject);
 
-	auto newList = ObjectList();
-	auto i = this->objectList.begin();
-	while( i != this->objectList.end() ){
-		if( ( *i )->isToBeDeleted() ){
-			auto objectPtr = ( *i );
-			delete objectPtr;
-		}
-		else{
-			newList.push_back( *i );
-		}
-	
-		i++;
-	}
+        return;
+        // }
+    } // TODO
 
-	this->objectList = newList;
+    this->graphicsList.push_back(newGraphicsObject);
+}
+
+Barta::GraphicsDataAwareInterface::GraphicsDataAwareList& Barta::BartaObjectManager::getGraphicsList() noexcept {
+    return this->graphicsList;
+}
+
+void Barta::BartaObjectManager::reduceDeleted() {
+    this->dynamicsList.reduce();
+    this->graphicsList.reduce();
+
+    auto newList = ObjectList();
+    auto i = this->objectList.begin();
+    while (i != this->objectList.end()) {
+        if ((*i)->isToBeDeleted()) {
+            auto objectPtr = (*i);
+            delete objectPtr;
+        } else {
+            newList.push_back(*i);
+        }
+
+        i++;
+    }
+
+    this->objectList = newList;
 }
 
 Barta::ObjectManagerInterface::ObjectList Barta::BartaObjectManager::getList() noexcept {
-	return this->objectList;
+    return this->objectList;
 }

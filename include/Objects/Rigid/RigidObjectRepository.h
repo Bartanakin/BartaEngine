@@ -1,25 +1,21 @@
 #pragma once
 
-
-#include <Objects/Rigid/RigidObject.h>
 #include <Graphics/Color.h>
-#include <Predefines.h>
 #include <ObjectManagerInterface.h>
+#include <Predefines.h>
 
 namespace Barta {
 
-    class RigidObjectRepository {
-    public:
-        RigidObjectRepository(
-            Barta::ListManager& listManager,
-            Barta::ObjectManagerInterface& objectManagerInterface
-        ) noexcept;
+class RigidObjectRepository {
+public:
+    RigidObjectRepository(ListManager& listManager, ObjectManagerInterface& objectManagerInterface) noexcept;
 
-        Barta::RigidObject* addNewAABB(Barta::Vector2f size, Barta::Color color, bool infiniteMass = true);
-        Barta::RigidObject* addNewCircle(float radius, Barta::Color color);
+    RigidObjectInterface* addNewAABB(Vector2f size, Color color, bool infiniteMass = true);
 
-    private:
-        Barta::ListManager& listManager;
-        Barta::ObjectManagerInterface& objectManager;
-    };
+    RigidObjectInterface* addNewCircle(float radius, Color color);
+
+private:
+    ListManager& listManager;
+    ObjectManagerInterface& objectManager;
+};
 }

@@ -46,7 +46,7 @@ jobs:
             if [[ "$file" == *.h || "$file" == *.cpp ]]; then
               echo $file
               echo $file >> "changed_files.txt"
-            else
+            fi
           done
 
       - name: Run clang-format

@@ -1,48 +1,32 @@
 #pragma once
 
-#include <BartaObject.h>
+#include "Graphics/GraphicsDataAwareInterface.h"
+#include "RigidObjectInterface.h"
+#include <BartaObjectInterface.h>
 #include <Collisions/CollisionAwareInterface.h>
 
 namespace Barta {
 
-    class RigidObject :
-        public BartaObjectInterface,
-        public CollisionAwareInterface {
-    public:
-        RigidObject(
-            std::unique_ptr<TransformableInterface> transformable,
-            std::unique_ptr<HitboxInterface> hitbox,
-            DynamicsDTO dynamicsDto
-        );
-        ~RigidObject() noexcept = default;
+class RigidObject: public virtual RigidObjectInterface {
+public:
+    RigidObject(GraphicsData graphicsData, std::unique_ptr<HitboxInterface> hitbox, DynamicsDTO dynamicsDto);
+    ~RigidObject() noexcept override = default;
 
-        bool isToBeDeleted() const override { return false; };
+    bool isToBeDeleted() const override { return false; }
 
-        const TransformableInterface& getTransformable() const override;
+    GraphicsDataList getGraphicsData() override;
 
-        const BartaSprite* getResource() noexcept override;
+    std::unique_ptr<const HitboxInterface> getHitbox() const override;
 
-        std::unique_ptr<const HitboxInterface> getHitbox() const override;
+    void move(const Vector2f& shift) override;
 
-        void move( const Vector2f& shift ) override;
+    DynamicsDTO& getDynamicsDTO() override;
 
-        RigidObject* setVelocity(const Vector2f& velocity);
+    inline void rotate(float, Vector2f) override;
 
-        const DynamicsDTO& getDynamicsDTO() const override;
-
-        void setDynamicsDTO( const DynamicsDTO& ) override;
-
-        inline virtual void rotate(float, Vector2f) override {}
-
-        int getZIndex() const override;
-
-        void setResource(BartaSprite resource);
-
-    protected:
-        std::unique_ptr<TransformableInterface> transformable;
-        std::unique_ptr<HitboxInterface> hitbox;
-        DynamicsDTO dynamicsDTO;
-
-        BartaSprite resource;
-    };
+protected:
+    GraphicsData graphicsData;
+    std::unique_ptr<HitboxInterface> hitbox;
+    DynamicsDTO dynamicsDTO;
+};
 }

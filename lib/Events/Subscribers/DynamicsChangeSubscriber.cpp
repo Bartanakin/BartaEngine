@@ -1,9 +1,12 @@
-#include <pch.h>
 #include <Events/Subscribers/DynamicsChangeSubscriber.h>
+#include <pch.h>
 
+bool Barta::DynamicsChangeSubscriber::handle(
+    DynamicsChangeEvent& event
+) {
+    auto& dynamics = event.dynamicsAware->getDynamicsDTO();
 
-bool Barta::DynamicsChangeSubscriber::handle(DynamicsChangeEvent& event) {
-    event.dynamicsAware->setDynamicsDTO(event.dynamicsAware->getDynamicsDTO() + event.dynamicsDiff);
+    dynamics.velocity += event.velocityChange;
 
     return true;
 }
