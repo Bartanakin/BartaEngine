@@ -7,12 +7,16 @@ namespace Barta {
 
 	class DynamicsChangeEvent {
 		public:
-		DynamicsChangeEvent(DynamicsAwareInterface* dynamicsAware, DynamicsDTO newDynamics) noexcept:
-			dynamicsAware(dynamicsAware), dynamicsDiff(newDynamics) {
-		}
+		DynamicsChangeEvent(
+            DynamicsAwareInterface* dynamicsAware,
+            Vector2f velocityChange
+        ) noexcept:
+			dynamicsAware(dynamicsAware),
+            velocityChange(velocityChange)
+        {}
 
 		DynamicsAwareInterface* dynamicsAware;
-		DynamicsDTO dynamicsDiff;
+		Vector2f velocityChange;
 	};
 
 	template<>

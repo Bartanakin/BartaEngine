@@ -9,11 +9,5 @@ namespace Barta{
         virtual ~BartaObjectInterface() noexcept = default;
 
 		virtual bool isToBeDeleted() const = 0;
-
-		virtual const TransformableInterface& getTransformable() const = 0;
-
-		virtual const BartaSprite* getResource() noexcept = 0;
-
-        virtual int getZIndex() const = 0;
 	};
 }

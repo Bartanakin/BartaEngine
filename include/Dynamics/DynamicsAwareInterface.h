@@ -1,4 +1,6 @@
 #pragma once
+
+#include <BartaObjectInterface.h>
 #include "../pch.h"
 #include "../Geometrics/Vector2f.h"
 #include "DynamicsDTO.h"
@@ -6,7 +8,7 @@
 
 namespace Barta{
 
-	class DynamicsAwareInterface{
+	class DynamicsAwareInterface : public virtual BartaObjectInterface {
 	public:
 		DynamicsAwareInterface() = default;
 		virtual ~DynamicsAwareInterface() = default;
@@ -17,10 +19,6 @@ namespace Barta{
 
 		virtual void rotate(float, Vector2f) = 0;
 
-		virtual const DynamicsDTO& getDynamicsDTO() const = 0;
-
-		virtual void setDynamicsDTO( const DynamicsDTO& ) = 0;
-
-		virtual bool isToBeDeleted() const = 0;
+		virtual DynamicsDTO& getDynamicsDTO() = 0;
 	};
 }

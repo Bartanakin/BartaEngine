@@ -25,6 +25,8 @@ namespace Barta{
 
 		Vector2f operator+(const Vector2f&) const;
 
+        Vector2f& operator+=(const Vector2f&);
+
 		bool operator==( const Vector2f& ) const;
 
 		float squareOfDistance(const Vector2f&) const;

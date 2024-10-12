@@ -25,36 +25,38 @@ void Barta::SFML_GraphicsBridge::createWindow( Vector2f size, std::string title 
 	this->sf_window->setFramerateLimit( 59 );
 }
 
-void Barta::SFML_GraphicsBridge::drawObjects(const std::list<BartaObjectInterface*>& objects) {
+void Barta::SFML_GraphicsBridge::drawObjects(std::list<GraphicsDataAwareInterface*>& objects) {
 	this->sf_window->clear();
 
 	for( const auto& object : objects ){
-        if (object->getResource()->getResourceId() == 0) {
-            this->handleCustomeResource(*object);
+        for (auto graphicsData_ptr : object->getGraphicsData()) {
+            if (graphicsData_ptr->resource.getResourceId() == 0) {
+                this->handleCustomeResource(*graphicsData_ptr);
 
-            continue;
+                continue;
+            }
+
+            auto hash = static_cast<const void*>(object);
+            if( object->isToBeDeleted() ){
+                this->resourceMatcher->drop( hash );
+
+                continue;
+            }
+
+            this->resourceMatcher->matchResource(hash, graphicsData_ptr->resource.getResourceId());
+            this->sf_window->draw(
+                this->resourceMatcher->matchAndTransform(
+                    hash,
+                    SFML_GraphicsBridge::convertTransformable(*graphicsData_ptr->transformable)
+                )
+            );
         }
-
-		auto hash = static_cast<const void*>(object);
-		if( object->isToBeDeleted() ){
-			this->resourceMatcher->drop( hash );
-
-			continue;
-		}
-
-		this->resourceMatcher->matchResource(hash, object->getResource()->getResourceId());
-		this->sf_window->draw(
-			this->resourceMatcher->matchAndTransform( 
-				hash,
-				SFML_GraphicsBridge::convertTransformable(object->getTransformable())
-			)
-		);
 	}
 
 	this->sf_window->display();
 }
 
-bool Barta::SFML_GraphicsBridge::logEvents( BartaEventLoggerInterface& eventLogger ){
+bool Barta::SFML_GraphicsBridge::logEvents(BartaEventLoggerInterface& eventLogger){
 	sf::Event event = sf::Event();
 	while (this->sf_window->pollEvent( event )) {
 		if( event.type == sf::Event::Closed ){
@@ -112,12 +114,12 @@ const sf::Transformable Barta::SFML_GraphicsBridge::convertTransformable(const T
 }
 
 void Barta::SFML_GraphicsBridge::handleCustomeResource(
-    BartaObjectInterface &object
+    GraphicsData& graphicsData
 ) {
     std::vector<float>::size_type dataOffset = 0;
-    for (auto type : object.getResource()->getSpriteType()) {
-        auto data = object.getResource()->getData();
-        auto sf_transformable = SFML_GraphicsBridge::convertTransformable(object.getTransformable());
+    for (auto type : graphicsData.resource.getSpriteType()) {
+        auto data = graphicsData.resource.getData();
+        auto sf_transformable = SFML_GraphicsBridge::convertTransformable(*graphicsData.transformable);
         auto transform = sf_transformable.getTransform();
 
         if (type == SpriteType::RECTABGLE_WITH_COLORS) {

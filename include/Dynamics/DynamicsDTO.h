@@ -39,18 +39,7 @@ namespace Barta{
             rotationVelocity(second.rotationVelocity),
             massCenter(second.massCenter) {}
 
-		inline DynamicsDTO operator+( const DynamicsDTO& second ) const {
-			return DynamicsDTO(
-                this->velocity + second.velocity,
-                false,
-                this->mass + second.mass,
-                this->acceleration + second.acceleration,
-                this->rotationVelocity + second.rotationVelocity,
-                this->massCenter + second.massCenter // TODO
-            );
-		}
-
-		inline DynamicsDTO operator-( const DynamicsDTO& second ) const {
+		inline DynamicsDTO getRelativeDynamics(const DynamicsDTO& second) const {
 			return DynamicsDTO(
                 this->velocity - second.velocity,
                 false,

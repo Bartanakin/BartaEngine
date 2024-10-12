@@ -22,8 +22,8 @@ namespace Barta {
 		CollisionTestResult(
 			bool collisionDetected,
 			float timePassed,
-			bool staticCollision,
-			Vector2f normVector,
+			bool staticCollision = false,
+			Vector2f normVector = {},
             std::string debugInfo = ""
 		) noexcept
 			: collisionDetected(collisionDetected),

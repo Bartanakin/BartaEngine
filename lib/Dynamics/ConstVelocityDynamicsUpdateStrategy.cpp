@@ -8,7 +8,7 @@ void Barta::ConstVelocityDynamicsUpdateStrategy::update(
 	const float deltaTime
 ) {
 	for (auto object : objectList) {
-        auto dynamics = object->getDynamicsDTO();
+        auto& dynamics = object->getDynamicsDTO();
         if (dynamics.hasInfiniteMass) {
             continue;
         }
@@ -17,7 +17,5 @@ void Barta::ConstVelocityDynamicsUpdateStrategy::update(
 		object->rotate(dynamics.rotationVelocity *deltaTime, dynamics.massCenter);
 
         dynamics.velocity = Vector2f::zeroise(dynamics.velocity + dynamics.acceleration * deltaTime, ZEROING_EDGE);
-
-        object->setDynamicsDTO(std::move(dynamics));
 	}
 }

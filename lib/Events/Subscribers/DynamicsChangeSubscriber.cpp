@@ -3,7 +3,9 @@
 
 
 bool Barta::DynamicsChangeSubscriber::handle(DynamicsChangeEvent& event) {
-    event.dynamicsAware->setDynamicsDTO(event.dynamicsAware->getDynamicsDTO() + event.dynamicsDiff);
+    auto& dynamics = event.dynamicsAware->getDynamicsDTO();
+
+    dynamics.velocity += event.velocityChange;
 
     return true;
 }

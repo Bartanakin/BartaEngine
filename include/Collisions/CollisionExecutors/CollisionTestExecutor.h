@@ -55,7 +55,7 @@ namespace Barta {
                         (*i)->getHitbox()->intersects(
                             *((*j)->getHitbox()),
                             *(this->collisionDetectionStrategy),
-                            (*i)->getDynamicsDTO() - (*j)->getDynamicsDTO()
+                            (*i)->getDynamicsDTO().getRelativeDynamics((*j)->getDynamicsDTO())
                         )
                     , (*i), (*j)});
                         

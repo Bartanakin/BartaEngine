@@ -4,6 +4,7 @@
 #include "BartaGraphicsBridgeInterface.h"
 #include "SFML_Bridge/ResourceContainerInterface.h"
 #include "SFML_Bridge/ResourceMatcherInterface.h"
+#include "GraphicsDataAwareInterface.h"
 
 namespace Barta{
     class SFML_GraphicsBridge :
@@ -18,15 +19,15 @@ namespace Barta{
         SFML_GraphicsBridge& operator=(const SFML_GraphicsBridge&) noexcept = delete;
         virtual ~SFML_GraphicsBridge();
 
-        void createWindow( Vector2f size, std::string title ) override;
-        void drawObjects( const std::list<BartaObjectInterface*>& objects ) override;
-        bool logEvents( BartaEventLoggerInterface& eventLogger ) override;
+        void createWindow(Vector2f size, std::string title) override;
+        void drawObjects(std::list<GraphicsDataAwareInterface*>& objects) override;
+        bool logEvents(BartaEventLoggerInterface& eventLogger) override;
 
         static const sf::Transformable convertTransformable( const TransformableInterface& myTransformable );
 
         static std::unique_ptr<Barta::TransformableInterface> createNewTransformableInstance();
     private:
-        void handleCustomeResource(BartaObjectInterface& object);
+        void handleCustomeResource(GraphicsData& graphicsData);
 
         sf::RenderWindow* sf_window;
         std::unique_ptr<RecourseMatcherInterface>resourceMatcher;

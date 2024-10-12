@@ -7,7 +7,7 @@
 
 namespace Barta {
     namespace Events {
-        using RigidObjectRigidObject = Barta::CollisionEvent<RigidObject, RigidObject>;
+        using RigidObjectRigidObject = Barta::CollisionEvent<RigidObjectInterface, RigidObjectInterface>;
     }
 }
 

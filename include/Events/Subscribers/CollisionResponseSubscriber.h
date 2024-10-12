@@ -8,7 +8,7 @@ namespace Barta {
     template<typename CollisionEventType>
 	class CollisionResponseSubscriber : public EventSubscriber<CollisionEventType> {
 		public:
-		constexpr static const float COEFFICIENT_OF_ELISTICITY = 1.f;
+		constexpr static const float COEFFICIENT_OF_RESTITUTION = 1.f;
 
 		CollisionResponseSubscriber(BartaEventLoggerInterface& eventLogger)
         	: eventLogger(eventLogger) {}
@@ -45,7 +45,7 @@ namespace Barta {
 
             auto realFirstVelocity = firstDynamics.velocity + testResult.timePassed * firstDynamics.acceleration;
             auto realSecondVelocity = secondDynamics.velocity + testResult.timePassed * secondDynamics.acceleration;
-            auto j = -(1.f + this->COEFFICIENT_OF_ELISTICITY) * ((realSecondVelocity - realFirstVelocity) * testResult.normVector) / (testResult.normVector * testResult.normVector * massInverted);
+            auto j = -(1.f + this->COEFFICIENT_OF_RESTITUTION) * ((realSecondVelocity - realFirstVelocity) * testResult.normVector) / (testResult.normVector * testResult.normVector * massInverted);
             this->calculateNewVelocity(-j, firstObject, testResult.normVector);
             this->calculateNewVelocity(j, secondObject, testResult.normVector);
 
@@ -70,7 +70,7 @@ namespace Barta {
 
             this->eventLogger.logEvent(DynamicsChangeEvent(
                 static_cast<DynamicsAwareInterface*>(dynamicsObject),
-                DynamicsDTO(normVector * (j / oldDynamics.mass), false, 0.f, {})
+                normVector * (j / oldDynamics.mass)
             ));
         }
 

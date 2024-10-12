@@ -4,52 +4,32 @@
 
 #include <Objects/Rigid/RigidObject.h>
 
-
 Barta::RigidObject::RigidObject(
-    std::unique_ptr<TransformableInterface> transformable,
+    GraphicsData graphicsData,
     std::unique_ptr<HitboxInterface> hitbox,
     DynamicsDTO dynamicsDto
 ) :
-    transformable(std::move(transformable)),
+    graphicsData(std::move(graphicsData)),
     hitbox(std::move(hitbox)),
-    dynamicsDTO(dynamicsDto),
-    resource({0})
+    dynamicsDTO(dynamicsDto)
 {}
 
-const Barta::TransformableInterface& Barta::RigidObject::getTransformable() const{
-    return *this->transformable;
-}
-
-const Barta::BartaSprite* Barta::RigidObject::getResource() noexcept{
-    return &this->resource;
-}
-
 std::unique_ptr<const Barta::HitboxInterface> Barta::RigidObject::getHitbox() const{
-    return this->hitbox->getTransformedHitbox(*this->transformable);
+    return this->hitbox->getTransformedHitbox(*this->graphicsData.transformable);
+}
+
+void Barta::RigidObject::rotate(float angle, Barta::Vector2f axis) {
+    this->graphicsData.transformable->rotate(angle, axis);
 }
 
 void Barta::RigidObject::move(const Barta::Vector2f& shift){
-    this->transformable->move(shift);
+    this->graphicsData.transformable->move(shift);
 }
 
-Barta::RigidObject* Barta::RigidObject::setVelocity(const Barta::Vector2f &velocity) {
-    this->dynamicsDTO.velocity = velocity;
-
-    return this;
-}
-
-const Barta::DynamicsDTO& Barta::RigidObject::getDynamicsDTO() const{
+Barta::DynamicsDTO& Barta::RigidObject::getDynamicsDTO() {
     return this->dynamicsDTO;
 }
 
-void Barta::RigidObject::setDynamicsDTO(const Barta::DynamicsDTO& dynamicsDTO){
-    this->dynamicsDTO = dynamicsDTO;
-}
-
-int Barta::RigidObject::getZIndex() const {
-    return 1;
-}
-
-void Barta::RigidObject::setResource(Barta::BartaSprite resource) {
-    this->resource = resource;
+Barta::GraphicsDataAwareInterface::GraphicsDataList Barta::RigidObject::getGraphicsData() {
+    return {&this->graphicsData};
 }

@@ -3,7 +3,8 @@
 
 Barta::BartaObjectManager::BartaObjectManager() noexcept
 :   objectList({}),
-    dynamicsList({})
+    dynamicsList({}),
+    graphicsList({})
 {}
 
 Barta::BartaObjectManager::~BartaObjectManager() {
@@ -16,19 +17,11 @@ Barta::BartaObjectManager::~BartaObjectManager() {
 	}
 }
 
-void Barta::BartaObjectManager::addNewObject( BartaObjectInterface* const newObject ){
-    for (auto it = this->objectList.begin(); it != this->objectList.end(); it++) {
-        if ((*it)->getZIndex() >= newObject->getZIndex()) {
-            this->objectList.insert(it, newObject);
-
-            return;
-        }
-    }
-
-	this->objectList.push_back( newObject );
+void Barta::BartaObjectManager::addNewObject( BartaObjectInterface* newObject ){
+    this->objectList.push_back(newObject);
 }
 
-void Barta::BartaObjectManager::addDynamicsObject(DynamicsAwareInterface* const dynamicsObject) {
+void Barta::BartaObjectManager::addDynamicsObject(DynamicsAwareInterface* dynamicsObject) {
 	this->dynamicsList.push_back(dynamicsObject);
 }
 
@@ -36,8 +29,25 @@ Barta::DynamicsAwareInterface::DynamicsAwareList& Barta::BartaObjectManager::get
 	return this->dynamicsList;
 }
 
+void Barta::BartaObjectManager::addGraphicsObject(Barta::GraphicsDataAwareInterface *newGraphicsObject) {
+    for (auto it = this->graphicsList.begin(); it != this->graphicsList.end(); it++) {
+//        if ((*it)->getGraphicsData().z_index >= newGraphicsObject->getGraphicsData().z_index) {
+            this->graphicsList.insert(it, newGraphicsObject);
+
+            return;
+//        }
+    } // TODO
+
+    this->graphicsList.push_back(newGraphicsObject);
+}
+
+Barta::GraphicsDataAwareInterface::GraphicsDataAwareList& Barta::BartaObjectManager::getGraphicsList() noexcept {
+    return this->graphicsList;
+}
+
 void Barta::BartaObjectManager::reduceDeleted(){
 	this->dynamicsList.reduce();
+	this->graphicsList.reduce();
 
 	auto newList = ObjectList();
 	auto i = this->objectList.begin();

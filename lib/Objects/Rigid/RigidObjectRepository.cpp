@@ -17,7 +17,7 @@ Barta::RigidObjectRepository::RigidObjectRepository(
     objectManager(objectManager)
 {}
 
-Barta::RigidObject *Barta::RigidObjectRepository::addNewAABB(
+Barta::RigidObjectInterface *Barta::RigidObjectRepository::addNewAABB(
     Barta::Vector2f size,
     Barta::Color color,
     bool infiniteMass
@@ -29,20 +29,24 @@ Barta::RigidObject *Barta::RigidObjectRepository::addNewAABB(
     auto merger = Barta::SpriteMerger();
     merger.addRectanglewithColors(spriteBuilder.build());
     auto aabb = new Barta::RigidObject(
-        Barta::SFML_GraphicsBridge::createNewTransformableInstance(),
+        {
+            Barta::SFML_GraphicsBridge::createNewTransformableInstance(),
+            merger.merge(false),
+            4
+        },
         std::unique_ptr<Barta::HitboxInterface>(new Barta::AABB_Hitbox({{0.f, 0.f}, size})),
         {{0., 0.}, infiniteMass, infiniteMass ? 0.f : 1.f}
     );
-    aabb->setResource(merger.merge(false));
 
     this->listManager.addObject(aabb);
+    this->objectManager.addGraphicsObject(static_cast<Barta::GraphicsDataAwareInterface*>(aabb));
     this->objectManager.addDynamicsObject(static_cast<Barta::DynamicsAwareInterface*>(aabb));
-    this->objectManager.addNewObject(aabb);
+    this->objectManager.addNewObject(static_cast<Barta::BartaObjectInterface*>(aabb));
 
     return aabb;
 }
 
-Barta::RigidObject *Barta::RigidObjectRepository::addNewCircle(float radius, Barta::Color color) {
+Barta::RigidObjectInterface *Barta::RigidObjectRepository::addNewCircle(float radius, Barta::Color color) {
     auto merger = Barta::SpriteMerger();
     merger.addCircleSprite(Barta::CircleSprite(
         Barta::Circle(
@@ -52,16 +56,19 @@ Barta::RigidObject *Barta::RigidObjectRepository::addNewCircle(float radius, Bar
         color
     ));
     auto circle = new Barta::RigidObject(
-        Barta::SFML_GraphicsBridge::createNewTransformableInstance(),
+        {
+            Barta::SFML_GraphicsBridge::createNewTransformableInstance(),
+            merger.merge(false),
+            4
+        },
         std::unique_ptr<Barta::HitboxInterface>(new Barta::CircleHitbox({radius, {radius, radius}})),
         {{0., 0.}, false, 1.f}
     );
 
     this->listManager.addObject(circle);
+    this->objectManager.addGraphicsObject(static_cast<Barta::GraphicsDataAwareInterface*>(circle));
     this->objectManager.addDynamicsObject(static_cast<Barta::DynamicsAwareInterface*>(circle));
-    this->objectManager.addNewObject(circle);
-
-    circle->setResource(merger.merge(false));
+    this->objectManager.addNewObject(static_cast<Barta::BartaObjectInterface*>(circle));
 
     return circle;
 }

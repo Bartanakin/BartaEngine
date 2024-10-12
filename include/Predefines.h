@@ -1,6 +1,6 @@
 #pragma once
 #include <pch.h>
-#include <Objects/Rigid/RigidObject.h>
+#include <Objects/Rigid/RigidObjectInterface.h>
 #include <Collisions/CollisionExecutors/CollisionTestExecutor.h>
 #include <Collisions/CollisionExecutors/FilterNoCollisionDecorator.h>
 #include <Collisions/CollisionLogger.h>
@@ -9,21 +9,21 @@
 #include <StaticObjectManager.h>
 
 namespace Barta {
-    typedef ReducibleList<std::vector<RigidObject*>> RigidObjectContainer;
+    typedef ReducibleList<std::vector<RigidObjectInterface*>> RigidObjectContainer;
 
     typedef FilterNoCollisionDecorator<
         CollisionTestExecutor
     > CollisionCoreExecutor;
 
     typedef CollisionLogger<
-        RigidObject, RigidObject
+        RigidObjectInterface, RigidObjectInterface
     > DefaultCollisionLogger; // <--
 
     typedef EventMatcher<
-        CollisionEvent<RigidObject, RigidObject>
+        CollisionEvent<RigidObjectInterface, RigidObjectInterface>
     > CollisionEventsLogger; // <--
 
     typedef StaticObjectManager<
-        RigidObject
+        RigidObjectInterface
     > ListManager; // <--
 }

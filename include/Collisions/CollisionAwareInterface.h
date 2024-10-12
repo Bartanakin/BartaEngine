@@ -6,13 +6,13 @@
 
 namespace Barta {
 
-	class CollisionAwareInterface:public HitboxAware, public DynamicsAwareInterface {
+	class CollisionAwareInterface:
+        public virtual HitboxAware,
+        public virtual DynamicsAwareInterface
+    {
 		public:
 		inline CollisionAwareInterface() = default;
 		inline virtual ~CollisionAwareInterface() = default;
-
-		using CollidableList = ReducibleList<std::list<CollisionAwareInterface*>>;
-
 	};
 
 }

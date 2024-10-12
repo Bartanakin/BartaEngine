@@ -28,6 +28,13 @@ Barta::Vector2f Barta::Vector2f::operator+( const Vector2f& second ) const{
 	return Vector2f( this->getX() + second.getX(), this->getY() + second.getY() );
 }
 
+Barta::Vector2f& Barta::Vector2f::operator+=( const Vector2f& second ) {
+    this->x += second.x;
+    this->y += second.y;
+
+    return *this;
+}
+
 bool Barta::Vector2f::operator==(const Vector2f& second) const {
 	return this->x == second.x && this->y == second.y;
 }

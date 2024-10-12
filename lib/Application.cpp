@@ -26,7 +26,7 @@ Barta::Application::Application(
     this->postDynamicsEventLogger->logSubscriber(std::make_unique<Barta::DynamicsChangeSubscriber>());
 
     this->collisionEventsLogger.logSubscriber(std::unique_ptr<Barta::Subscribers::RigidObjectRigidObject>(
-        new Barta::StaticCollisionResponseSubscriberType<Barta::RigidObject, Barta::RigidObject>(
+        new Barta::StaticCollisionResponseSubscriberType<Barta::RigidObjectInterface, Barta::RigidObjectInterface>(
             *this->postDynamicsEventLogger
         )
     ));
@@ -60,12 +60,12 @@ void Barta::Application::run(){
 		}
 
         // Rendering
-		this->graphicsBridge->drawObjects( this->objectManager->getList() );
+		this->graphicsBridge->drawObjects(this->objectManager->getGraphicsList());
 
         this->preGarbageCollect(); // inheritable
 
         // Removing from containers and deleting relevant objects
-        this->objectLists.StaticObjectManager<Barta::RigidObject>::reduceDeleted();
+        this->objectLists.StaticObjectManager<Barta::RigidObjectInterface>::reduceDeleted();
 		this->objectManager->reduceDeleted();
 	}
 }
