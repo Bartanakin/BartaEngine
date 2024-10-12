@@ -1,6 +1,5 @@
 add_library(${LIBRARY_NAME}
-    Application.cpp
-    BartaObjectManager.cpp
+        BartaObjectManager.cpp
     pch.cpp
 )
 

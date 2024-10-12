@@ -31,7 +31,7 @@ public:
             while (j != list2.end()) {
                 collisionResults.push_back(
                     {(*i)->getHitbox()
-                         ->intersects(*((*j)->getHitbox()), *(this->collisionDetectionStrategy), (*i)->getDynamicsDTO() - (*j)->getDynamicsDTO()),
+                         ->intersects(*((*j)->getHitbox()), *(this->collisionDetectionStrategy), (*i)->getDynamicsDTO().getRelativeDynamics((*j)->getDynamicsDTO())),
                      (*i),
                      (*j)}
                 );

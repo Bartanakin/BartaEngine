@@ -88,6 +88,18 @@ float Barta::Vector2f::operator^(
     return this->x * second.y - this->y * second.x;
 }
 
+Barta::Vector2f Barta::Vector2f::rotated(
+    float radians
+) const noexcept {
+    const float sin = std::sin(radians);
+    const float cos = std::cos(radians);
+
+    return {
+        Vector2f(cos, -sin) * *this,
+        Vector2f(sin, cos) * *this
+    };
+}
+
 Barta::Vector2f Barta::Vector2f::zeroise(
     Vector2f vector,
     float edge

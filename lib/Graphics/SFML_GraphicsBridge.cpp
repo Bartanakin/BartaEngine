@@ -110,7 +110,7 @@ void Barta::SFML_GraphicsBridge::handleCustomResource(
         auto sf_transformable = SFML_GraphicsBridge::convertTransformable(*graphicsData.transformable);
         auto transform = sf_transformable.getTransform();
 
-        if (type == SpriteType::RECTABGLE_WITH_COLORS) {
+        if (type == SpriteType::RECTANGLE_WITH_COLORS) {
             auto rectangle = sf::VertexArray(sf::PrimitiveType::Triangles, 6);
             auto leftTopVertex = sf::Vertex(
                 transform.transformPoint(data[dataOffset], data[dataOffset + 1]),
@@ -194,6 +194,45 @@ void Barta::SFML_GraphicsBridge::handleCustomResource(
             this->sf_window->draw(text);
 
             dataOffset += 3 + 1 + 64;
+        }
+
+        if (type == SpriteType::TRIANGLE) {
+            auto triangle = sf::VertexArray(sf::PrimitiveType::Triangles, 3);
+            auto p1 = sf::Vertex(
+                transform.transformPoint(data[dataOffset], data[dataOffset + 1]),
+                sf::Color(
+                    static_cast<sf::Uint8>(data[dataOffset + 9]),
+                    static_cast<sf::Uint8>(data[dataOffset + 10]),
+                    static_cast<sf::Uint8>(data[dataOffset + 11]),
+                    static_cast<sf::Uint8>(data[dataOffset + 12])
+                )
+            );
+            auto p2 = sf::Vertex(
+                transform.transformPoint(data[dataOffset + 3], data[dataOffset + 4]),
+                sf::Color(
+                    static_cast<sf::Uint8>(data[dataOffset + 13]),
+                    static_cast<sf::Uint8>(data[dataOffset + 14]),
+                    static_cast<sf::Uint8>(data[dataOffset + 15]),
+                    static_cast<sf::Uint8>(data[dataOffset + 16])
+                )
+            );
+            auto p3 = sf::Vertex(
+                transform.transformPoint(data[dataOffset + 6], data[dataOffset + 7]),
+                sf::Color(
+                    static_cast<sf::Uint8>(data[dataOffset + 17]),
+                    static_cast<sf::Uint8>(data[dataOffset + 18]),
+                    static_cast<sf::Uint8>(data[dataOffset + 19]),
+                    static_cast<sf::Uint8>(data[dataOffset + 20])
+                )
+            );
+
+            triangle[0] = p1;
+            triangle[1] = p2;
+            triangle[2] = p3;
+
+            this->sf_window->draw(triangle);
+
+            dataOffset += 3 * 3 + 4 * 3;
         }
     }
 }
