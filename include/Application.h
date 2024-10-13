@@ -7,10 +7,7 @@
 #include "Dynamics/TimerInterface.h"
 #include "Graphics/BartaGraphicsBridgeInterface.h"
 #include "pch.h"
-#include <BartaObjectManager.h>
-#include <ObjectManagerInterface.h>
 #include <Predefines.h>
-
 
 namespace Barta {
 
@@ -23,7 +20,7 @@ public:
         TimerInterface& timer,
         std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy,
         std::unique_ptr<Barta::CollisionDetectionStrategyInterface> collisionDetectionStrategy
-        ):
+    ):
         windowName(std::move(windowName)),
         graphicsBridge(std::move(graphicsBridge)),
         eventLogger(std::make_unique<BartaEventLoggerInterface>()),
@@ -37,6 +34,7 @@ public:
         //     new Barta::StaticCollisionResponseSubscriberType<RigidObjectInterface, RigidObjectInterface>(*this->postDynamicsEventLogger)
         // ));
     }
+
     Application(const Application&) = delete;
     Application(Application&&) = delete;
     Application& operator=(const Application&) = delete;
