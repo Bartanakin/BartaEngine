@@ -7,11 +7,10 @@
 #include "Graphics/BartaGraphicsBridgeInterface.h"
 #include "ObjectManagerInterface.h"
 #include "pch.h"
-
 #include <BartaObjectManager.h>
+#include <Events/Subscribers/DynamicsChangeSubscriber.h>
 #include <Objects/Rigid/RigidObjectCollisionSubscriber.h>
 #include <Predefines.h>
-#include <Events/Subscribers/DynamicsChangeSubscriber.h>
 
 namespace Barta {
 
@@ -24,7 +23,7 @@ public:
         TimerInterface& timer,
         std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy,
         std::unique_ptr<Barta::CollisionDetectionStrategyInterface> collisionDetectionStrategy
-        ):
+    ):
         windowName(std::move(windowName)),
         graphicsBridge(std::move(graphicsBridge)),
         eventLogger(std::make_unique<BartaEventLoggerInterface>()),
@@ -35,12 +34,13 @@ public:
         collisionEventsLogger({}),
         collisionExecutor(CollisionCoreExecutor(std::move(collisionDetectionStrategy))),
         objectLists({}) {
-        this->postDynamicsEventLogger->logSubscriber(std::make_unique<DynamicsChangeSubscriber>());
+        this->postDynamicsEventLogger->logSubscriber(std::make_shared<DynamicsChangeSubscriber>());
 
         // this->collisionEventsLogger.logSubscriber(std::unique_ptr<Subscribers::RigidObjectRigidObject>(
         //     new Barta::StaticCollisionResponseSubscriberType<RigidObjectInterface, RigidObjectInterface>(*this->postDynamicsEventLogger)
         // ));
     }
+
     Application(const Application&) = delete;
     Application(Application&&) = delete;
     Application& operator=(const Application&) = delete;
@@ -86,13 +86,9 @@ public:
 
     virtual void preGarbageCollect() {}
 
-    virtual void postDynamicUpdate() {
-        this->postDynamicsEventLogger->runSubscribers();
-    }
+    virtual void postDynamicUpdate() { this->postDynamicsEventLogger->runSubscribers(); }
 
-    virtual bool isRunning() const {
-        return true;
-    }
+    virtual bool isRunning() const { return true; }
 
 protected:
     std::string windowName;
