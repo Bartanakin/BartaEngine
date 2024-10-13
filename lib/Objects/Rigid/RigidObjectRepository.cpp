@@ -27,7 +27,7 @@ Barta::RigidObjectInterface* Barta::RigidObjectRepository::addNewAABB(
     spriteBuilder.setSize(size);
     spriteBuilder.setAllColors(color);
     auto merger = SpriteMerger();
-    merger.addRectanglewithColors(spriteBuilder.build());
+    merger.addRectangleWithColors(spriteBuilder.build());
     auto aabb = new RigidObject(
         {
             Barta::SFML_GraphicsBridge::createNewTransformableInstance(),

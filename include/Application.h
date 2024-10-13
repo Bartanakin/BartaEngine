@@ -1,54 +1,106 @@
 #pragma once
-#include "pch.h"
+#include "Collisions/CollisionDetectionStrategyInterface.h"
+#include "Dynamics/DynamicsUpdateStrategyInterface.h"
+#include "Dynamics/TimerInterface.h"
+#include "Events/BartaEventLoggerInterface.h"
 #include "Geometrics/Vector2f.h"
 #include "Graphics/BartaGraphicsBridgeInterface.h"
-#include "Events/BartaEventLoggerInterface.h"
-#include"ObjectManagerInterface.h"
-#include "Dynamics/TimerInterface.h"
-#include "Dynamics/DynamicsUpdateStrategyInterface.h"
-#include "Collisions/CollisionDetectionStrategyInterface.h"
+#include "ObjectManagerInterface.h"
+#include "pch.h"
+#include <BartaObjectManager.h>
+#include <Events/Subscribers/DynamicsChangeSubscriber.h>
+#include <Objects/Rigid/RigidObjectCollisionSubscriber.h>
 #include <Predefines.h>
 
-namespace Barta{
-	class Application{
-	public:
-		Application(
-            std::string windowName,
-			std::unique_ptr<BartaGraphicsBridgeInterface> graphicsBridge,
-			TimerInterface& timer,
-			std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy,
-            std::unique_ptr<Barta::CollisionDetectionStrategyInterface> collisionDetectionStrategy
-		);
-        Application(const Application&) = delete;
-        Application(Application&&) = delete;
-        Application& operator=(const Application&) = delete;
+namespace Barta {
 
-		virtual ~Application();
+template<typename CollisionLogger, typename EventLogger, typename ObjectManager, typename TestExecutor>
+class Application {
+public:
+    Application(
+        std::string windowName,
+        std::unique_ptr<BartaGraphicsBridgeInterface> graphicsBridge,
+        TimerInterface& timer,
+        std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy,
+        std::unique_ptr<Barta::CollisionDetectionStrategyInterface> collisionDetectionStrategy
+    ):
+        windowName(std::move(windowName)),
+        graphicsBridge(std::move(graphicsBridge)),
+        eventLogger(std::make_unique<BartaEventLoggerInterface>()),
+        postDynamicsEventLogger(std::make_unique<BartaEventLoggerInterface>()),
+        objectManager(std::unique_ptr<ObjectManagerInterface>(new BartaObjectManager())),
+        timer(timer),
+        dynamicsUpdateStrategy(std::move(dynamicsUpdateStrategy)),
+        collisionEventsLogger({}),
+        collisionExecutor(CollisionCoreExecutor(std::move(collisionDetectionStrategy))),
+        objectLists({}) {
+        this->postDynamicsEventLogger->logSubscriber(std::make_shared<DynamicsChangeSubscriber>());
 
-		virtual void run() final;
+        // this->collisionEventsLogger.logSubscriber(std::unique_ptr<Subscribers::RigidObjectRigidObject>(
+        //     new Barta::StaticCollisionResponseSubscriberType<RigidObjectInterface, RigidObjectInterface>(*this->postDynamicsEventLogger)
+        // ));
+    }
 
-		virtual void checkLogic() {};
+    Application(const Application&) = delete;
+    Application(Application&&) = delete;
+    Application& operator=(const Application&) = delete;
+    virtual ~Application() = default;
 
-        virtual void preGarbageCollect() {};
+    virtual void run() {
+        this->graphicsBridge->createWindow(Vector2f(700.f, 700.f), this->windowName);
+        while (this->isRunning() && this->graphicsBridge->logEvents(*(this->eventLogger))) {
+            this->timer.restart();
+            while (!timer.finished()) {
+                this->checkLogic(); // inheritable
 
-        virtual void postDynamicUpdate();
+                // Collisions
+                Barta::executeAndLog<CollisionLogger, EventLogger, ObjectManager, TestExecutor>(
+                    this->collisionEventsLogger,
+                    this->objectLists,
+                    this->collisionExecutor,
+                    this->timer
+                );
+                this->collisionEventsLogger.runSubscribers();
 
-        virtual bool isRunning() const;
+                // In-build events
+                this->eventLogger->runSubscribersRecurrently();
+                this->dynamicsUpdateStrategy->update(this->objectManager->getDynamicsList(), timer.getCurrentDeltaTime());
 
-	protected:
-        std::string windowName;
-		std::unique_ptr<BartaGraphicsBridgeInterface> graphicsBridge;
-		std::unique_ptr<BartaEventLoggerInterface> eventLogger;
-		std::unique_ptr<BartaEventLoggerInterface> postDynamicsEventLogger;
-		std::unique_ptr<ObjectManagerInterface> objectManager;
-        TimerInterface& timer;
-		std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy;
-        CollisionEventsLogger collisionEventsLogger;
-        CollisionCoreExecutor collisionExecutor;
-        ListManager objectLists;
-    };
+                this->postDynamicUpdate(); // inheritable
 
+                this->timer.forward();
+            }
+
+            // Rendering
+            this->graphicsBridge->drawObjects(this->objectManager->getGraphicsList());
+
+            this->preGarbageCollect(); // inheritable
+
+            // Removing from containers and deleting relevant objects
+            // this->objectLists.template ObjectManager<Barta::RigidObjectInterface>::reduceDeleted();
+            this->objectManager->reduceDeleted();
+        }
+    }
+
+    virtual void checkLogic() {}
+
+    virtual void preGarbageCollect() {}
+
+    virtual void postDynamicUpdate() { this->postDynamicsEventLogger->runSubscribers(); }
+
+    virtual bool isRunning() const { return true; }
+
+protected:
+    std::string windowName;
+    std::unique_ptr<BartaGraphicsBridgeInterface> graphicsBridge;
+    std::unique_ptr<BartaEventLoggerInterface> eventLogger;
+    std::unique_ptr<BartaEventLoggerInterface> postDynamicsEventLogger;
+    std::unique_ptr<ObjectManagerInterface> objectManager;
+    TimerInterface& timer;
+    std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy;
+    EventLogger collisionEventsLogger;
+    TestExecutor collisionExecutor;
+    ObjectManager objectLists;
+};
 
 }
-
-
