@@ -23,6 +23,9 @@ public:
     DynamicsDTO& getDynamicsDTO() override;
 
     inline void rotate(float, Vector2f) override;
+    void rotate(float);
+    float getRotation() const;
+    void setRotation(float angle);
 
 protected:
     GraphicsData graphicsData;
