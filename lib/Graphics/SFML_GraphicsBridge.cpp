@@ -1,6 +1,6 @@
+#include <Graphics/SFML_GraphicsBridge.h>
 #include <Geometrics/SFML_Transformable.h>
 #include <Graphics/SFML_Bridge/SpriteResourceMatcher.h>
-#include <Graphics/SFML_GraphicsBridge.h>
 
 Barta::SFML_GraphicsBridge::SFML_GraphicsBridge(
     std::unique_ptr<ResourceContainerInterface> resourceContainer,
