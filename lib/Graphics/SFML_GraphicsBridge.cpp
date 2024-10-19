@@ -1,6 +1,6 @@
-#include <Graphics/SFML_GraphicsBridge.h>
 #include <Geometrics/SFML_Transformable.h>
 #include <Graphics/SFML_Bridge/SpriteResourceMatcher.h>
+#include <Graphics/SFML_GraphicsBridge.h>
 
 Barta::SFML_GraphicsBridge::SFML_GraphicsBridge(
     std::unique_ptr<ResourceContainerInterface> resourceContainer,
@@ -76,26 +76,7 @@ bool Barta::SFML_GraphicsBridge::logEvents(
             eventLogger.logEvent(MouseMoveEvent(Vector2f(static_cast<float>(event.mouseMove.x), static_cast<float>(event.mouseMove.y))));
         }
 
-        BartaKeyMap key;
-        if (event.key.code == sf::Keyboard::D) {
-            key = BartaKeyMap::D;
-        }
-
-        if (event.key.code == sf::Keyboard::A) {
-            key = BartaKeyMap::A;
-        }
-
-        if (event.key.code == sf::Keyboard::Left) {
-            key = BartaKeyMap::LEFT;
-        }
-
-        if (event.key.code == sf::Keyboard::Right) {
-            key = BartaKeyMap::RIGHT;
-        }
-
-        if (event.key.code == sf::Keyboard::Space) {
-            key = BartaKeyMap::SPACEBAR;
-        }
+        BartaKeyMap key = static_cast<BartaKeyMap>(event.key.code);
 
         if (event.type == sf::Event::KeyPressed) {
             eventLogger.logEvent(KeyPressedEvent(key));
