@@ -80,11 +80,7 @@ Barta::SpriteMerger* Barta::SpriteMerger::addTriangle(
         this->data.push_back(0.f);
     }
 
-    for (const auto& color: {
-             triangleSprite.color1,
-             triangleSprite.color2,
-             triangleSprite.color3
-         }) {
+    for (const auto& color: {triangleSprite.color1, triangleSprite.color2, triangleSprite.color3}) {
         this->data.push_back(color.r);
         this->data.push_back(color.g);
         this->data.push_back(color.b);

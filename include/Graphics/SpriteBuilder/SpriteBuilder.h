@@ -82,12 +82,12 @@ public:
         return this;
     }
 
-        SpriteBuilder* setVertex1(Vector2f vertex) { this->vertex1 = vertex; return this; }
-        SpriteBuilder* setVertex2(Vector2f vertex) { this->vertex2 = vertex; return this; }
-        SpriteBuilder* setVertex3(Vector2f vertex) { this->vertex3 = vertex; return this; }
-        SpriteBuilder* setSize(Vector2f size) { this->size = size; return this; }
-        SpriteBuilder* setString(std::string string) { this->string = string; return this; }
-        SpriteBuilder* setFontSize(int fontSize) { this->fontSize = fontSize; return this; }
+    SpriteBuilder* setFontSize(
+        int fontSize
+    ) {
+        this->fontSize = fontSize;
+        return this;
+    }
 
 protected:
     Color color1;
