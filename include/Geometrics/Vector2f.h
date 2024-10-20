@@ -50,6 +50,10 @@ public:
 
     float operator^(const Vector2f) const noexcept;
 
+    Vector2f rotated(float radians) const noexcept;
+
+    float angleTo(const Vector2f) const noexcept;
+
     static Vector2f zeroise(Vector2f vector, float edge) noexcept;
 
     friend Vector2f operator*(float, const Vector2f&) noexcept;

@@ -88,6 +88,21 @@ float Barta::Vector2f::operator^(
     return this->x * second.y - this->y * second.x;
 }
 
+Barta::Vector2f Barta::Vector2f::rotated(
+    float radians
+) const noexcept {
+    const float sin = std::sin(radians);
+    const float cos = std::cos(radians);
+
+    return {Vector2f(cos, -sin) * *this, Vector2f(sin, cos) * *this};
+}
+
+float Barta::Vector2f::angleTo(
+    const Vector2f second
+) const noexcept {
+    return std::atan2(second.y, second.x) - std::atan2(this->y, this->x);
+}
+
 Barta::Vector2f Barta::Vector2f::zeroise(
     Vector2f vector,
     float edge

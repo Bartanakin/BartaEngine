@@ -5,22 +5,25 @@
 #include "RectangleWithColorsSprite.h"
 #include "SpriteBuilder.h"
 #include "StringSprite.h"
+#include "TriangleSprite.h"
 
-namespace Barta{
-    class SpriteMerger {
-        public:
-        SpriteMerger() noexcept;
+namespace Barta {
+class SpriteMerger {
+public:
+    SpriteMerger() noexcept;
 
-        SpriteMerger* addRectanglewithColors(const RectangleWithColorsSprite& addRectanglewithColors);
-        SpriteMerger* addCircleSprite(const CircleSprite& circleSprite);
-        SpriteMerger* addString(const Barta::StringSprite& stringSprite);
-        
-        BartaSprite merge(bool reloadCache);
+    SpriteMerger* addRectangleWithColors(const RectangleWithColorsSprite& addRectangleWithColors);
 
-        protected:
+    SpriteMerger* addCircleSprite(const CircleSprite& circleSprite);
 
-        std::vector<float> data;
-        std::vector<SpriteType> types;
-    };
+    SpriteMerger* addString(const StringSprite& stringSprite);
+
+    SpriteMerger* addTriangle(const TriangleSprite& triangleSprite);
+
+    BartaSprite merge(bool reloadCache);
+
+protected:
+    std::vector<float> data;
+    std::vector<SpriteType> types;
+};
 }
-

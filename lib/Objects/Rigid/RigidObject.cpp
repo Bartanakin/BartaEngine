@@ -18,6 +18,22 @@ std::unique_ptr<const Barta::HitboxInterface> Barta::RigidObject::getHitbox() co
 }
 
 void Barta::RigidObject::rotate(
+    float angle
+) {
+    this->rotate(angle, this->dynamicsDTO.massCenter);
+}
+
+float Barta::RigidObject::getRotation() const {
+    return this->graphicsData.transformable->getRotaion();
+}
+
+void Barta::RigidObject::setRotation(
+    float angle
+) {
+    this->rotate(angle - this->graphicsData.transformable->getRotaion(), this->dynamicsDTO.massCenter);
+}
+
+void Barta::RigidObject::rotate(
     float angle,
     Vector2f axis
 ) {
