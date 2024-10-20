@@ -11,8 +11,9 @@ class SFML_GraphicsBridge: public BartaGraphicsBridgeInterface {
 public:
     SFML_GraphicsBridge(
         std::unique_ptr<ResourceContainerInterface> resourceContainer = std::make_unique<NullResourceContainer>(),
-        const std::string& repositoryDir = ""
+        const std::filesystem::path& filePath = ""
     ) noexcept;
+    SFML_GraphicsBridge(const std::filesystem::path& filePath) noexcept;
     SFML_GraphicsBridge(const SFML_GraphicsBridge&) noexcept = delete;
     SFML_GraphicsBridge(SFML_GraphicsBridge&&) noexcept = delete;
     SFML_GraphicsBridge& operator=(const SFML_GraphicsBridge&) noexcept = delete;
