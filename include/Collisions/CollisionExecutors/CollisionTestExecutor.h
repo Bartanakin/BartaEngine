@@ -30,8 +30,11 @@ public:
             auto j = list2.begin();
             while (j != list2.end()) {
                 collisionResults.push_back(
-                    {(*i)->getHitbox()
-                         ->intersects(*((*j)->getHitbox()), *(this->collisionDetectionStrategy), (*i)->getDynamicsDTO().getRelativeDynamics((*j)->getDynamicsDTO())),
+                    {(*i)->getHitbox()->intersects(
+                         *((*j)->getHitbox()),
+                         *(this->collisionDetectionStrategy),
+                         (*i)->getDynamicsDTO().getRelativeDynamics((*j)->getDynamicsDTO())
+                     ),
                      (*i),
                      (*j)}
                 );
