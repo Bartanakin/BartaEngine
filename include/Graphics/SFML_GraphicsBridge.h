@@ -34,6 +34,6 @@ private:
 
     sf::RenderWindow* sf_window;
     std::unique_ptr<RecourseMatcherInterface> resourceMatcher;
-    std::unique_ptr<sf::Font> arialFont;
+    std::unique_ptr<sf::Font> font;
 };
 }
