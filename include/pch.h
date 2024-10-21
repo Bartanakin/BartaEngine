@@ -1,15 +1,16 @@
 #pragma once
 
 // STL
+#include <array>
+#include <filesystem>
 #include <iostream>
-#include <sstream>
 #include <limits>
 #include <list>
 #include <memory>
+#include <sstream>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
-#include <array>
 
 // SFML
 #pragma GCC diagnostic push
@@ -18,8 +19,8 @@
 #pragma GCC diagnostic pop
 
 // other headers
-#include <math.h>
 #include <chrono>
+#include <math.h>
 
 // DEBUG
 #include <iomanip>

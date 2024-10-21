@@ -4,15 +4,20 @@
 
 Barta::SFML_GraphicsBridge::SFML_GraphicsBridge(
     std::unique_ptr<ResourceContainerInterface> resourceContainer,
-    const std::string& repositoryDir
+    const std::filesystem::path& fontPath
 ) noexcept:
     sf_window(nullptr),
     resourceMatcher(std::make_unique<SpriteResourceMatcher>(std::move(resourceContainer))),
-    arialFont(std::make_unique<sf::Font>()) {
-    if (!repositoryDir.empty()) {
-        arialFont->loadFromFile(repositoryDir + "\\fonts\\arial.ttf");
+    font(std::make_unique<sf::Font>()) {
+    if (!fontPath.empty()) {
+        font->loadFromFile(fontPath);
     }
 }
+
+Barta::SFML_GraphicsBridge::SFML_GraphicsBridge(
+    const std::filesystem::path& fontPath
+) noexcept:
+    SFML_GraphicsBridge(std::make_unique<Barta::NullResourceContainer>(), fontPath) {}
 
 Barta::SFML_GraphicsBridge::~SFML_GraphicsBridge() {
     delete this->sf_window;
@@ -188,7 +193,7 @@ void Barta::SFML_GraphicsBridge::handleCustomResource(
             auto string = sf::String(c_string);
             auto text = sf::Text();
             text.setString(string);
-            text.setFont(*this->arialFont);
+            text.setFont(*this->font);
             text.setCharacterSize(static_cast<unsigned int>(data[dataOffset + 3]));
             text.setPosition(data[dataOffset] + sf_transformable.getPosition().x, data[dataOffset + 1] + sf_transformable.getPosition().y);
             this->sf_window->draw(text);
