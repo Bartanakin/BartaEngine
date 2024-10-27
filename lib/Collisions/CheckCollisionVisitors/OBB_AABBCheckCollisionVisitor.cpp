@@ -68,7 +68,10 @@ Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkStaticColl
     }
 
     auto relativeAabb2 = AABB({}, this->obb.getWidthHeight());
-    auto relativeObb2 = OBB((this->aabb.getLeftTop() - this->obb.getFirstVertex()).rotated(-this->obb.getRotation()), this->aabb.getWidthHeight(), -this->obb.getRotation());
+    auto relativeObb2 =
+        OBB((this->aabb.getLeftTop() - this->obb.getFirstVertex()).rotated(-this->obb.getRotation()),
+            this->aabb.getWidthHeight(),
+            -this->obb.getRotation());
     if (OBB_AABBCheckCollisionVisitor::checkStaticOneWay(relativeAabb2, relativeObb2)) {
         return collisionTestResultBuilder.build();
     }

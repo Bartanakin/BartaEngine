@@ -70,7 +70,10 @@ Barta::CollisionTestResult Barta::OBB_Hitbox::intersectsWithOBB(
     );
 
     auto aabb = AABB({}, secondShape.getWidthHeight());
-    auto obb = OBB((this->obb.getFirstVertex() - secondShape.getFirstVertex()).rotated(-secondShape.getRotation()), this->obb.getWidthHeight(), this->obb.getRotation() - secondShape.getRotation());
+    auto obb =
+        OBB((this->obb.getFirstVertex() - secondShape.getFirstVertex()).rotated(-secondShape.getRotation()),
+            this->obb.getWidthHeight(),
+            this->obb.getRotation() - secondShape.getRotation());
 
     return collisionDetector.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(obb, aabb, rebasedDynamicsDifference));
 }

@@ -22,7 +22,7 @@ public:
     ) const override;
 
 private:
-    static bool checkStaticOneWay(const AABB& aabb, const OBB& obb) ;
+    static bool checkStaticOneWay(const AABB& aabb, const OBB& obb);
 
     const OBB obb;
     const AABB aabb;

@@ -115,7 +115,9 @@ Barta::Vector2f Barta::Vector2f::projection(
     return this->operator*(this->operator*(v) / this->normSquare());
 }
 
-Barta::Vector2f Barta::Vector2f::zeroised(const float edge) const noexcept {
+Barta::Vector2f Barta::Vector2f::zeroised(
+    const float edge
+) const noexcept {
     auto vector = *this;
     if (std::abs(vector.x) < edge) {
         vector.x = 0.f;

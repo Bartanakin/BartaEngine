@@ -1,9 +1,8 @@
 #include <Hitbox/AABB_Hitbox.h>
+#include "Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h"
 #include <Collisions/CheckCollisionVisitors/AABB_AABBCheckCollisionVisitor.h>
 #include <Collisions/CheckCollisionVisitors/CircleAABBCheckCollisionVisitor.h>
 #include <pch.h>
-
-#include "Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h"
 
 Barta::AABB_Hitbox::AABB_Hitbox(
     const AABB& aabb

@@ -19,7 +19,7 @@ public:
 
     float getRotation() const noexcept { return this->rotation; }
 
-    AABB getAABB() const {return *this; }
+    AABB getAABB() const { return *this; }
 
     Vector2f rebasePoint(Vector2f) const;
 

@@ -18,28 +18,27 @@ Barta::Vector2f Barta::OBB::getFirstVertex() const noexcept {
 
 std::vector<Barta::Segment> Barta::OBB::getSides() const noexcept {
     auto rotatedSides = decltype(AABB::getSides())();
-    for (const auto& side : AABB::getSides()) {
+    for (const auto& side: AABB::getSides()) {
         rotatedSides.emplace_back(side.getBeginning().rotated(this->rotation), side.getEnd().rotated(this->rotation));
     }
 
     return rotatedSides;
 }
 
-Barta::Vector2f Barta::OBB::rebasePoint(Vector2f p) const {
+Barta::Vector2f Barta::OBB::rebasePoint(
+    Vector2f p
+) const {
     return (p - this->getLeftTop()).rotated(-this->rotation);
 }
 
-Barta::Vector2f Barta::OBB::rebaseVector(Vector2f v) const {
+Barta::Vector2f Barta::OBB::rebaseVector(
+    Vector2f v
+) const {
     return v.rotated(-this->rotation);
 }
 
 std::vector<Barta::Vector2f> Barta::OBB::getVertices() const noexcept {
-    return {
-        this->getFirstVertex(),
-        this->getSecondVertex(),
-        this->getThirdVertex(),
-        this->getFourthVertex()
-    };
+    return {this->getFirstVertex(), this->getSecondVertex(), this->getThirdVertex(), this->getFourthVertex()};
 }
 
 Barta::Vector2f Barta::OBB::getSecondVertex() const {
