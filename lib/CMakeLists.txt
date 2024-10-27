@@ -1,6 +1,13 @@
 add_library(${LIBRARY_NAME}
         BartaObjectManager.cpp
     pch.cpp
+        ../include/Dynamics/DynamicsAwareListConcept.h
+        ../include/Geometrics/BartaShapes/OBB.h
+        Geometrics/BartaShapes/OBB.cpp
+        ../include/Hitbox/OBB_Hitbox.h
+        Hitbox/OBB_Hitbox.cpp
+        ../include/Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h
+        Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.cpp
 )
 
 # target_precompile_headers(${PROJECT_NAME} PUBLIC

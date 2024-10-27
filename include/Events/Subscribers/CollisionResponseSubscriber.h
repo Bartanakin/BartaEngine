@@ -47,8 +47,8 @@ public:
             return true;
         }
 
-        auto realFirstVelocity = firstDynamics.velocity + testResult.timePassed * firstDynamics.acceleration;
-        auto realSecondVelocity = secondDynamics.velocity + testResult.timePassed * secondDynamics.acceleration;
+        auto realFirstVelocity = firstDynamics.velocity + testResult.timePassed * firstDynamics.force / firstDynamics.mass;
+        auto realSecondVelocity = secondDynamics.velocity + testResult.timePassed * firstDynamics.force / firstDynamics.mass;
         auto j = -(1.f + COEFFICIENT_OF_RESTITUTION) * ((realSecondVelocity - realFirstVelocity) * testResult.normVector)
                  / (testResult.normVector * testResult.normVector * massInverted);
         this->calculateNewVelocity(-j, firstObject, testResult.normVector);

@@ -5,11 +5,12 @@ namespace Barta {
 
 class Vector2f {
 public:
+    static constexpr float ZEROING_EDGE = 0.005f;
     float x;
     float y;
     constexpr Vector2f() noexcept = default;
 
-    inline constexpr Vector2f(
+    constexpr Vector2f(
         float x,
         float y
     ):
@@ -18,13 +19,15 @@ public:
 
     Vector2f(const Vector2f& second);
     Vector2f(sf::Vector2f vector);
-    Barta::Vector2f& operator=(const Barta::Vector2f&);
+    Vector2f& operator=(const Vector2f&);
 
-    inline float getX() const { return this->x; }
+    float getX() const { return this->x; }
 
-    inline float getY() const { return this->y; }
+    float getY() const { return this->y; }
 
     Vector2f operator*(float scalar) const noexcept;
+
+    Vector2f operator/(float scalar) const noexcept;
 
     float operator*(const Vector2f&) const;
 
@@ -48,23 +51,25 @@ public:
 
     std::string toString() const noexcept;
 
-    float operator^(const Vector2f) const noexcept;
+    float operator^(Vector2f) const noexcept;
 
     Vector2f rotated(float radians) const noexcept;
 
-    float angleTo(const Vector2f) const noexcept;
+    float angleTo(Vector2f) const noexcept;
 
+    Vector2f projection(Vector2f) const noexcept;
+
+    Vector2f zeroised(float = ZEROING_EDGE) const noexcept;
+
+    /**
+     * @deprecated
+     */
     static Vector2f zeroise(Vector2f vector, float edge) noexcept;
 
     friend Vector2f operator*(float, const Vector2f&) noexcept;
 };
 
-inline Vector2f operator*(
-    float scalar,
-    const Vector2f& vector
-) noexcept {
-    return vector * scalar;
-}
+Vector2f operator*(float, const Vector2f&) noexcept;
 
 std::ostream& operator<<(std::ostream&, const Vector2f&);
 }

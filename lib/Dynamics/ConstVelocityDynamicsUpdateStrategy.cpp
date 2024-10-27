@@ -13,9 +13,9 @@ void Barta::ConstVelocityDynamicsUpdateStrategy::update(
             continue;
         }
 
-        object->move(dynamics.velocity * deltaTime + 0.5f * dynamics.acceleration * deltaTime * deltaTime);
+        object->move(dynamics.velocity * deltaTime + 0.5f * dynamics.force / dynamics.mass * deltaTime * deltaTime);
         object->rotate(dynamics.rotationVelocity * deltaTime, dynamics.massCenter);
 
-        dynamics.velocity = Vector2f::zeroise(dynamics.velocity + dynamics.acceleration * deltaTime, ZEROING_EDGE);
+        dynamics.velocity = Vector2f::zeroise(dynamics.velocity + dynamics.force / dynamics.mass * deltaTime, ZEROING_EDGE);
     }
 }

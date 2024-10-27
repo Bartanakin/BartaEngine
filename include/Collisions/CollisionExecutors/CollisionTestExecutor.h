@@ -33,7 +33,7 @@ public:
                     {(*i)->getHitbox()->intersects(
                          *((*j)->getHitbox()),
                          *(this->collisionDetectionStrategy),
-                         (*i)->getDynamicsDTO().getRelativeDynamics((*j)->getDynamicsDTO())
+                         (*i)->getDynamicsDTO().getDynamicsDifference((*j)->getDynamicsDTO())
                      ),
                      (*i),
                      (*j)}
@@ -64,7 +64,7 @@ public:
                     {(*i)->getHitbox()->intersects(
                          *((*j)->getHitbox()),
                          *(this->collisionDetectionStrategy),
-                         (*i)->getDynamicsDTO().getRelativeDynamics((*j)->getDynamicsDTO())
+                         (*i)->getDynamicsDTO().getDynamicsDifference((*j)->getDynamicsDTO())
                      ),
                      (*i),
                      (*j)}
