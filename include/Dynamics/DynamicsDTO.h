@@ -47,7 +47,7 @@ struct DynamicsDTO {
     ) const {
         return {
             this->velocity - second.velocity,
-            this->force * (1.f / this->mass) - second.force * (1.f / second.mass),
+            this->force * (1.f/this->mass) - second.force * (1.f/second.mass),
             this->rotationVelocity - second.rotationVelocity,
         };
     }
