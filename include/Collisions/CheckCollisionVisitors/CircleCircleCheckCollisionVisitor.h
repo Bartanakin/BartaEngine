@@ -1,36 +1,29 @@
 #pragma once
+#include "../../Dynamics/DynamicsDTO.h"
+#include "../../Geometrics/BartaShapes/Circle.h"
 #include "../../pch.h"
-#include"../CheckCollisionVisitorInterface.h"
-#include"../../Geometrics/BartaShapes/Circle.h"
-#include"../../Dynamics/DynamicsDTO.h"
+#include "../CheckCollisionVisitorInterface.h"
 
-namespace Barta{
-	class CircleCircleCheckCollisionVisitor : public CheckCollisionVisitorInterface{
-	public:
-		CircleCircleCheckCollisionVisitor(
-			const Circle& circle1,
-			const Circle& circle2,
-			const DynamicsDTO& dynamicsDifference
-		);
-		virtual ~CircleCircleCheckCollisionVisitor();
+namespace Barta {
+class CircleCircleCheckCollisionVisitor: public CheckCollisionVisitorInterface {
+public:
+    CircleCircleCheckCollisionVisitor(const Circle& circle1, const Circle& circle2, const DynamicsDifference& dynamicsDifference);
+    virtual ~CircleCircleCheckCollisionVisitor();
 
-		virtual CollisionTestResult checkStaticCollision(
-			const MathLibraryInterface& mathLib,
-			CollisionTestResultBuilder& collisionTestResultBuilder
-		) const override;
-		
-		virtual CollisionTestResult checkDynamicCollision(
-			const MathLibraryInterface& mathLib,
-			const float delta_time,
-			CollisionTestResultBuilder& collisionTestResultBuilder
-		) const override;
+    CollisionTestResult checkStaticCollision(const MathLibraryInterface& mathLib, CollisionTestResultBuilder& collisionTestResultBuilder)
+        const override;
 
-	private:
-		const Circle circle1;
-		const Circle circle2;
-		const DynamicsDTO dynamicsDifference;
+    CollisionTestResult checkDynamicCollision(
+        const MathLibraryInterface& mathLib,
+        float delta_time,
+        CollisionTestResultBuilder& collisionTestResultBuilder
+    ) const override;
 
-		Vector2f getNormalVector() const;
-	};
+private:
+    const Circle circle1;
+    const Circle circle2;
+    const DynamicsDifference dynamicsDifference;
+
+    Vector2f getNormalVector() const;
+};
 }
-

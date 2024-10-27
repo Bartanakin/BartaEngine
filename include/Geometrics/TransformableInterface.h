@@ -2,6 +2,7 @@
 #include "Vector2f.h"
 #include "../Geometrics/BartaShapes/Circle.h"
 #include "../Geometrics/BartaShapes/AABB.h"
+#include "BartaShapes/OBB.h"
 
 namespace Barta{
 	class TransformableInterface{
@@ -22,6 +23,8 @@ namespace Barta{
         virtual float getRotaion() const = 0;
 
         virtual void rotate(float, Vector2f) = 0;
+
+		virtual OBB getTransformedOBB(const OBB& aabb) const = 0;
 	};
 }
 

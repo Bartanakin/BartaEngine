@@ -2,7 +2,7 @@
 #include "../pch.h"
 #include "../Collisions/CollisionDetectionStrategyInterface.h"
 #include "../Geometrics/TransformableInterface.h"
-#include "../Dynamics/DynamicsDTO.h"
+#include "../Dynamics/DynamicsDifference.h"
 
 namespace Barta{
 
@@ -16,7 +16,7 @@ namespace Barta{
 		virtual CollisionTestResult intersects(
 			const HitboxInterface& secondHitbox,
 			const CollisionDetectionStrategyInterface& collisionDetector,
-			const DynamicsDTO& dynamicsDifference
+			const DynamicsDifference& dynamicsDifference
 		) const = 0;
 
 		virtual std::unique_ptr<const HitboxInterface> getTransformedHitbox(const TransformableInterface& transformable ) const = 0;
@@ -24,13 +24,19 @@ namespace Barta{
 		virtual CollisionTestResult intersectsWithCircle(
 			const Circle& secondHitbox,
 			const CollisionDetectionStrategyInterface& collisionDetector,
-			const DynamicsDTO& dynamicsDifference
+			const DynamicsDifference& dynamicsDifference
 		) const = 0;
 
 		virtual CollisionTestResult intersectsWithAABB(
 			const AABB& secondHitbox,
 			const CollisionDetectionStrategyInterface& collisionDetector,
-			const DynamicsDTO& dynamicsDifference
+			const DynamicsDifference& dynamicsDifference
+			) const = 0;
+
+		virtual CollisionTestResult intersectsWithOBB(
+			const OBB& secondShape,
+			const CollisionDetectionStrategyInterface& collisionDetector,
+			const DynamicsDifference& dynamicsDifference
 		) const = 0;
 	};
 }

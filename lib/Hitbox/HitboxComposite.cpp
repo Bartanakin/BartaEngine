@@ -21,7 +21,7 @@ bool Barta::HitboxComposite::isWithin(
 Barta::CollisionTestResult Barta::HitboxComposite::intersects(
     const HitboxInterface& secondHitbox,
     const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDTO& dynamicsDifference
+    const DynamicsDifference& dynamicsDifference
 ) const {
     auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
     for (auto& child: this->children) {
@@ -49,7 +49,7 @@ std::unique_ptr<const Barta::HitboxInterface> Barta::HitboxComposite::getTransfo
 Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithCircle(
     const Circle& secondCircle,
     const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDTO& dynamicsDifference
+    const DynamicsDifference& dynamicsDifference
 ) const {
     auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
     for (auto& child: this->children) {
@@ -69,11 +69,29 @@ Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithCircle(
 Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithAABB(
     const AABB& secondAABB,
     const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDTO& dynamicsDifference
+    const DynamicsDifference& dynamicsDifference
 ) const {
     auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
     for (auto& child: this->children) {
         auto currentResult = child->intersectsWithAABB(secondAABB, collisionDetector, dynamicsDifference);
+
+        if (currentResult.collisionDetected && currentResult.timePassed < result.timePassed) {
+            result = currentResult;
+        }
+    }
+
+    return result;
+}
+
+Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithOBB(
+    const OBB& secondShape,
+    const CollisionDetectionStrategyInterface& collisionDetector,
+    const DynamicsDifference& dynamicsDifference
+) const {
+
+    auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
+    for (auto& child: this->children) {
+        auto currentResult = child->intersectsWithOBB(secondShape, collisionDetector, dynamicsDifference);
 
         if (currentResult.collisionDetected && currentResult.timePassed < result.timePassed) {
             result = currentResult;

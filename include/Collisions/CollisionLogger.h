@@ -24,12 +24,12 @@ namespace Barta {
         auto staticCollisionLogger = CollisionLogger();
         float delta_time = staticCollisionLogger.execute(objectManager, testExecutor);
 
+        staticCollisionLogger.logEvent(eventLogger, delta_time);
         if (timer.getCurrentDeltaTime() <= delta_time) {
             return;
         }
 
         timer.setCurrentDeltaTime(std::min(delta_time + COLLISION_EPS, timer.getCurrentDeltaTime()));
-        staticCollisionLogger.logEvent(eventLogger, delta_time);
     }
 
     template<
@@ -82,7 +82,7 @@ namespace Barta {
 			}
 
             for (const auto& testResult : testResults) {
-                if (testResult.collisionTestResult.timePassed < delta_time + COLLISION_EPS && !testResult.collisionTestResult.staticCollision) {
+                if (testResult.collisionTestResult.timePassed < delta_time + COLLISION_EPS) {
                     this->testResults.push_back(testResult);
                 }
             }
@@ -93,6 +93,12 @@ namespace Barta {
         template<typename EventLogger>
         void logEvent(EventLogger& eventLogger, const float min_time) {
             for (auto& testResult : this->testResults) {
+                if (testResult.collisionTestResult.staticCollision) {
+                    eventLogger.logEvent(CollisionEvent<T1, T2>(testResult, 0.f));
+
+                    continue;
+                }
+
                 if (min_time + COLLISION_EPS >= testResult.collisionTestResult.timePassed) {
                     eventLogger.logEvent(CollisionEvent<T1, T2>(testResult, min_time));
                 }
@@ -121,7 +127,7 @@ namespace Barta {
 			}
 
             for (const auto& testResult : testResults) {
-                if (testResult.collisionTestResult.timePassed < delta_time + COLLISION_EPS && !testResult.collisionTestResult.staticCollision) {
+                if (testResult.collisionTestResult.timePassed < delta_time + COLLISION_EPS) {
                     this->testResults.push_back(testResult);
                 }
             }
@@ -132,6 +138,12 @@ namespace Barta {
         template<typename EventLogger>
         void logEvent(EventLogger& eventLogger, const float min_time) {
             for (auto& testResult : this->testResults) {
+                if (testResult.collisionTestResult.staticCollision) {
+                    eventLogger.logEvent(CollisionEvent<T, T>(testResult, 0.f));
+
+                    continue;
+                }
+
                 if (min_time + COLLISION_EPS >= testResult.collisionTestResult.timePassed) {
                     eventLogger.logEvent(CollisionEvent<T, T>(testResult, min_time));
                 }

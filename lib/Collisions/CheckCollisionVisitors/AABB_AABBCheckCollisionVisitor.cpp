@@ -3,7 +3,7 @@
 Barta::AABB_AABBCheckCollisionVisitor::AABB_AABBCheckCollisionVisitor(
     const AABB &aabb1,
     const AABB &aabb2,
-    const DynamicsDTO &dynamicsDifference
+    const DynamicsDifference &dynamicsDifference
 ) noexcept :
     aabb1(aabb1),
     aabb2(aabb2),

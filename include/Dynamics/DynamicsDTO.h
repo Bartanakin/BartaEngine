@@ -1,67 +1,63 @@
 #pragma once
-#include "../Geometrics/Vector2f.h"
-#include "../pch.h"
+#include "DynamicsDifference.h"
 
 namespace Barta {
 
 struct DynamicsDTO {
-    inline DynamicsDTO(
+    DynamicsDTO(
         Vector2f velocity,
         bool hasInfiniteMass = true,
         float mass = 0.f,
-        Vector2f acceleration = {},
+        Vector2f force = {},
         float rotationVelocity = 0.f,
         Vector2f massCenter = {}
     ):
         velocity(velocity),
         hasInfiniteMass(hasInfiniteMass),
         mass(mass),
-        acceleration(acceleration),
+        force(force),
         rotationVelocity(rotationVelocity),
         massCenter(massCenter) {}
 
-    inline DynamicsDTO& operator=(
+    DynamicsDTO& operator=(
         const DynamicsDTO& second
     ) {
         this->velocity = second.velocity;
         this->hasInfiniteMass = second.hasInfiniteMass;
         this->mass = second.mass;
-        this->acceleration = second.acceleration;
+        this->force = second.force;
         this->rotationVelocity = second.rotationVelocity;
         this->massCenter = second.massCenter;
 
         return *this;
     }
 
-    inline DynamicsDTO(
+    DynamicsDTO(
         const DynamicsDTO& second
     ):
         velocity(second.velocity),
         hasInfiniteMass(second.hasInfiniteMass),
         mass(second.mass),
-        acceleration(second.acceleration),
+        force(second.force),
         rotationVelocity(second.rotationVelocity),
         massCenter(second.massCenter) {}
 
-    inline DynamicsDTO getRelativeDynamics(
+    DynamicsDifference getDynamicsDifference(
         const DynamicsDTO& second
     ) const {
         return {
             this->velocity - second.velocity,
-            false,
-            this->mass - second.mass,
-            this->acceleration - second.acceleration,
+            this->force * (1.f/this->mass) - second.force * (1.f/second.mass),
             this->rotationVelocity - second.rotationVelocity,
-            this->massCenter - this->massCenter // TODO
         };
     }
 
-    inline DynamicsDTO operator-() const {
+    DynamicsDTO operator-() const {
         return {
             -this->velocity,
             this->hasInfiniteMass,
             -this->mass,
-            -this->acceleration,
+            -this->force,
             this->rotationVelocity,
             -this->massCenter // TODO
         };
@@ -70,7 +66,7 @@ struct DynamicsDTO {
     Vector2f velocity;
     bool hasInfiniteMass;
     float mass;
-    Vector2f acceleration;
+    Vector2f force;
     float rotationVelocity;
     Vector2f massCenter;
 };

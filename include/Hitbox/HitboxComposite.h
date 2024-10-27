@@ -16,7 +16,7 @@ public:
     CollisionTestResult intersects(
         const HitboxInterface& secondHitbox,
         const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDTO& dynamicsDifference
+        const DynamicsDifference& dynamicsDifference
     ) const override;
 
     std::unique_ptr<const HitboxInterface> getTransformedHitbox(const TransformableInterface& transformable) const override;
@@ -24,13 +24,19 @@ public:
     CollisionTestResult intersectsWithCircle(
         const Circle& secondCircle,
         const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDTO& dynamicsDifference
+        const DynamicsDifference& dynamicsDifference
     ) const override;
 
     CollisionTestResult intersectsWithAABB(
         const AABB& secondAABB,
         const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDTO& dynamicsDifference
+        const DynamicsDifference& dynamicsDifference
+    ) const override;
+
+    CollisionTestResult intersectsWithOBB(
+        const OBB& secondShape,
+        const CollisionDetectionStrategyInterface& collisionDetector,
+        const DynamicsDifference& dynamicsDifference
     ) const override;
 
 private:

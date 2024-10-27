@@ -1,37 +1,30 @@
 #pragma once
 
-#include <Collisions/CollisionTestResult/CollisionTestResult.h>
-#include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
+#include "../../Dynamics/DynamicsDTO.h"
+#include "../../Geometrics/BartaShapes/AABB.h"
 #include "../../pch.h"
 #include "../CheckCollisionVisitorInterface.h"
-#include "../../Geometrics/BartaShapes/AABB.h"
-#include "../../Dynamics/DynamicsDTO.h"
+#include <Collisions/CollisionTestResult/CollisionTestResult.h>
+#include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
 
-namespace Barta{
+namespace Barta {
 
-	class AABB_AABBCheckCollisionVisitor : public CheckCollisionVisitorInterface{
-	public:
-		AABB_AABBCheckCollisionVisitor(
-			const AABB& aabb1,
-			const AABB& aabb2,
-			const DynamicsDTO& dynamicsDifference
-		) noexcept;
+class AABB_AABBCheckCollisionVisitor: public CheckCollisionVisitorInterface {
+public:
+    AABB_AABBCheckCollisionVisitor(const AABB& aabb1, const AABB& aabb2, const DynamicsDifference& dynamicsDifference) noexcept;
 
-		virtual CollisionTestResult checkStaticCollision(
-			const MathLibraryInterface& mathLib,
-			CollisionTestResultBuilder& collisionTestResultBuilder
-		) const override;
+    CollisionTestResult checkStaticCollision(const MathLibraryInterface& mathLib, CollisionTestResultBuilder& collisionTestResultBuilder)
+        const override;
 
-		virtual CollisionTestResult checkDynamicCollision(
-			const MathLibraryInterface& mathLib,
-			const float delta_time,
-			CollisionTestResultBuilder& collisionTestResultBuilder
-		) const override;
+    CollisionTestResult checkDynamicCollision(
+        const MathLibraryInterface& mathLib,
+        float delta_time,
+        CollisionTestResultBuilder& collisionTestResultBuilder
+    ) const override;
 
-	private:
-		const AABB aabb1;
-		const AABB aabb2;
-		const DynamicsDTO dynamicsDifference;
-	};
+private:
+    const AABB aabb1;
+    const AABB aabb2;
+    const DynamicsDifference dynamicsDifference;
+};
 }
-

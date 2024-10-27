@@ -21,6 +21,12 @@ Barta::Vector2f Barta::Vector2f::operator*(
     return Vector2f(scalar * this->x, scalar * this->y);
 }
 
+Barta::Vector2f Barta::Vector2f::operator/(
+    float scalar
+) const noexcept {
+    return {this->x / scalar, this->y / scalar};
+}
+
 float Barta::Vector2f::operator*(
     const Vector2f& second
 ) const {
@@ -71,7 +77,7 @@ Barta::Vector2f Barta::Vector2f::normalised() const {
 }
 
 float Barta::Vector2f::normSquare() const {
-    return this->squareOfDistance(*this);
+    return this->operator*(*this);
 }
 
 std::string Barta::Vector2f::toString() const noexcept {
@@ -103,6 +109,25 @@ float Barta::Vector2f::angleTo(
     return std::atan2(second.y, second.x) - std::atan2(this->y, this->x);
 }
 
+Barta::Vector2f Barta::Vector2f::projection(
+    const Vector2f v
+) const noexcept {
+    return this->operator*(this->operator*(v) / this->normSquare());
+}
+
+Barta::Vector2f Barta::Vector2f::zeroised(const float edge) const noexcept {
+    auto vector = *this;
+    if (std::abs(vector.x) < edge) {
+        vector.x = 0.f;
+    }
+
+    if (std::abs(vector.y) < edge) {
+        vector.y = 0.f;
+    }
+
+    return vector;
+}
+
 Barta::Vector2f Barta::Vector2f::zeroise(
     Vector2f vector,
     float edge
@@ -123,4 +148,11 @@ std::ostream& Barta::operator<<(
     const Vector2f& v
 ) {
     return s << v.toString();
+}
+
+Barta::Vector2f Barta::operator*(
+    float scalar,
+    const Vector2f& vector
+) noexcept {
+    return vector * scalar;
 }

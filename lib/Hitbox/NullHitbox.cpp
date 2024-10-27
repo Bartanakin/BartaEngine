@@ -11,7 +11,7 @@ bool Barta::NullHitbox::isWithin(
 Barta::CollisionTestResult Barta::NullHitbox::intersects(
     const HitboxInterface& secondHitbox,
     const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDTO& dynamicsDifference
+    const DynamicsDifference& dynamicsDifference
 ) const {
     return CollisionTestResult();
 }
@@ -25,7 +25,7 @@ std::unique_ptr<const Barta::HitboxInterface> Barta::NullHitbox::getTransformedH
 Barta::CollisionTestResult Barta::NullHitbox::intersectsWithCircle(
     const Circle& secondCircle,
     const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDTO& dynamicsDifference
+    const DynamicsDifference& dynamicsDifference
 ) const {
     return CollisionTestResult();
 }
@@ -36,7 +36,15 @@ Barta::CollisionTestResult Barta::NullHitbox::intersectsWithCircle(
 Barta::CollisionTestResult Barta::NullHitbox::intersectsWithAABB(
     const AABB& secondAABB,
     const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDTO& dynamicsDifference
+    const DynamicsDifference& dynamicsDifference
+) const {
+    return CollisionTestResult();
+}
+
+Barta::CollisionTestResult Barta::NullHitbox::intersectsWithOBB(
+    const OBB& secondShape,
+    const CollisionDetectionStrategyInterface& collisionDetector,
+    const DynamicsDifference& dynamicsDifference
 ) const {
     return CollisionTestResult();
 }
