@@ -10,44 +10,38 @@ struct DynamicsDTO {
         float mass = 0.f,
         Vector2f force = {},
         float rotationVelocity = 0.f,
-        Vector2f massCenter = {}
+        Vector2f massCenter = {},
+        std::vector<Vector2f> allowedDirections = {}
     ):
         velocity(velocity),
         hasInfiniteMass(hasInfiniteMass),
         mass(mass),
         force(force),
         rotationVelocity(rotationVelocity),
-        massCenter(massCenter) {}
+        massCenter(massCenter),
+        allowedDirections(std::move(allowedDirections)) {}
 
-    DynamicsDTO& operator=(
-        const DynamicsDTO& second
-    ) {
-        this->velocity = second.velocity;
-        this->hasInfiniteMass = second.hasInfiniteMass;
-        this->mass = second.mass;
-        this->force = second.force;
-        this->rotationVelocity = second.rotationVelocity;
-        this->massCenter = second.massCenter;
+    DynamicsDTO& operator=(const DynamicsDTO& second) = default;
 
-        return *this;
-    }
+    DynamicsDTO(const DynamicsDTO& second) = default;
 
-    DynamicsDTO(
-        const DynamicsDTO& second
-    ):
-        velocity(second.velocity),
-        hasInfiniteMass(second.hasInfiniteMass),
-        mass(second.mass),
-        force(second.force),
-        rotationVelocity(second.rotationVelocity),
-        massCenter(second.massCenter) {}
+    ~DynamicsDTO() = default;
 
     DynamicsDifference getDynamicsDifference(
         const DynamicsDTO& second
     ) const {
+        Vector2f acceleration{};
+        if (!this->hasInfiniteMass) {
+            acceleration += this->force * (1.f / this->mass);
+        }
+
+        if (!second.hasInfiniteMass) {
+            acceleration += -second.force * (1.f / second.mass);
+        }
+
         return {
             this->velocity - second.velocity,
-            this->force * (1.f / this->mass) - second.force * (1.f / second.mass),
+            acceleration,
             this->rotationVelocity - second.rotationVelocity,
         };
     }
@@ -59,7 +53,8 @@ struct DynamicsDTO {
             -this->mass,
             -this->force,
             this->rotationVelocity,
-            -this->massCenter // TODO
+            -this->massCenter,
+            this->allowedDirections
         };
     }
 
@@ -69,5 +64,6 @@ struct DynamicsDTO {
     Vector2f force;
     float rotationVelocity;
     Vector2f massCenter;
+    std::vector<Vector2f> allowedDirections;
 };
 }

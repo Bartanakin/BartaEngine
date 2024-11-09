@@ -22,7 +22,7 @@ public:
 
     float getRotaion() const override;
 
-    void rotate(float, Vector2f) override;
+    Vector2f rotate(float, Vector2f) override;
 
     OBB getTransformedOBB(const OBB& aabb) const override;
 

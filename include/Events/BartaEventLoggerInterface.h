@@ -4,7 +4,6 @@
 #include "Events/KeyPressedEvent.h"
 #include "Events/KeyReleasedEvent.h"
 #include "Events/LeftClickEvent.h"
-#include "Events/VelocityChangeEvent.h"
 
 namespace Barta {
 template<typename EventType, typename... OtherTypes>
@@ -135,10 +134,9 @@ private:
     std::list<std::shared_ptr<EventSubscriber<EventType>>> subscribers;
 };
 
-class DynamicsChangeEvent;
 class KeyPressedEvent;
 class KeyReleasedEvent;
 class MouseMoveEvent;
 
-typedef EventMatcher<LeftClickEvent, KeyPressedEvent, KeyReleasedEvent, DynamicsChangeEvent, MouseMoveEvent> BartaEventLoggerInterface;
+typedef EventMatcher<LeftClickEvent, KeyPressedEvent, KeyReleasedEvent, MouseMoveEvent> BartaEventLoggerInterface;
 }

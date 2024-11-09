@@ -61,18 +61,19 @@ float Barta::SFML_Transformable::getRotaion() const {
     return this->transformable->getRotation();
 }
 
-void Barta::SFML_Transformable::rotate(
+Barta::Vector2f Barta::SFML_Transformable::rotate(
     float rotation,
     Vector2f axis
 ) {
-    auto transformAxis = sf::Transform();
-    transformAxis.rotate(this->transformable->getRotation());
-    auto rotatedAxis = transformAxis.transformPoint({axis.getX(), axis.getY()});
+    axis = axis - this->transformable->getPosition();
+    sf::Vector2f sf_axis = {axis.x, axis.y};
 
     this->transformable->rotate(rotation);
 
-    transformAxis = sf::Transform();
+    auto transformAxis = sf::Transform();
     transformAxis.rotate(rotation);
-    auto originTranslation = transformAxis.transformPoint(rotatedAxis);
-    this->transformable->move(rotatedAxis - originTranslation);
+    auto originTranslation = transformAxis.transformPoint(sf_axis);
+    this->transformable->move(sf_axis - originTranslation);
+
+    return sf_axis - originTranslation;
 }

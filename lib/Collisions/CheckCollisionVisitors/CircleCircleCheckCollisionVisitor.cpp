@@ -28,6 +28,8 @@ Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkStatic
             >= this->circle1.getCenter().squareOfDistance(this->circle2.getCenter())
         )
         ->setStaticCollision(true)
+        ->setNormVector(this->getNormalVector())
+        ->setCollisionPoint(0.5f * (this->circle1.getCenter() + this->circle2.getCenter()))
         ->setDebugInfo("Circle - Circle static")
         ->setObjectsDebugInfo(ss.str())
         ->build();

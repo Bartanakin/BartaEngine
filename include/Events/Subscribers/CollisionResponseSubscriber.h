@@ -1,6 +1,5 @@
 #pragma once
 #include "../BartaEventLoggerInterface.h"
-#include "../Events/VelocityChangeEvent.h"
 #include "Collisions/CollisionAwareInterface.h"
 
 namespace Barta {
@@ -10,10 +9,7 @@ class CollisionResponseSubscriber: public EventSubscriber<CollisionEventType> {
 public:
     static constexpr float COEFFICIENT_OF_RESTITUTION = 1.f;
 
-    CollisionResponseSubscriber(
-        BartaEventLoggerInterface& eventLogger
-    ):
-        eventLogger(eventLogger) {}
+    CollisionResponseSubscriber() = default;
 
     ~CollisionResponseSubscriber() noexcept = default;
 
@@ -31,8 +27,8 @@ public:
             return true;
         }
 
-        const auto& firstDynamics = firstObject->getDynamicsDTO();
-        const auto& secondDynamics = secondObject->getDynamicsDTO();
+        const auto& firstDynamics = firstObject->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
+        const auto& secondDynamics = secondObject->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
 
         float massInverted = 0.f;
         if (!firstDynamics.hasInfiniteMass) {
@@ -60,19 +56,17 @@ public:
     bool isValid() const noexcept override { return true; }
 
 private:
-    BartaEventLoggerInterface& eventLogger;
-
     void calculateNewVelocity(
         float j,
         CollisionAwareInterface* dynamicsObject,
         Vector2f normVector
     ) const noexcept {
-        const auto& oldDynamics = dynamicsObject->getDynamicsDTO();
+        const auto& oldDynamics = dynamicsObject->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
         if (oldDynamics.hasInfiniteMass) {
             return;
         }
 
-        this->eventLogger.logEvent(DynamicsChangeEvent(dynamicsObject, normVector * (j / oldDynamics.mass)));
+        dynamicsObject->getDynamicsDTOs()[DynamicsDTOIteration::NEXT].velocity += normVector * (j / oldDynamics.mass);
     }
 };
 

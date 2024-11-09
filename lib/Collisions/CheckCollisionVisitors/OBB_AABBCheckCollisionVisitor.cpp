@@ -76,7 +76,7 @@ Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkStaticColl
         return collisionTestResultBuilder.build();
     }
 
-    return collisionTestResultBuilder.setCollisionDetected(true)->build();
+    return collisionTestResultBuilder.setCollisionDetected(true)->setCollisionPoint(this->calculateCollisionPoint())->build();
 }
 
 Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkDynamicCollision(
@@ -85,4 +85,27 @@ Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkDynamicCol
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     throw std::runtime_error("Not implemented");
+}
+
+Barta::Vector2f Barta::OBB_AABBCheckCollisionVisitor::calculateCollisionPoint() const {
+    AABB::PointDistance maxDistance;
+    Vector2f collisionPoint{};
+    maxDistance.distance = std::numeric_limits<float>::max();
+    for (const auto p: this->aabb.getVertices()) {
+        auto closest = this->obb.closestPointTo(p);
+        if (closest.distance < maxDistance.distance) {
+            maxDistance = closest;
+            collisionPoint = 0.5 * p + 0.5 * closest.point;
+        }
+    }
+
+    for (const auto p: this->obb.getVertices()) {
+        auto closest = this->aabb.closestPointTo(p);
+        if (closest.distance < maxDistance.distance) {
+            maxDistance = closest;
+            collisionPoint = 0.5 * p + 0.5 * closest.point;
+        }
+    }
+
+    return collisionPoint;
 }

@@ -15,7 +15,7 @@ typedef ReducibleList<std::vector<RigidObjectInterface*>> RigidObjectContainer;
 typedef FilterNoCollisionDecorator<CollisionTestExecutor> CollisionCoreExecutor;
 
 /**
- * Always insert types in pairs. Each pair tell the logger which object types should be searched for collision.
+ * Always insert types in pairs. Each pair tells the logger which object types should be searched for collision.
  * This class runs collision test executors and logs the collisions to an event matcher.
  */
 typedef CollisionLogger<RigidObjectInterface, RigidObjectInterface> DefaultCollisionLogger;

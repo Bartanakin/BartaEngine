@@ -38,5 +38,8 @@ public:
         const CollisionDetectionStrategyInterface& collisionDetector,
         const DynamicsDifference& dynamicsDifference
     ) const = 0;
+
+    virtual OBB getBoundingOBB() const = 0;
 };
+
 }

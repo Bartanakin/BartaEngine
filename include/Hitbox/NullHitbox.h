@@ -37,6 +37,8 @@ public:
         const CollisionDetectionStrategyInterface& collisionDetector,
         const DynamicsDifference& dynamicsDifference
     ) const override;
+
+    OBB getBoundingOBB() const override;
 };
 
 }

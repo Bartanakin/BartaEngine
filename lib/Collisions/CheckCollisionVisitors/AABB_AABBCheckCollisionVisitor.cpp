@@ -22,6 +22,7 @@ Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkStaticCol
             && this->aabb1.getLeftTop().getY() <= this->aabb2.getLeftBottom().getY()
             && this->aabb1.getLeftBottom().getY() >= this->aabb2.getLeftTop().getY()
         )
+        ->setCollisionPoint(this->calculateCollisionPoint())
         ->setStaticCollision(true)
         ->setDebugInfo("AABB - AABB static")
         ->setObjectsDebugInfo(ss.str())
@@ -116,4 +117,27 @@ Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkDynamicCo
         ->setNormVector(normVector)
         ->setDebugInfo("AABB - AABB succesful dynamic")
         ->build();
+}
+
+Barta::Vector2f Barta::AABB_AABBCheckCollisionVisitor::calculateCollisionPoint() const {
+    AABB::PointDistance maxDistance;
+    Vector2f collisionPoint{};
+    maxDistance.distance = std::numeric_limits<float>::min();
+    for (const auto p: this->aabb1.getVertices()) {
+        auto closest = this->aabb2.closestPointTo(p);
+        if (closest.distance < maxDistance.distance) {
+            maxDistance = closest;
+            collisionPoint = 0.5 * p + 0.5 * closest.point;
+        }
+    }
+
+    for (const auto p: this->aabb2.getVertices()) {
+        auto closest = this->aabb1.closestPointTo(p);
+        if (closest.distance < maxDistance.distance) {
+            maxDistance = closest;
+            collisionPoint = 0.5 * p + 0.5 * closest.point;
+        }
+    }
+
+    return collisionPoint;
 }

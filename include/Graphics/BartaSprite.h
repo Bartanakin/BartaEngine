@@ -52,6 +52,7 @@ public:
         data(std::move(data)),
         spriteTypes(std::move(spriteTypes)) {}
 
+    BartaSprite() = default;
     ~BartaSprite() = default;
 
     inline int getResourceId() const { return this->resource; }

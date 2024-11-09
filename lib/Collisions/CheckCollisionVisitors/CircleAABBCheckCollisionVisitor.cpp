@@ -21,6 +21,21 @@ Barta::CircleAABBCheckCollisionVisitor::~CircleAABBCheckCollisionVisitor() {}
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
+Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateCollisionPoint() const {
+    Vector2f collisionPoint = {};
+    float min = std::numeric_limits<float>::max();
+    for (const auto& side: this->expandedAABB.getSides()) {
+        auto perpVector = (side.getEnd() - side.getBeginning()).perp(this->circle.getCenter() - side.getBeginning());
+        auto distance = perpVector.normSquare();
+        if (distance < min) {
+            min = distance;
+            collisionPoint = this->circle.getCenter() - 0.5 * perpVector;
+        }
+    }
+
+    return collisionPoint;
+}
+
 Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkStaticCollision(
     const MathLibraryInterface& mathLib,
     CollisionTestResultBuilder& collisionTestResultBuilder
@@ -36,7 +51,9 @@ Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkStaticCo
     auto regionMask = this->aabb.findVoronoiRegionType(this->circle.getCenter());
     if (regionMask == AABB::VoronoiRegion::TOP || regionMask == AABB::VoronoiRegion::RIGHT || regionMask == AABB::VoronoiRegion::BOTTOM
         || regionMask == AABB::VoronoiRegion::LEFT || regionMask == AABB::VoronoiRegion::INSIDE) {
+        collisionTestResultBuilder.setNormVector(this->calculateNormVectorForStatic());
         collisionTestResultBuilder.setCollisionDetected(true);
+        collisionTestResultBuilder.setCollisionPoint(this->calculateCollisionPoint());
 
         return collisionTestResultBuilder.setDebugInfo("Circle - AABB static, in expanded, in base")->build();
     }
@@ -44,6 +61,8 @@ Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkStaticCo
     auto cornerCircle = Circle(this->circle.getRadius(), this->matchCornerCenter(regionMask, this->aabb));
     if (cornerCircle.isWithin(this->circle.getCenter())) {
         return collisionTestResultBuilder.setCollisionDetected(true)
+            ->setCollisionPoint(this->calculateCollisionPoint())
+            ->setNormVector(this->calculateNormVectorForStatic())
             ->setDebugInfo("Circle - AABB static, in expanded, NOT in base, in corners")
             ->build();
     }
@@ -139,6 +158,29 @@ Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateNormVector(
         );
         if (seg.calculateRelationToPoint(vertices[i]) == Segment::Relation::RIGHT) {
             auto relationToNext = seg.calculateRelationToPoint(vertices[(i + 1) % 4]);
+            if (relationToNext == Segment::Relation::LEFT || relationToNext == Segment::Relation::COLINEAR) {
+                return possibleNormalVectors[i];
+            }
+        }
+    }
+
+    return {};
+}
+
+Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateNormVectorForStatic() const {
+    auto middle = this->aabb.getLeftTop() + 0.5f * this->aabb.getWidthHeight();
+    std::vector<Vector2f> possibleNormalVectors = {
+        {0.f,  -1.f},
+        {1.f,  0.f },
+        {0.f,  1.f },
+        {-1.f, 0.f }
+    };
+    auto vertices = this->aabb.getVertices();
+    for (decltype(possibleNormalVectors)::size_type i = 0; i < 4; i++) {
+        auto seg = Segment(middle, vertices[i]);
+        if (seg.calculateRelationToPoint(this->circle.getCenter()) == Segment::Relation::RIGHT) {
+            auto nextSeg = Segment(middle, vertices[(i + 1) % 4]);
+            auto relationToNext = nextSeg.calculateRelationToPoint(this->circle.getCenter());
             if (relationToNext == Segment::Relation::LEFT || relationToNext == Segment::Relation::COLINEAR) {
                 return possibleNormalVectors[i];
             }

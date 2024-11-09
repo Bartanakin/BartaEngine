@@ -11,7 +11,7 @@ Barta::RigidObject::RigidObject(
 ):
     graphicsData(std::move(graphicsData)),
     hitbox(std::move(hitbox)),
-    dynamicsDTO(dynamicsDto) {}
+    dynamicsDTOCollection(dynamicsDto) {}
 
 std::unique_ptr<const Barta::HitboxInterface> Barta::RigidObject::getHitbox() const {
     return this->hitbox->getTransformedHitbox(*this->graphicsData.transformable);
@@ -20,9 +20,10 @@ std::unique_ptr<const Barta::HitboxInterface> Barta::RigidObject::getHitbox() co
 void Barta::RigidObject::rotate(
     float angle
 ) {
-    this->rotate(angle, this->dynamicsDTO.massCenter);
+    this->rotate(angle, this->dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter);
 }
 
+// TODO move rotation to update strategy
 float Barta::RigidObject::getRotation() const {
     return this->graphicsData.transformable->getRotaion();
 }
@@ -30,7 +31,7 @@ float Barta::RigidObject::getRotation() const {
 void Barta::RigidObject::setRotation(
     float angle
 ) {
-    this->rotate(angle - this->graphicsData.transformable->getRotaion(), this->dynamicsDTO.massCenter);
+    this->rotate(angle - this->graphicsData.transformable->getRotaion(), this->dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter);
 }
 
 void Barta::RigidObject::rotate(
@@ -44,10 +45,11 @@ void Barta::RigidObject::move(
     const Vector2f& shift
 ) {
     this->graphicsData.transformable->move(shift);
+    this->dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter += shift;
 }
 
-Barta::DynamicsDTO& Barta::RigidObject::getDynamicsDTO() {
-    return this->dynamicsDTO;
+Barta::DynamicsDTOCollection& Barta::RigidObject::getDynamicsDTOs() {
+    return this->dynamicsDTOCollection;
 }
 
 Barta::GraphicsDataAwareInterface::GraphicsDataList Barta::RigidObject::getGraphicsData() {

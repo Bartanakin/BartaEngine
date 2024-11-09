@@ -8,6 +8,10 @@ add_library(${LIBRARY_NAME}
         Hitbox/OBB_Hitbox.cpp
         ../include/Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h
         Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.cpp
+        Graphics/GraphicsDataTransformer.cpp
+        ../include/Graphics/GraphicsDataTransformer.h
+        ../include/Events/Subscribers/CollisionBrakeSubscriber.h
+        ../include/Dynamics/DynamicsDTOCollection.h
 )
 
 # target_precompile_headers(${PROJECT_NAME} PUBLIC
@@ -16,7 +20,6 @@ add_library(${LIBRARY_NAME}
 
 add_subdirectory(Collisions)
 add_subdirectory(Dynamics)
-add_subdirectory(Events/Subscribers)
 add_subdirectory(Geometrics)
 add_subdirectory(Graphics)
 add_subdirectory(Hitbox)

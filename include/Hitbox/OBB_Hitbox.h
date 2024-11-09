@@ -3,12 +3,11 @@
 //
 
 #pragma once
-#include "AABB_Hitbox.h"
 #include "Geometrics/BartaShapes/OBB.h"
 #include "HitboxInterface.h"
 
 namespace Barta {
-class OBB_Hitbox: public AABB_Hitbox {
+class OBB_Hitbox: public virtual HitboxInterface {
 public:
     OBB_Hitbox(const OBB& obb) noexcept;
     bool isWithin(const Vector2f& position) const override;
@@ -38,6 +37,10 @@ public:
         const CollisionDetectionStrategyInterface& collisionDetector,
         const DynamicsDifference& dynamicsDifference
     ) const override;
+
+    const OBB& getOBB() const noexcept { return this->obb; }
+
+    OBB getBoundingOBB() const override;
 
 private:
     OBB obb;

@@ -59,9 +59,19 @@ public:
 
     Vector2f projection(Vector2f) const noexcept;
 
+    Vector2f perp(Vector2f) const noexcept;
+
     Vector2f zeroised(float = ZEROING_EDGE) const noexcept;
 
-    /**
+    size_t size() const noexcept;
+
+    float operator[](size_t index) const;
+
+    float& operator[](size_t index);
+
+    bool isZero() const noexcept;
+
+    /*
      * @deprecated
      */
     static Vector2f zeroise(Vector2f vector, float edge) noexcept;

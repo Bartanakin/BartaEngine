@@ -10,6 +10,8 @@ public:
     BartaSprite resource;
     int z_index;
 
+    GraphicsData() = default;
+
     GraphicsData(
         std::unique_ptr<TransformableInterface> transformable,
         BartaSprite resource,

@@ -64,6 +64,13 @@ public:
     */
     bool isWithin(const Vector2f&) const noexcept;
 
+    struct PointDistance {
+        float distance;
+        Vector2f point;
+    };
+
+    PointDistance closestPointTo(Vector2f) const noexcept;
+
     VoronoiRegion findVoronoiRegionType(const Vector2f& point) const noexcept;
 
 private:

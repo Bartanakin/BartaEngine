@@ -37,6 +37,8 @@ public:
         const DynamicsDifference& dynamicsDifference
     ) const override;
 
+    OBB getBoundingOBB() const override;
+
 private:
     const Circle& getCircle() const;
 

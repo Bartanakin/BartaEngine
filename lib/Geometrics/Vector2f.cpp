@@ -1,5 +1,6 @@
 #include <Geometrics/Vector2f.h>
 #include <pch.h>
+#include <strings.h>
 
 Barta::Vector2f::Vector2f(
     const Vector2f& second
@@ -115,6 +116,12 @@ Barta::Vector2f Barta::Vector2f::projection(
     return this->operator*(this->operator*(v) / this->normSquare());
 }
 
+Barta::Vector2f Barta::Vector2f::perp(
+    Vector2f v
+) const noexcept {
+    return v - this->projection(v);
+}
+
 Barta::Vector2f Barta::Vector2f::zeroised(
     const float edge
 ) const noexcept {
@@ -128,6 +135,42 @@ Barta::Vector2f Barta::Vector2f::zeroised(
     }
 
     return vector;
+}
+
+size_t Barta::Vector2f::size() const noexcept {
+    return 2;
+}
+
+float Barta::Vector2f::operator[](
+    size_t index
+) const {
+    if (index == 0) {
+        return x;
+    }
+
+    if (index == 1) {
+        return y;
+    }
+
+    throw std::runtime_error("Barta::Vector2f::operator[]: index out of range");
+}
+
+float& Barta::Vector2f::operator[](
+    size_t index
+) {
+    if (index == 0) {
+        return x;
+    }
+
+    if (index == 1) {
+        return y;
+    }
+
+    throw std::runtime_error("Barta::Vector2f::operator[]: index out of range");
+}
+
+bool Barta::Vector2f::isZero() const noexcept {
+    return *this == Vector2f{};
 }
 
 Barta::Vector2f Barta::Vector2f::zeroise(

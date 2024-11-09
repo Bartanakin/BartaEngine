@@ -26,5 +26,7 @@ private:
     const AABB aabb1;
     const AABB aabb2;
     const DynamicsDifference dynamicsDifference;
+
+    Vector2f calculateCollisionPoint() const;
 };
 }

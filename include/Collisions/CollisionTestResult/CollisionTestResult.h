@@ -9,6 +9,7 @@ struct CollisionTestResult {
     float timePassed;
     bool staticCollision;
     Vector2f normVector;
+    Vector2f collisionPoint;
     std::string debugInfo;
 
     CollisionTestResult() noexcept:
@@ -16,6 +17,7 @@ struct CollisionTestResult {
         timePassed(0.f),
         staticCollision(true),
         normVector(Vector2f()),
+        collisionPoint(Vector2f()),
         debugInfo("") {}
 
     CollisionTestResult(
@@ -23,12 +25,14 @@ struct CollisionTestResult {
         float timePassed,
         bool staticCollision = false,
         Vector2f normVector = {},
+        Vector2f collisionPoint = {},
         std::string debugInfo = ""
     ) noexcept:
         collisionDetected(collisionDetected),
         timePassed(timePassed),
         staticCollision(staticCollision),
         normVector(normVector),
+        collisionPoint(collisionPoint),
         debugInfo(debugInfo) {}
 
     bool operator==(

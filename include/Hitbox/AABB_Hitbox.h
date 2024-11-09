@@ -38,6 +38,8 @@ public:
         const DynamicsDifference& dynamicsDifference
     ) const override;
 
+    OBB getBoundingOBB() const override;
+
 private:
     const AABB& getAABB() const;
 

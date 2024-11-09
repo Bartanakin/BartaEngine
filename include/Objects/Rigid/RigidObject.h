@@ -20,9 +20,9 @@ public:
 
     void move(const Vector2f& shift) override;
 
-    DynamicsDTO& getDynamicsDTO() override;
+    DynamicsDTOCollection& getDynamicsDTOs() override;
 
-    inline void rotate(float, Vector2f) override;
+    void rotate(float, Vector2f) override;
     void rotate(float);
     float getRotation() const;
     void setRotation(float angle);
@@ -30,6 +30,6 @@ public:
 protected:
     GraphicsData graphicsData;
     std::unique_ptr<HitboxInterface> hitbox;
-    DynamicsDTO dynamicsDTO;
+    DynamicsDTOCollection dynamicsDTOCollection;
 };
 }
