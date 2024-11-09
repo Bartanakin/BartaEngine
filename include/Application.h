@@ -1,6 +1,5 @@
 #pragma once
 #include <BartaObjectManager.h>
-#include <ObjectManagerInterface.h>
 
 #include "Collisions/CollisionDetectionStrategyInterface.h"
 #include "Dynamics/DynamicsUpdateStrategyInterface.h"

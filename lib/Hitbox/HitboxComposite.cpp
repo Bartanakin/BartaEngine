@@ -88,7 +88,6 @@ Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithOBB(
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
 ) const {
-
     auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
     for (auto& child: this->children) {
         auto currentResult = child->intersectsWithOBB(secondShape, collisionDetector, dynamicsDifference);
