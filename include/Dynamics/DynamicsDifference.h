@@ -23,13 +23,9 @@ struct DynamicsDifference {
         return *this;
     }
 
-    DynamicsDifference(
-        const DynamicsDifference& second
-    ) = default;
+    DynamicsDifference(const DynamicsDifference& second) = default;
 
-    DynamicsDifference operator-() const {
-        return {-this->velocity, -this->acceleration, this->rotationVelocity};
-    }
+    DynamicsDifference operator-() const { return {-this->velocity, -this->acceleration, this->rotationVelocity}; }
 
     Vector2f velocity;
     Vector2f acceleration;

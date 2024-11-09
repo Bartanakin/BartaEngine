@@ -22,8 +22,8 @@ public:
 
     virtual float getRotaion() const = 0;
 
-    virtual void rotate(float, Vector2f) = 0;
+    virtual Vector2f rotate(float, Vector2f) = 0;
 
-	virtual OBB getTransformedOBB(const OBB& aabb) const = 0;
-	};
+    virtual OBB getTransformedOBB(const OBB& aabb) const = 0;
+};
 }

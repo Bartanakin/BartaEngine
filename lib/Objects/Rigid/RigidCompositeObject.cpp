@@ -12,7 +12,7 @@ Barta::RigidCompositeObject::RigidCompositeObject(
     std::vector<RigidObjectInterface*> children
 ):
     transformable(std::move(transformable)),
-    dynamicsDto(dynamicsDto),
+    dynamicsDtoCollection(dynamicsDto),
     children(std::move(children)) {}
 
 bool Barta::RigidCompositeObject::isToBeDeleted() const {
@@ -51,8 +51,8 @@ void Barta::RigidCompositeObject::move(
     }
 }
 
-Barta::DynamicsDTO& Barta::RigidCompositeObject::getDynamicsDTO() {
-    return this->dynamicsDto;
+Barta::DynamicsDTOCollection& Barta::RigidCompositeObject::getDynamicsDTOs() {
+    return this->dynamicsDtoCollection;
 }
 
 Barta::GraphicsDataAwareInterface::GraphicsDataList Barta::RigidCompositeObject::getGraphicsData() {
@@ -71,7 +71,7 @@ void Barta::RigidCompositeObject::addNewChild(
     RigidObjectInterface* newChild
 ) {
     this->children.push_back(newChild);
-    newChild->getDynamicsDTO() = DynamicsDTO({});
+    newChild->getDynamicsDTOs() = DynamicsDTOCollection{DynamicsDTO({})};
 }
 
 Barta::RigidCompositeObject::~RigidCompositeObject() noexcept {

@@ -27,7 +27,9 @@ private:
     const DynamicsDifference dynamicsDifference;
     const AABB expandedAABB;
 
+    Vector2f calculateCollisionPoint() const;
     Vector2f matchCornerCenter(AABB::VoronoiRegion regionMask, const AABB& aabb) const;
     Vector2f calculateNormVector(float delta_time) const;
+    Vector2f calculateNormVectorForStatic() const;
 };
 }

@@ -9,13 +9,15 @@
 Barta::OBB_Hitbox::OBB_Hitbox(
     const OBB& obb
 ) noexcept:
-    AABB_Hitbox(obb.getAABB()),
     obb(obb) {}
 
 bool Barta::OBB_Hitbox::isWithin(
     const Vector2f& position
 ) const {
-    return AABB_Hitbox::isWithin(this->obb.rebasePoint(position));
+    auto rebasedPosition = this->obb.rebasePoint(position);
+
+    return 0.f <= rebasedPosition.getX() && rebasedPosition.getX() <= this->obb.getWidthHeight().x && 0.f <= rebasedPosition.getY()
+           && rebasedPosition.getY() <= this->obb.getWidthHeight().y;
 }
 
 Barta::CollisionTestResult Barta::OBB_Hitbox::intersects(
@@ -62,7 +64,6 @@ Barta::CollisionTestResult Barta::OBB_Hitbox::intersectsWithOBB(
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
 ) const {
-    // REBASE ! TODO rebase back
     auto rebasedDynamicsDifference = DynamicsDifference(
         this->obb.rebaseVector(dynamicsDifference.velocity),
         this->obb.rebaseVector(dynamicsDifference.acceleration),
@@ -75,5 +76,15 @@ Barta::CollisionTestResult Barta::OBB_Hitbox::intersectsWithOBB(
             this->obb.getWidthHeight(),
             this->obb.getRotation() - secondShape.getRotation());
 
-    return collisionDetector.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(obb, aabb, rebasedDynamicsDifference));
+    auto collisionResult = collisionDetector.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(obb, aabb, rebasedDynamicsDifference));
+    if (collisionResult.collisionDetected) {
+        collisionResult.collisionPoint = collisionResult.collisionPoint.rotated(secondShape.getRotation()) + secondShape.getFirstVertex();
+        collisionResult.normVector = collisionResult.normVector.rotated(secondShape.getRotation());
+    }
+
+    return collisionResult;
+}
+
+Barta::OBB Barta::OBB_Hitbox::getBoundingOBB() const {
+    return this->obb;
 }

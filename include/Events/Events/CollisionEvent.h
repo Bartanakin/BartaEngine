@@ -5,27 +5,28 @@
 
 namespace Barta {
 
-    template<typename T1, typename T2>
-	class CollisionEvent
-	{
-		public:
-		CollisionEvent(const ExtendedCollisionResult<T1, T2> collisionResult, float delta_t) noexcept:
-            collisionResult(std::move(collisionResult)), delta_t(delta_t) {}
-        CollisionEvent(const CollisionEvent&) = delete;
-        CollisionEvent(CollisionEvent&&) noexcept = default;
-        CollisionEvent& operator=(const CollisionEvent&) = delete;
-        ~CollisionEvent() noexcept = default;
+template<typename T1, typename T2>
+class CollisionEvent {
+public:
+    CollisionEvent(
+        const ExtendedCollisionResult<T1, T2> collisionResult,
+        float delta_t
+    ) noexcept:
+        collisionResult(std::move(collisionResult)),
+        delta_t(delta_t) {}
 
-		inline const ExtendedCollisionResult<T1, T2> getTestResult() const noexcept {
-			return this->collisionResult;
-		}
+    CollisionEvent(const CollisionEvent&) = delete;
+    CollisionEvent(CollisionEvent&&) noexcept = default;
+    CollisionEvent& operator=(const CollisionEvent&) = delete;
+    ~CollisionEvent() noexcept = default;
 
-		inline float getDelta_t() const noexcept {
-			return this->delta_t;
-		}
+    const ExtendedCollisionResult<T1, T2>& getTestResult() const noexcept { return this->collisionResult; }
 
-		private:
-		const ExtendedCollisionResult<T1, T2> collisionResult;
-		const float delta_t;
-	};
+    float getDelta_t() const noexcept { return this->delta_t; }
+
+    const ExtendedCollisionResult<T1, T2> collisionResult;
+    const float delta_t;
+
+private:
+};
 }

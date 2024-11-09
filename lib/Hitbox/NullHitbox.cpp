@@ -49,4 +49,8 @@ Barta::CollisionTestResult Barta::NullHitbox::intersectsWithOBB(
     return CollisionTestResult();
 }
 
+Barta::OBB Barta::NullHitbox::getBoundingOBB() const {
+    return {{}, {}, 0.f};
+}
+
 #pragma GCC diagnostic pop

@@ -2,13 +2,15 @@
 #include "../pch.h"
 #include "DynamicsAwareInterface.h"
 
-namespace Barta{
+namespace Barta {
 
-	class DynamicsUpdateStrategyInterface{
-	public:
-		DynamicsUpdateStrategyInterface() = default;
-		virtual ~DynamicsUpdateStrategyInterface() = default;
+class DynamicsUpdateStrategyInterface {
+public:
+    DynamicsUpdateStrategyInterface() = default;
+    virtual ~DynamicsUpdateStrategyInterface() = default;
 
-		virtual void update(DynamicsAwareInterface::DynamicsAwareList&, const float) = 0;
-	};
+    virtual void prepare(float) = 0;
+
+    virtual void update(bool runForward = true) = 0;
+};
 }

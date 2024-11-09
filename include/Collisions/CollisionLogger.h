@@ -17,7 +17,7 @@ void executeAndLog(
     TimerInterface& timer
 ) {
     auto staticCollisionLogger = CollisionLogger();
-    float delta_time = staticCollisionLogger.execute(objectManager, testExecutor);
+    float delta_time = staticCollisionLogger.execute(objectManager, testExecutor, timer);
 
     staticCollisionLogger.logEvent(eventLogger, delta_time);
     if (timer.getCurrentDeltaTime() <= delta_time) {
@@ -37,10 +37,11 @@ public:
     template<typename ObjectManager, typename TestExecutor>
     float execute(
         ObjectManager& objectManager,
-        TestExecutor& testExecutor
+        TestExecutor& testExecutor,
+        TimerInterface& timer
     ) {
-        auto t1 = CollisionLogger<T1, T2>::template execute<ObjectManager, TestExecutor>(objectManager, testExecutor);
-        auto t2 = CollisionLogger<Ts...>::template execute<ObjectManager, TestExecutor>(objectManager, testExecutor);
+        auto t1 = CollisionLogger<T1, T2>::template execute<ObjectManager, TestExecutor>(objectManager, testExecutor, timer);
+        auto t2 = CollisionLogger<Ts...>::template execute<ObjectManager, TestExecutor>(objectManager, testExecutor, timer);
 
         return std::min(t1, t2);
     }
@@ -61,10 +62,11 @@ public:
     template<typename ObjectManager, typename TestExecutor>
     float execute(
         ObjectManager& objectManager,
-        TestExecutor& testExecutor
+        TestExecutor& testExecutor,
+        TimerInterface& timer
     ) {
         this->testResults = {};
-        float delta_time = 1000.f; // TODO
+        float delta_time = timer.getCurrentDeltaTime();
         auto testResults = testExecutor.template executeTests<T1, T2>(
             objectManager.getList(static_cast<T1*>(nullptr)),
             objectManager.getList(static_cast<T2*>(nullptr))
@@ -92,7 +94,7 @@ public:
     ) {
         for (auto& testResult: this->testResults) {
             if (testResult.collisionTestResult.staticCollision) {
-                eventLogger.logEvent(CollisionEvent<T1, T2>(testResult, 0.f));
+                eventLogger.logEvent(CollisionEvent<T1, T2>(testResult, min_time));
 
                 continue;
             }
@@ -113,9 +115,10 @@ public:
     template<typename ObjectManager, typename TestExecutor>
     float execute(
         ObjectManager& objectManager,
-        TestExecutor& testExecutor
+        TestExecutor& testExecutor,
+        TimerInterface& timer
     ) {
-        float delta_time = 1000.f; // TODO
+        float delta_time = timer.getCurrentDeltaTime();
         auto testResults = testExecutor.template executeTestsForSame<T>(objectManager.getList(static_cast<T*>(nullptr)));
 
         for (const auto& testResult: testResults) {
@@ -140,7 +143,7 @@ public:
     ) {
         for (auto& testResult: this->testResults) {
             if (testResult.collisionTestResult.staticCollision) {
-                eventLogger.logEvent(CollisionEvent<T, T>(testResult, 0.f));
+                eventLogger.logEvent(CollisionEvent<T, T>(testResult, min_time));
 
                 continue;
             }

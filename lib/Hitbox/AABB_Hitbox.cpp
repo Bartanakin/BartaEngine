@@ -57,6 +57,10 @@ Barta::CollisionTestResult Barta::AABB_Hitbox::intersectsWithOBB(
     return collisionDetector.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(secondShape, this->aabb, dynamicsDifference));
 }
 
+Barta::OBB Barta::AABB_Hitbox::getBoundingOBB() const {
+    return {this->aabb.getLeftTop(), this->aabb.getWidthHeight(), 0.f};
+}
+
 #pragma GCC diagnostic pop
 
 const Barta::AABB& Barta::AABB_Hitbox::getAABB() const {

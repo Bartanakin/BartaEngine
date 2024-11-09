@@ -20,6 +20,7 @@ public:
         float deltaTime,
         CollisionTestResultBuilder& collisionTestResultBuilder
     ) const override;
+    Vector2f calculateCollisionPoint() const;
 
 private:
     static bool checkStaticOneWay(const AABB& aabb, const OBB& obb);

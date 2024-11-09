@@ -22,7 +22,7 @@ public:
 
     void move(const Vector2f& shift) override;
 
-    DynamicsDTO& getDynamicsDTO() override;
+    DynamicsDTOCollection& getDynamicsDTOs() override;
 
     inline void rotate(float, Vector2f) override;
 
@@ -30,7 +30,7 @@ public:
 
 protected:
     std::vector<RigidObjectInterface*> children;
-    DynamicsDTO dynamicsDto;
+    DynamicsDTOCollection dynamicsDtoCollection;
     std::unique_ptr<TransformableInterface> transformable;
 };
 }

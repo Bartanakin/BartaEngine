@@ -35,6 +35,8 @@ public:
 
     Vector2f rebaseVector(Vector2f v) const;
 
+    PointDistance closestPointTo(Vector2f) const noexcept;
+
 private:
     // radians
     float rotation;

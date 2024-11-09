@@ -4,6 +4,7 @@
 #include "../ReduceableList.h"
 #include "../pch.h"
 #include "DynamicsDTO.h"
+#include "DynamicsDTOCollection.h"
 #include <BartaObjectInterface.h>
 
 namespace Barta {
@@ -19,6 +20,6 @@ public:
 
     virtual void rotate(float, Vector2f) = 0;
 
-    virtual DynamicsDTO& getDynamicsDTO() = 0;
+    virtual DynamicsDTOCollection& getDynamicsDTOs() = 0;
 };
 }

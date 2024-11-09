@@ -3,6 +3,7 @@
 // STL
 #include <array>
 #include <filesystem>
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <list>
@@ -21,6 +22,7 @@
 // other headers
 #include <chrono>
 #include <math.h>
+#include <random>
 
 // DEBUG
 #include <iomanip>
