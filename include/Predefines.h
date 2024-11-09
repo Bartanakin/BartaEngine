@@ -7,6 +7,7 @@
 #include <ReduceableList.h>
 #include <StaticObjectManager.h>
 #include <pch.h>
+#include <Objects/Rigid/RigidObjectCollisionSubscriber.h>
 
 namespace Barta {
 
