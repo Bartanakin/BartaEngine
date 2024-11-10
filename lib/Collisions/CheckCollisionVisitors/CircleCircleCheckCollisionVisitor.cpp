@@ -1,5 +1,6 @@
 #include <Collisions/CheckCollisionVisitors/CircleCircleCheckCollisionVisitor.h>
 #include "pch.h"
+#include <Utilities/MathUtilities.h>
 
 Barta::CircleCircleCheckCollisionVisitor::CircleCircleCheckCollisionVisitor(
     const Circle& circle1,
@@ -16,7 +17,6 @@ Barta::CircleCircleCheckCollisionVisitor::~CircleCircleCheckCollisionVisitor() {
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkStaticCollision(
-    const MathLibraryInterface& mathLib,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     std::stringstream ss;
@@ -38,11 +38,10 @@ Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkStatic
 #pragma GCC diagnostic pop
 
 Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkDynamicCollision(
-    const MathLibraryInterface& mathLib,
     const float delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
-    auto staticResult = this->checkStaticCollision(mathLib, collisionTestResultBuilder);
+    auto staticResult = this->checkStaticCollision(collisionTestResultBuilder);
     if (staticResult.collisionDetected) {
         return staticResult;
     }
@@ -52,7 +51,7 @@ Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkDynami
     auto v = dynamicsDifference.velocity + 0.5f * dynamicsDifference.acceleration * delta_time;
     auto r = circle1.getRadius() + circle2.getRadius();
 
-    auto eq = mathLib.createQuadraticEquation(v * v, v * s * 2.f, s * s - r * r);
+    auto eq = Barta::Utils::createQuadraticEquation(v * v, v * s * 2.f, s * s - r * r);
     eq->solve();
 
     if (eq->getState() != EquationInterface::State::FINITE_NO_SOLTIONS) {

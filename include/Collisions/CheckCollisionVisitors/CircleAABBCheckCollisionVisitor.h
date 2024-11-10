@@ -12,14 +12,9 @@ public:
     CircleAABBCheckCollisionVisitor(const Circle& circle, const AABB& aabb, const DynamicsDifference& dynamicsDifference);
     virtual ~CircleAABBCheckCollisionVisitor();
 
-    CollisionTestResult checkStaticCollision(const MathLibraryInterface& mathLib, CollisionTestResultBuilder& collisionTestResultBuilder)
-        const override;
+    CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
-    CollisionTestResult checkDynamicCollision(
-        const MathLibraryInterface& mathLib,
-        float delta_time,
-        CollisionTestResultBuilder& collisionTestResultBuilder
-    ) const override;
+    CollisionTestResult checkDynamicCollision(float delta_time, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
 private:
     const Circle circle;

@@ -55,7 +55,6 @@ bool Barta::OBB_AABBCheckCollisionVisitor::checkStaticOneWay(
 }
 
 Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkStaticCollision(
-    const MathLibraryInterface& mathLib,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     std::stringstream ss;
@@ -80,7 +79,6 @@ Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkStaticColl
 }
 
 Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkDynamicCollision(
-    const MathLibraryInterface& mathLib,
     float deltaTime,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {

@@ -10,7 +10,6 @@ Barta::AABB_AABBCheckCollisionVisitor::AABB_AABBCheckCollisionVisitor(
     dynamicsDifference(dynamicsDifference) {}
 
 Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkStaticCollision(
-    const MathLibraryInterface& mathLib,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     std::stringstream ss;
@@ -30,11 +29,10 @@ Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkStaticCol
 }
 
 Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkDynamicCollision(
-    const MathLibraryInterface& mathLib,
     const float delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
-    auto staticCollisionResult = this->checkStaticCollision(mathLib, collisionTestResultBuilder);
+    auto staticCollisionResult = this->checkStaticCollision(collisionTestResultBuilder);
     if (staticCollisionResult.collisionDetected) {
         return staticCollisionResult;
     }

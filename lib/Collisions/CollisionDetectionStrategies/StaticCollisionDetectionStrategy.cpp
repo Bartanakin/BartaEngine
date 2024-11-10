@@ -1,13 +1,13 @@
-#include "pch.h"
 #include <Collisions/CollisionDetectionStrategies/StaticCollisionDetectionStrategy.h>
+#include "pch.h"
 #include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
 
-Barta::StaticCollisionDetectionStrategy::StaticCollisionDetectionStrategy( std::unique_ptr<MathLibraryInterface> mathLibrary ) :
-    mathLibrary(std::move(mathLibrary))
-{}
+Barta::StaticCollisionDetectionStrategy::StaticCollisionDetectionStrategy() {}
 
-Barta::CollisionTestResult Barta::StaticCollisionDetectionStrategy::acceptCheckCollisionVisitor( const CheckCollisionVisitorInterface& checkCollisionVisitor ) const{
+Barta::CollisionTestResult Barta::StaticCollisionDetectionStrategy::acceptCheckCollisionVisitor(
+    const CheckCollisionVisitorInterface& checkCollisionVisitor
+) const {
     auto builder = CollisionTestResultBuilder();
 
-    return checkCollisionVisitor.checkStaticCollision(*this->mathLibrary, builder);
+    return checkCollisionVisitor.checkStaticCollision(builder);
 }

@@ -1,4 +1,3 @@
-target_sources(${LIBRARY_NAME} PUBLIC
-    BartaMathLibrary.cpp
-    QuadraticEquation.cpp
+target_sources(
+    ${LIBRARY_NAME} PUBLIC QuadraticEquation.cpp
 )
