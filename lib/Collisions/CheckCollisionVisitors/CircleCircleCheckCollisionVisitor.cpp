@@ -51,14 +51,14 @@ Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkDynami
     auto v = dynamicsDifference.velocity + 0.5f * dynamicsDifference.acceleration * delta_time;
     auto r = circle1.getRadius() + circle2.getRadius();
 
-    auto eq = Barta::Utils::createQuadraticEquation(v * v, v * s * 2.f, s * s - r * r);
-    eq->solve();
+    auto eq = Utils::createQuadraticEquation(v * v, v * s * 2.f, s * s - r * r);
+    eq.solve();
 
-    if (eq->getState() != EquationInterface::State::FINITE_NO_SOLTIONS) {
+    if (eq.getState() != Utils::EquationInterface::State::FINITE_NO_SOLTIONS) {
         return collisionTestResultBuilder.setCollisionDetected(false)->setDebugInfo("Circle - Circle dynamic, moving parallelly")->build();
     }
 
-    auto solution = eq->getSolutions()[0];
+    auto solution = eq.getSolutions()[0];
 
     return collisionTestResultBuilder.setNormVector(this->getNormalVector())
         ->setCollisionDetected(0.f <= solution && solution <= delta_time)

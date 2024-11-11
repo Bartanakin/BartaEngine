@@ -1,14 +1,13 @@
 #pragma once
-#include "../Geometrics/Math/EquationInterface.h"
-#include "../Geometrics/Math/QuadraticEquation.h"
 #include "../pch.h"
+#include "QuadraticEquation.h"
 
 namespace Barta::Utils {
-std::unique_ptr<EquationInterface> createQuadraticEquation(
+QuadraticEquation createQuadraticEquation(
     float A,
     float B,
     float C
 ) {
-    return std::unique_ptr<EquationInterface>(new QuadraticEquation(A, B, C));
+    return QuadraticEquation(A, B, C);
 }
 }
