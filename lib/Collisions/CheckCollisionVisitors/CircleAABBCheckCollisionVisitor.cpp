@@ -37,7 +37,6 @@ Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateCollisionPoint(
 }
 
 Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkStaticCollision(
-    const MathLibraryInterface& mathLib,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     std::stringstream ss;
@@ -73,11 +72,10 @@ Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkStaticCo
 #pragma GCC diagnostic pop
 
 Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkDynamicCollision(
-    const MathLibraryInterface& mathLib,
     const float delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
-    auto staticResult = this->checkStaticCollision(mathLib, collisionTestResultBuilder);
+    auto staticResult = this->checkStaticCollision(collisionTestResultBuilder);
     if (staticResult.collisionDetected) {
         return staticResult;
     }

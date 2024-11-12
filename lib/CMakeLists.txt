@@ -24,6 +24,7 @@ add_subdirectory(Geometrics)
 add_subdirectory(Graphics)
 add_subdirectory(Hitbox)
 add_subdirectory(Objects)
+add_subdirectory(Utilities)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/include")
 

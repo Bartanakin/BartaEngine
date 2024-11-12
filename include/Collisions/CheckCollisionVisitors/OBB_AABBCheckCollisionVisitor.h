@@ -12,14 +12,9 @@ class OBB_AABBCheckCollisionVisitor: public CheckCollisionVisitorInterface {
 public:
     OBB_AABBCheckCollisionVisitor(const OBB& obb, const AABB& aabb, const DynamicsDifference& dynamicsDifference) noexcept;
 
-    CollisionTestResult checkStaticCollision(const MathLibraryInterface& mathLib, CollisionTestResultBuilder& collisionTestResultBuilder)
-        const override;
+    CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
-    CollisionTestResult checkDynamicCollision(
-        const MathLibraryInterface& mathLib,
-        float deltaTime,
-        CollisionTestResultBuilder& collisionTestResultBuilder
-    ) const override;
+    CollisionTestResult checkDynamicCollision(float deltaTime, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
     Vector2f calculateCollisionPoint() const;
 
 private:

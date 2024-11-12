@@ -1,5 +1,4 @@
 add_subdirectory(BartaShapes)
-add_subdirectory(Math)
 
 target_sources(${LIBRARY_NAME} PUBLIC
     Segment.cpp

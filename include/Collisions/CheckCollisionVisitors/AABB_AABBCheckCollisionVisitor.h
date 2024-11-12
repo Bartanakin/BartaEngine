@@ -13,14 +13,9 @@ class AABB_AABBCheckCollisionVisitor: public CheckCollisionVisitorInterface {
 public:
     AABB_AABBCheckCollisionVisitor(const AABB& aabb1, const AABB& aabb2, const DynamicsDifference& dynamicsDifference) noexcept;
 
-    CollisionTestResult checkStaticCollision(const MathLibraryInterface& mathLib, CollisionTestResultBuilder& collisionTestResultBuilder)
-        const override;
+    CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
-    CollisionTestResult checkDynamicCollision(
-        const MathLibraryInterface& mathLib,
-        float delta_time,
-        CollisionTestResultBuilder& collisionTestResultBuilder
-    ) const override;
+    CollisionTestResult checkDynamicCollision(float delta_time, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
 private:
     const AABB aabb1;
