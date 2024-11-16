@@ -65,12 +65,14 @@ public:
                 continue;
             }
 
-            nextDynamics.velocity = applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.velocity);
+            nextDynamics.velocity = applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.velocity).zeroised();
 
             // TODO add response force handling
-            nextDynamics.force = applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.force);
+            nextDynamics.force = applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.force).zeroised();
 
-            object->move(applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.massCenter - dynamics.massCenter));
+            auto shift = applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.massCenter - dynamics.massCenter).zeroised();
+            nextDynamics.massCenter = dynamics.massCenter + shift;
+            object->move(shift);
             // TODO
             // object->rotate(
             //     nextDynamics.rotationVelocity * object.deltaTime,

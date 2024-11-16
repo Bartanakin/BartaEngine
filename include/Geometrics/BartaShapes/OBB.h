@@ -37,6 +37,8 @@ public:
 
     PointDistance closestPointTo(Vector2f) const noexcept;
 
+    Vector2f getCenter() const noexcept;
+
 private:
     // radians
     float rotation;

@@ -5,6 +5,7 @@
 #include "Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h"
 #include "Hitbox/OBB_Hitbox.h"
 #include <Collisions/CheckCollisionVisitors/CircleAABBCheckCollisionVisitor.h>
+#include <Geometrics/Intersections.h>
 
 Barta::OBB_Hitbox::OBB_Hitbox(
     const OBB& obb
@@ -18,6 +19,12 @@ bool Barta::OBB_Hitbox::isWithin(
 
     return 0.f <= rebasedPosition.getX() && rebasedPosition.getX() <= this->obb.getWidthHeight().x && 0.f <= rebasedPosition.getY()
            && rebasedPosition.getY() <= this->obb.getWidthHeight().y;
+}
+
+std::vector<float> Barta::OBB_Hitbox::intersectsWithRay(
+    const Ray& ray
+) const {
+    throw std::runtime_error("Not implemented");
 }
 
 Barta::CollisionTestResult Barta::OBB_Hitbox::intersects(

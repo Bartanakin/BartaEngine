@@ -74,7 +74,12 @@ Barta::Vector2f Barta::Vector2f::perpendicular() const {
 }
 
 Barta::Vector2f Barta::Vector2f::normalised() const {
-    return *this * (1.f / std::sqrt(this->squareOfDistance(Vector2f())));
+    auto length = std::sqrt(this->squareOfDistance(Vector2f()));
+    if (length == 0) {
+        return {};
+    }
+
+    return *this * 1.f / length;
 }
 
 float Barta::Vector2f::normSquare() const {
@@ -170,7 +175,11 @@ float& Barta::Vector2f::operator[](
 }
 
 bool Barta::Vector2f::isZero() const noexcept {
-    return *this == Vector2f{};
+    return this->zeroised() == Vector2f{};
+}
+
+float Barta::Vector2f::length() const noexcept {
+    return std::sqrt(this->normSquare());
 }
 
 Barta::Vector2f Barta::Vector2f::zeroise(

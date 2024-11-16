@@ -8,6 +8,12 @@ bool Barta::NullHitbox::isWithin(
     return false;
 }
 
+std::vector<float> Barta::NullHitbox::intersectsWithRay(
+    const Ray& ray
+) const {
+    return {};
+}
+
 Barta::CollisionTestResult Barta::NullHitbox::intersects(
     const HitboxInterface& secondHitbox,
     const CollisionDetectionStrategyInterface& collisionDetector,

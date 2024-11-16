@@ -1,11 +1,10 @@
 #pragma once
-#include <BartaObjectManager.h>
-
 #include "Collisions/CollisionDetectionStrategyInterface.h"
 #include "Dynamics/DynamicsUpdateStrategyInterface.h"
 #include "Dynamics/TimerInterface.h"
 #include "Graphics/BartaGraphicsBridgeInterface.h"
 #include "pch.h"
+#include <BartaObjectManager.h>
 #include <Predefines.h>
 
 namespace Barta {
@@ -90,7 +89,7 @@ public:
 
     virtual void postDynamicUpdate() {}
 
-    virtual bool isRunning() const { return true; }
+    virtual bool isRunning() { return true; }
 
 protected:
     std::string windowName;

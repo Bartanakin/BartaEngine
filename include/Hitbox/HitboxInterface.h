@@ -3,6 +3,7 @@
 #include "../Dynamics/DynamicsDifference.h"
 #include "../Geometrics/TransformableInterface.h"
 #include "../pch.h"
+#include "Geometrics/Ray.h"
 
 namespace Barta {
 
@@ -12,6 +13,8 @@ public:
     virtual ~HitboxInterface() = default;
 
     virtual bool isWithin(const Vector2f& position) const = 0;
+
+    virtual std::vector<float> intersectsWithRay(const Ray& ray) const = 0;
 
     virtual CollisionTestResult intersects(
         const HitboxInterface& secondHitbox,

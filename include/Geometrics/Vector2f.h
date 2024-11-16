@@ -5,7 +5,7 @@ namespace Barta {
 
 class Vector2f {
 public:
-    static constexpr float ZEROING_EDGE = 0.005f;
+    static constexpr float ZEROING_EDGE = 0.001f;
     float x;
     float y;
     constexpr Vector2f() noexcept = default;
@@ -55,7 +55,7 @@ public:
 
     Vector2f rotated(float radians) const noexcept;
 
-    float angleTo(Vector2f) const noexcept;
+    float angleTo(Vector2f = {1.f, 0.f}) const noexcept;
 
     Vector2f projection(Vector2f) const noexcept;
 
@@ -70,6 +70,8 @@ public:
     float& operator[](size_t index);
 
     bool isZero() const noexcept;
+
+    float length() const noexcept;
 
     /*
      * @deprecated
