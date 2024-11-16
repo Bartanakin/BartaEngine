@@ -12,6 +12,12 @@ add_library(${LIBRARY_NAME}
         ../include/Graphics/GraphicsDataTransformer.h
         ../include/Events/Subscribers/CollisionBrakeSubscriber.h
         ../include/Dynamics/DynamicsDTOCollection.h
+        ../include/Hitbox/HitboxAwareConcept.h
+        Debug/DebugGuardSubscriber.cpp
+        ../include/Debug/DebugGuardSubscriber.h
+        ../include/Geometrics/Ray.h
+        Geometrics/Ray.cpp
+        Geometrics/Intersections.cpp
 )
 
 # target_precompile_headers(${PROJECT_NAME} PUBLIC

@@ -43,6 +43,10 @@ Barta::AABB::PointDistance Barta::OBB::closestPointTo(
     return AABB::closestPointTo((p - this->getLeftTop()).rotated(-this->getRotation()) + this->getLeftTop());
 }
 
+Barta::Vector2f Barta::OBB::getCenter() const noexcept {
+    return this->getLeftTop() + (this->getWidthHeight() * 0.5f).rotated(this->rotation);
+}
+
 std::vector<Barta::Vector2f> Barta::OBB::getVertices() const noexcept {
     return {this->getFirstVertex(), this->getSecondVertex(), this->getThirdVertex(), this->getFourthVertex()};
 }

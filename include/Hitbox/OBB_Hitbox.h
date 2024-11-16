@@ -10,7 +10,10 @@ namespace Barta {
 class OBB_Hitbox: public virtual HitboxInterface {
 public:
     OBB_Hitbox(const OBB& obb) noexcept;
+
     bool isWithin(const Vector2f& position) const override;
+
+    std::vector<float> intersectsWithRay(const Ray& ray) const override;
 
     CollisionTestResult intersects(
         const HitboxInterface& secondHitbox,

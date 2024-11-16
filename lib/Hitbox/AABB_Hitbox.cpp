@@ -16,6 +16,13 @@ bool Barta::AABB_Hitbox::isWithin(
            && this->getAABB().getLeftTop().getY() <= position.getY() && position.getY() <= this->getAABB().getRightBottom().getY();
 }
 
+std::vector<float> Barta::AABB_Hitbox::intersectsWithRay(
+    const Ray& ray
+) const {
+    // TODO
+    return {};
+}
+
 Barta::CollisionTestResult Barta::AABB_Hitbox::intersects(
     const HitboxInterface& secondHitbox,
     const CollisionDetectionStrategyInterface& collisionDetector,

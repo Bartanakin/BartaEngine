@@ -22,6 +22,7 @@ public:
         LEFT_TOP = TOP + LEFT
     };
 
+    AABB() = default;
     AABB(const Vector2f& leftTop, const Vector2f& widthHeight);
 
     /*
@@ -74,8 +75,8 @@ public:
     VoronoiRegion findVoronoiRegionType(const Vector2f& point) const noexcept;
 
 private:
-    const Vector2f leftTop;
-    const Vector2f widthHeight;
+    Vector2f leftTop;
+    Vector2f widthHeight;
 };
 
 inline AABB::VoronoiRegion operator|(

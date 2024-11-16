@@ -18,6 +18,12 @@ bool Barta::HitboxComposite::isWithin(
     return false;
 }
 
+std::vector<float> Barta::HitboxComposite::intersectsWithRay(
+    const Ray& ray
+) const {
+    throw std::runtime_error("Not implemented");
+}
+
 Barta::CollisionTestResult Barta::HitboxComposite::intersects(
     const HitboxInterface& secondHitbox,
     const CollisionDetectionStrategyInterface& collisionDetector,

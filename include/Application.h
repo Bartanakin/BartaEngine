@@ -5,7 +5,6 @@
 #include "Graphics/BartaGraphicsBridgeInterface.h"
 #include "pch.h"
 #include <BartaObjectManager.h>
-#include <ObjectManagerInterface.h>
 #include <Predefines.h>
 
 namespace Barta {
@@ -28,7 +27,11 @@ public:
         dynamicsUpdateStrategy(std::move(dynamicsUpdateStrategy)),
         collisionEventsLogger({}),
         collisionExecutor(CollisionCoreExecutor(std::move(collisionDetectionStrategy))),
-        objectLists({}) {}
+        objectLists({}) {
+        // this->collisionEventsLogger.logSubscriber(std::unique_ptr<Subscribers::RigidObjectRigidObject>(
+        //     new Barta::StaticCollisionResponseSubscriberType<RigidObjectInterface, RigidObjectInterface>(*this->postDynamicsEventLogger)
+        // ));
+    }
 
     Application(const Application&) = delete;
     Application(Application&&) = delete;
@@ -86,7 +89,7 @@ public:
 
     virtual void postDynamicUpdate() {}
 
-    virtual bool isRunning() const { return true; }
+    virtual bool isRunning() { return true; }
 
 protected:
     std::string windowName;

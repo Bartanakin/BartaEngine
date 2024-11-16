@@ -1,6 +1,7 @@
 #include <Hitbox/CircleHitbox.h>
 #include <Collisions/CheckCollisionVisitors/CircleAABBCheckCollisionVisitor.h>
 #include <Collisions/CheckCollisionVisitors/CircleCircleCheckCollisionVisitor.h>
+#include <Geometrics/Intersections.h>
 #include <pch.h>
 
 namespace Barta {
@@ -67,6 +68,12 @@ bool CircleHitbox::isWithin(
 ) const {
     return pow(position.getX() - this->circle.getCenter().getX(), 2) + pow(position.getY() - this->circle.getCenter().getY(), 2)
            <= pow(this->circle.getRadius(), 2);
+}
+
+std::vector<float> CircleHitbox::intersectsWithRay(
+    const Ray& ray
+) const {
+    return Intersections::rayAndCircle(ray, this->circle);
 }
 
 CollisionTestResult CircleHitbox::intersects(

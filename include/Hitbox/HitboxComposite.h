@@ -13,6 +13,8 @@ public:
 
     bool isWithin(const Vector2f& position) const override;
 
+    std::vector<float> intersectsWithRay(const Ray& ray) const override;
+
     CollisionTestResult intersects(
         const HitboxInterface& secondHitbox,
         const CollisionDetectionStrategyInterface& collisionDetector,
