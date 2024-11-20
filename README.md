@@ -5,7 +5,7 @@ _This is a c++ library which implements core features of a physics engine. The c
 * _velocity calculation_
 * _collision detection and collision responses_
 
-_The project is open to collaboration at my GitHub account as there are plenty of ideas for new functionalities. This program is a base for my Master's degree research about soft bodies simulation.A c++ library which implements core features of a physics engine. The core concepts for now are: events handling system, velocity calculation, collision detection and collision response. The project open to collaboration at my GitHub account as there are plenty of ideas for new functionalities. This program is a base for my Master's degree research about soft bodies simulation._
+_The project is open to collaboration at my GitHub account as there are plenty of ideas for new functionalities. This program is a base for my Master's degree research about soft bodies simulation._
 
 ## **Table of Contents**
 
@@ -56,7 +56,7 @@ _The project is open to collaboration at my GitHub account as there are plenty o
 
 * To ensure your pull request passes the GitHub Actions checks, I recommend using **clang-format 19** for code formatting. As for 20-11-2024 it is still unofficial version that you can download from [here](https://releases.llvm.org/).
 * All the current issues are at the [Issues section](https://github.com/Bartanakin/BartaEngine/issues).
-* You can join the development community you can write to me on [Discord #Bartanakin](https://discord.com/)  or email me `Bartanakin.bak@student.uj.edu.pl`
+* You can join the development community: write to me on [Discord #Bartanakin](https://discord.com/)  or email me `Bartanakin.bak@student.uj.edu.pl`
 
 ## Examples
 to be written down :)
