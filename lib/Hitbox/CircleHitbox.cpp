@@ -57,8 +57,8 @@ CollisionTestResult CircleHitbox::intersectsWithOBB(
 
 OBB CircleHitbox::getBoundingOBB() const {
     return {
-        this->getCircle().getCenter() - this->getCircle().getRadius() * Vector2f(0.5f, 0.5f),
-        this->getCircle().getRadius() * Vector2f(1.f, 1.f),
+        this->getCircle().getCenter() - this->getCircle().getRadius() * Vector2f(1.f, 1.f),
+        2.f * this->getCircle().getRadius() * Vector2f(1.f, 1.f),
         0.f
     };
 }
