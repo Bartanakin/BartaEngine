@@ -1,5 +1,6 @@
 #pragma once
 #include "../Segment.h"
+#include <Geometrics/Transformation.h>
 
 namespace Barta {
 
@@ -23,32 +24,32 @@ public:
     };
 
     AABB() = default;
-    AABB(const Vector2f& leftTop, const Vector2f& widthHeight);
+    AABB(const Point& leftTop, const Vector& widthHeight);
 
     /*
         The vector to the left top corner of the rectangle
     */
-    Vector2f getLeftTop() const;
+    Point getLeftTop() const;
 
     /*
         The vector to the left top corner of the rectangle
     */
-    Vector2f getRightTop() const;
+    Point getRightTop() const;
 
     /*
         The vector to the left top corner of the rectangle
     */
-    Vector2f getRightBottom() const;
+    Point getRightBottom() const;
 
     /*
         The vector to the left top corner of the rectangle
     */
-    Vector2f getLeftBottom() const;
+    Point getLeftBottom() const;
 
     /*
         The size of the rectangle
     */
-    Vector2f getWidthHeight() const;
+    Vector getWidthHeight() const;
 
     /*
         All sides as Segments in clockwise orientation starting from the top
@@ -58,25 +59,25 @@ public:
     /*
         All sides as Segments in clockwise orientation starting from the top
     */
-    std::vector<Vector2f> getVertices() const noexcept;
+    std::vector<Point> getVertices() const noexcept;
 
     /*
         Wheater the point is inside the AABB
     */
-    bool isWithin(const Vector2f&) const noexcept;
+    bool isWithin(const Point&) const noexcept;
 
     struct PointDistance {
         float distance;
-        Vector2f point;
+        Point point;
     };
 
-    PointDistance closestPointTo(Vector2f) const noexcept;
+    PointDistance closestPointTo(Point) const noexcept;
 
-    VoronoiRegion findVoronoiRegionType(const Vector2f& point) const noexcept;
+    VoronoiRegion findVoronoiRegionType(const Point& point) const noexcept;
 
 private:
-    Vector2f leftTop;
-    Vector2f widthHeight;
+    Point leftTop;
+    Vector widthHeight;
 };
 
 inline AABB::VoronoiRegion operator|(
@@ -103,6 +104,13 @@ inline std::ostream& operator<<(
     std::ostream& stream,
     const AABB& aabb
 ) noexcept {
-    return stream << "(" << aabb.getLeftTop() << ", " << aabb.getWidthHeight() << ")";
+    return stream << "(" << aabb.getLeftTop().toVector() << ", " << aabb.getWidthHeight() << ")";
+}
+
+inline AABB operator*(
+    const Matrix& M,
+    const AABB& aabb
+) noexcept {
+    return {M * aabb.getLeftTop(), aabb.getWidthHeight()};
 }
 }

@@ -1,9 +1,9 @@
 #pragma once
-#include "../../Dynamics/DynamicsDTO.h"
-#include "../../Geometrics/BartaShapes/AABB.h"
-#include "../../Geometrics/BartaShapes/Circle.h"
-#include "../../pch.h"
-#include "../CheckCollisionVisitorInterface.h"
+#include <Collisions/CheckCollisionVisitorInterface.h>
+#include <Dynamics/DynamicsDifference.h>
+#include <Geometrics/BartaShapes/AABB.h>
+#include <Geometrics/BartaShapes/Circle.h>
+#include <pch.h>
 
 namespace Barta {
 
@@ -22,9 +22,9 @@ private:
     const DynamicsDifference dynamicsDifference;
     const AABB expandedAABB;
 
-    Vector2f calculateCollisionPoint() const;
-    Vector2f matchCornerCenter(AABB::VoronoiRegion regionMask, const AABB& aabb) const;
-    Vector2f calculateNormVector(float delta_time) const;
-    Vector2f calculateNormVectorForStatic() const;
+    Point calculateCollisionPoint() const;
+    Point matchCornerCenter(AABB::VoronoiRegion regionMask, const AABB& aabb) const;
+    Vector calculateNormVector(PrecisionType delta_time) const;
+    Vector calculateNormVectorForStatic() const;
 };
 }

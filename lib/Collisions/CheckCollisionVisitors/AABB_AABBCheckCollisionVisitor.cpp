@@ -1,6 +1,8 @@
 #include <Collisions/CheckCollisionVisitors/AABB_AABBCheckCollisionVisitor.h>
+#include <Geometrics/ConvexFactor.h>
 
-Barta::AABB_AABBCheckCollisionVisitor::AABB_AABBCheckCollisionVisitor(
+namespace Barta {
+AABB_AABBCheckCollisionVisitor::AABB_AABBCheckCollisionVisitor(
     const AABB& aabb1,
     const AABB& aabb2,
     const DynamicsDifference& dynamicsDifference
@@ -9,7 +11,7 @@ Barta::AABB_AABBCheckCollisionVisitor::AABB_AABBCheckCollisionVisitor(
     aabb2(aabb2),
     dynamicsDifference(dynamicsDifference) {}
 
-Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkStaticCollision(
+CollisionTestResult AABB_AABBCheckCollisionVisitor::checkStaticCollision(
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     std::stringstream ss;
@@ -17,9 +19,8 @@ Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkStaticCol
 
     return collisionTestResultBuilder
         .setCollisionDetected(
-            this->aabb1.getLeftTop().getX() <= this->aabb2.getRightTop().getX() && this->aabb1.getRightTop().getX() >= this->aabb2.getLeftTop().getX()
-            && this->aabb1.getLeftTop().getY() <= this->aabb2.getLeftBottom().getY()
-            && this->aabb1.getLeftBottom().getY() >= this->aabb2.getLeftTop().getY()
+            this->aabb1.getLeftTop().x() <= this->aabb2.getRightTop().x() && this->aabb1.getRightTop().x() >= this->aabb2.getLeftTop().x()
+            && this->aabb1.getLeftTop().y() <= this->aabb2.getLeftBottom().y() && this->aabb1.getLeftBottom().y() >= this->aabb2.getLeftTop().y()
         )
         ->setCollisionPoint(this->calculateCollisionPoint())
         ->setStaticCollision(true)
@@ -28,7 +29,7 @@ Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkStaticCol
         ->build();
 }
 
-Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkDynamicCollision(
+CollisionTestResult AABB_AABBCheckCollisionVisitor::checkDynamicCollision(
     const float delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
@@ -38,27 +39,27 @@ Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkDynamicCo
     }
 
     collisionTestResultBuilder.setStaticCollision(false)->setCollisionDetected(false);
-    if (this->dynamicsDifference.velocity == Vector2f()) {
+    if (this->dynamicsDifference.velocity == Vector::Zero()) {
         return collisionTestResultBuilder.setDebugInfo("AABB - AABB zero velocity")->build();
     }
 
     float t_first = 0.f;
     float t_last = delta_time;
-    Vector2f normVector = {};
-    std::vector<std::tuple<const float, const float, const float, const float, const float, const Vector2f, std::string>> dataVector = {
-        {this->dynamicsDifference.velocity.getX(),
-         this->aabb2.getLeftTop().getX(),
-         this->aabb2.getRightTop().getX(),
-         this->aabb1.getLeftTop().getX(),
-         this->aabb1.getRightTop().getX(),
-         Vector2f(1.f, 0.f),
+    Vector normVector = {};
+    std::vector<std::tuple<const float, const float, const float, const float, const float, const Vector, std::string>> dataVector = {
+        {this->dynamicsDifference.velocity.x(),
+         this->aabb2.getLeftTop().x(),
+         this->aabb2.getRightTop().x(),
+         this->aabb1.getLeftTop().x(),
+         this->aabb1.getRightTop().x(),
+         Vector(1.f, 0.f),
          "x"},
-        {this->dynamicsDifference.velocity.getY(),
-         this->aabb2.getLeftTop().getY(),
-         this->aabb2.getLeftBottom().getY(),
-         this->aabb1.getLeftTop().getY(),
-         this->aabb1.getLeftBottom().getY(),
-         Vector2f(0.f, 1.f),
+        {this->dynamicsDifference.velocity.y(),
+         this->aabb2.getLeftTop().y(),
+         this->aabb2.getLeftBottom().y(),
+         this->aabb1.getLeftTop().y(),
+         this->aabb1.getLeftBottom().y(),
+         Vector(0.f, 1.f),
          "y"}
     };
     static constexpr const int VELOCITY = 0;
@@ -117,15 +118,18 @@ Barta::CollisionTestResult Barta::AABB_AABBCheckCollisionVisitor::checkDynamicCo
         ->build();
 }
 
-Barta::Vector2f Barta::AABB_AABBCheckCollisionVisitor::calculateCollisionPoint() const {
+Point AABB_AABBCheckCollisionVisitor::calculateCollisionPoint() const {
     AABB::PointDistance maxDistance;
-    Vector2f collisionPoint{};
+    Point collisionPoint{};
     maxDistance.distance = std::numeric_limits<float>::min();
     for (const auto p: this->aabb1.getVertices()) {
         auto closest = this->aabb2.closestPointTo(p);
         if (closest.distance < maxDistance.distance) {
             maxDistance = closest;
-            collisionPoint = 0.5 * p + 0.5 * closest.point;
+            collisionPoint = ConvexFactor::convexCombination({
+                {0.5f, p            },
+                {0.5f, closest.point},
+            });
         }
     }
 
@@ -133,9 +137,13 @@ Barta::Vector2f Barta::AABB_AABBCheckCollisionVisitor::calculateCollisionPoint()
         auto closest = this->aabb1.closestPointTo(p);
         if (closest.distance < maxDistance.distance) {
             maxDistance = closest;
-            collisionPoint = 0.5 * p + 0.5 * closest.point;
+            collisionPoint = ConvexFactor::convexCombination({
+                {0.5f, p            },
+                {0.5f, closest.point},
+            });
         }
     }
 
     return collisionPoint;
+}
 }

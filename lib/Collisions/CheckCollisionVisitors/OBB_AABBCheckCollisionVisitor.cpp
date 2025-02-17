@@ -3,6 +3,7 @@
 //
 
 #include <Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h>
+#include <Geometrics/ConvexFactor.h>
 
 Barta::OBB_AABBCheckCollisionVisitor::OBB_AABBCheckCollisionVisitor(
     const OBB& obb,
@@ -20,7 +21,7 @@ bool Barta::OBB_AABBCheckCollisionVisitor::checkStaticOneWay(
     auto min = std::numeric_limits<float>::max();
     auto max = -std::numeric_limits<float>::max();
     for (auto& vertex: obb.getVertices()) {
-        auto projection = vertex.x;
+        auto projection = vertex.x();
         if (projection < min) {
             min = projection;
         }
@@ -30,14 +31,14 @@ bool Barta::OBB_AABBCheckCollisionVisitor::checkStaticOneWay(
         }
     }
 
-    if (aabb.getLeftTop().x > max || (aabb.getWidthHeight() + aabb.getLeftTop()).x < min) {
+    if (aabb.getLeftTop().x() > max || (aabb.getWidthHeight() + aabb.getLeftTop()).x() < min) {
         return true;
     }
 
     min = std::numeric_limits<float>::max();
     max = -std::numeric_limits<float>::max();
     for (auto& vertex: obb.getVertices()) {
-        auto projection = vertex.y;
+        auto projection = vertex.y();
         if (projection < min) {
             min = projection;
         }
@@ -47,7 +48,7 @@ bool Barta::OBB_AABBCheckCollisionVisitor::checkStaticOneWay(
         }
     }
 
-    if (aabb.getLeftTop().y > max || (aabb.getWidthHeight() + aabb.getLeftTop()).y < min) {
+    if (aabb.getLeftTop().y() > max || (aabb.getWidthHeight() + aabb.getLeftTop()).y() < min) {
         return true;
     }
 
@@ -60,17 +61,17 @@ Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkStaticColl
     std::stringstream ss;
     ss << "obb " << this->obb << " aabb: " << this->obb << " velocity: " << this->dynamicsDifference.velocity;
     collisionTestResultBuilder.setStaticCollision(true)->setDebugInfo("OOB - AABB static")->setObjectsDebugInfo(ss.str());
-    auto relativeAabb = AABB({}, this->aabb.getWidthHeight());
-    auto relativeObb = OBB(this->obb.getFirstVertex() - this->aabb.getLeftTop(), this->obb.getWidthHeight(), this->obb.getRotation());
+
+    Matrix M = Transformation::translation(-this->aabb.getLeftTop().toVector()) * this->obb.getTransformation().getMatrix();
+    auto relativeAabb = AABB(Point::Zero(), this->aabb.getWidthHeight());
+    auto relativeObb = OBB(this->obb.getWidthHeight(), Transformation(M));
     if (OBB_AABBCheckCollisionVisitor::checkStaticOneWay(relativeAabb, relativeObb)) {
         return collisionTestResultBuilder.build();
     }
 
-    auto relativeAabb2 = AABB({}, this->obb.getWidthHeight());
-    auto relativeObb2 =
-        OBB((this->aabb.getLeftTop() - this->obb.getFirstVertex()).rotated(-this->obb.getRotation()),
-            this->aabb.getWidthHeight(),
-            -this->obb.getRotation());
+    M = this->obb.getTransformation().getMatrix().inverse();
+    auto relativeObb2 = OBB(this->aabb.getWidthHeight(), Transformation(M));
+    auto relativeAabb2 = AABB(Point::Zero(), this->obb.getWidthHeight());
     if (OBB_AABBCheckCollisionVisitor::checkStaticOneWay(relativeAabb2, relativeObb2)) {
         return collisionTestResultBuilder.build();
     }
@@ -82,18 +83,22 @@ Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkDynamicCol
     float deltaTime,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
-    throw std::runtime_error("Not implemented");
+    // throw std::runtime_error("Not implemented");
+    return collisionTestResultBuilder.build();
 }
 
-Barta::Vector2f Barta::OBB_AABBCheckCollisionVisitor::calculateCollisionPoint() const {
+Barta::Point Barta::OBB_AABBCheckCollisionVisitor::calculateCollisionPoint() const {
     AABB::PointDistance maxDistance;
-    Vector2f collisionPoint{};
+    Point collisionPoint{};
     maxDistance.distance = std::numeric_limits<float>::max();
     for (const auto p: this->aabb.getVertices()) {
         auto closest = this->obb.closestPointTo(p);
         if (closest.distance < maxDistance.distance) {
             maxDistance = closest;
-            collisionPoint = 0.5 * p + 0.5 * closest.point;
+            collisionPoint = ConvexFactor::convexCombination({
+                {0.5, p            },
+                {0.5, closest.point}
+            });
         }
     }
 
@@ -101,7 +106,10 @@ Barta::Vector2f Barta::OBB_AABBCheckCollisionVisitor::calculateCollisionPoint() 
         auto closest = this->aabb.closestPointTo(p);
         if (closest.distance < maxDistance.distance) {
             maxDistance = closest;
-            collisionPoint = 0.5 * p + 0.5 * closest.point;
+            collisionPoint = ConvexFactor::convexCombination({
+                {0.5, p            },
+                {0.5, closest.point}
+            });
         }
     }
 

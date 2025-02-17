@@ -5,8 +5,8 @@
 #include "Geometrics/Ray.h"
 
 Barta::Ray::Ray(
-    Vector2f origin,
-    Vector2f direction
+    Point origin,
+    Vector direction
 ) noexcept:
     origin(origin),
     direction(direction) {}

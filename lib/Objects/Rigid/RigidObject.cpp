@@ -4,7 +4,8 @@
 
 #include <Objects/Rigid/RigidObject.h>
 
-Barta::RigidObject::RigidObject(
+namespace Barta {
+RigidObject::RigidObject(
     GraphicsData graphicsData,
     std::unique_ptr<HitboxInterface> hitbox,
     DynamicsDTO dynamicsDto
@@ -13,45 +14,40 @@ Barta::RigidObject::RigidObject(
     hitbox(std::move(hitbox)),
     dynamicsDTOCollection(dynamicsDto) {}
 
-std::unique_ptr<const Barta::HitboxInterface> Barta::RigidObject::getHitbox() const {
-    return this->hitbox->getTransformedHitbox(*this->graphicsData.transformable);
+std::unique_ptr<const HitboxInterface> RigidObject::getHitbox() const {
+    return this->hitbox->getTransformedHitbox(this->graphicsData.transformation);
 }
 
-void Barta::RigidObject::rotate(
+void RigidObject::rotate(
     float angle
 ) {
     this->rotate(angle, this->dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter);
 }
 
 // TODO move rotation to update strategy
-float Barta::RigidObject::getRotation() const {
-    return this->graphicsData.transformable->getRotaion();
+float RigidObject::getRotation() const {
+    return this->graphicsData.transformation.getRotation(Vector::Z_Axis());
 }
 
-void Barta::RigidObject::setRotation(
-    float angle
-) {
-    this->rotate(angle - this->graphicsData.transformable->getRotaion(), this->dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter);
-}
-
-void Barta::RigidObject::rotate(
+void RigidObject::rotate(
     float angle,
-    Vector2f axis
+    const Point& origin
 ) {
-    this->graphicsData.transformable->rotate(angle, axis);
+    this->graphicsData.transformation = Transformation::rotation(angle, origin) * this->graphicsData.transformation;
 }
 
-void Barta::RigidObject::move(
-    const Vector2f& shift
+void RigidObject::move(
+    const Vector& shift
 ) {
-    this->graphicsData.transformable->move(shift);
+    this->graphicsData.transformation = Transformation::translation(shift) * this->graphicsData.transformation;
     this->dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter += shift;
 }
 
-Barta::DynamicsDTOCollection& Barta::RigidObject::getDynamicsDTOs() {
+DynamicsDTOCollection& RigidObject::getDynamicsDTOs() {
     return this->dynamicsDTOCollection;
 }
 
-Barta::GraphicsDataAwareInterface::GraphicsDataList Barta::RigidObject::getGraphicsData() {
+GraphicsDataAwareInterface::GraphicsDataList RigidObject::getGraphicsData() {
     return {&this->graphicsData};
+}
 }

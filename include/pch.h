@@ -21,6 +21,10 @@
 
 #define _USE_MATH_DEFINES
 
+// Eigen
+#include <Eigen/Dense>
+#include <Eigen/src/Core/Matrix.h>
+
 // other headers
 #include <chrono>
 #include <math.h>

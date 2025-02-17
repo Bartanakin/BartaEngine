@@ -2,19 +2,20 @@
 #include <Collisions/CheckCollisionVisitors/AABB_AABBCheckCollisionVisitor.h>
 #include <pch.h>
 
-bool Barta::NullHitbox::isWithin(
-    const Vector2f& position
+namespace Barta {
+bool NullHitbox::isWithin(
+    const Point& position
 ) const {
     return false;
 }
 
-std::vector<float> Barta::NullHitbox::intersectsWithRay(
+std::vector<float> NullHitbox::intersectsWithRay(
     const Ray& ray
 ) const {
     return {};
 }
 
-Barta::CollisionTestResult Barta::NullHitbox::intersects(
+CollisionTestResult NullHitbox::intersects(
     const HitboxInterface& secondHitbox,
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
@@ -22,13 +23,13 @@ Barta::CollisionTestResult Barta::NullHitbox::intersects(
     return CollisionTestResult();
 }
 
-std::unique_ptr<const Barta::HitboxInterface> Barta::NullHitbox::getTransformedHitbox(
-    const TransformableInterface& transformable
+std::unique_ptr<const HitboxInterface> NullHitbox::getTransformedHitbox(
+    const Transformation& transformation
 ) const {
-    return std::unique_ptr<const HitboxInterface>(new NullHitbox());
+    return std::make_unique<const NullHitbox>();
 }
 
-Barta::CollisionTestResult Barta::NullHitbox::intersectsWithCircle(
+CollisionTestResult NullHitbox::intersectsWithCircle(
     const Circle& secondCircle,
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
@@ -39,7 +40,7 @@ Barta::CollisionTestResult Barta::NullHitbox::intersectsWithCircle(
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-Barta::CollisionTestResult Barta::NullHitbox::intersectsWithAABB(
+CollisionTestResult NullHitbox::intersectsWithAABB(
     const AABB& secondAABB,
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
@@ -47,7 +48,7 @@ Barta::CollisionTestResult Barta::NullHitbox::intersectsWithAABB(
     return CollisionTestResult();
 }
 
-Barta::CollisionTestResult Barta::NullHitbox::intersectsWithOBB(
+CollisionTestResult NullHitbox::intersectsWithOBB(
     const OBB& secondShape,
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
@@ -55,8 +56,9 @@ Barta::CollisionTestResult Barta::NullHitbox::intersectsWithOBB(
     return CollisionTestResult();
 }
 
-Barta::OBB Barta::NullHitbox::getBoundingOBB() const {
+OBB NullHitbox::getBoundingOBB() const {
     return {{}, {}, 0.f};
+}
 }
 
 #pragma GCC diagnostic pop

@@ -1,6 +1,8 @@
 #pragma once
-#include "../Geometrics/TransformableInterface.h"
-#include "HitboxInterface.h"
+#include <Dynamics/DynamicsDifference.h>
+#include <Geometrics/BartaShapes/OBB.h>
+#include <Geometrics/Transformation.h>
+#include <Hitbox/HitboxInterface.h>
 
 namespace Barta {
 
@@ -9,7 +11,7 @@ public:
     CircleHitbox(const Circle& circle);
     ~CircleHitbox() = default;
 
-    bool isWithin(const Vector2f& position) const override;
+    bool isWithin(const Point& position) const override;
 
     std::vector<float> intersectsWithRay(const Ray& ray) const override;
 
@@ -19,7 +21,7 @@ public:
         const DynamicsDifference& dynamicsDifference
     ) const override;
 
-    std::unique_ptr<const HitboxInterface> getTransformedHitbox(const TransformableInterface& transformable) const override;
+    std::unique_ptr<const HitboxInterface> getTransformedHitbox(const Transformation& transformation) const override;
 
     CollisionTestResult intersectsWithCircle(
         const Circle& secondCircle,

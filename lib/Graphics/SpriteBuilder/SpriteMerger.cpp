@@ -10,11 +10,11 @@ Barta::SpriteMerger* Barta::SpriteMerger::addRectangleWithColors(
     this->types.push_back(SpriteType::RECTANGLE_WITH_COLORS);
 
     for (const auto& vector: {
-             addRectangleWithColors.aabb.getLeftTop(),
+             addRectangleWithColors.aabb.getLeftTop().toVector(),
              addRectangleWithColors.aabb.getWidthHeight(),
          }) {
-        this->data.push_back(vector.getX());
-        this->data.push_back(vector.getY());
+        this->data.push_back(vector.x());
+        this->data.push_back(vector.y());
         this->data.push_back(0.f);
     }
 
@@ -37,8 +37,8 @@ Barta::SpriteMerger* Barta::SpriteMerger::addCircleSprite(
 ) {
     this->types.push_back(SpriteType::CIRCLE);
 
-    this->data.push_back(circleSprite.circle.getCenter().getX());
-    this->data.push_back(circleSprite.circle.getCenter().getY());
+    this->data.push_back(circleSprite.circle.getCenter().x());
+    this->data.push_back(circleSprite.circle.getCenter().y());
     this->data.push_back(0.f);
     this->data.push_back(circleSprite.circle.getRadius());
 
@@ -75,8 +75,8 @@ Barta::SpriteMerger* Barta::SpriteMerger::addTriangle(
     this->types.push_back(SpriteType::TRIANGLE);
 
     for (const auto& vector: {triangleSprite.triangle.p1, triangleSprite.triangle.p2, triangleSprite.triangle.p3}) {
-        this->data.push_back(vector.getX());
-        this->data.push_back(vector.getY());
+        this->data.push_back(vector.x());
+        this->data.push_back(vector.y());
         this->data.push_back(0.f);
     }
 

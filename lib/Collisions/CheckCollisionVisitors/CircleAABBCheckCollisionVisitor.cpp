@@ -1,9 +1,11 @@
 #include <Collisions/CheckCollisionVisitors/CircleAABBCheckCollisionVisitor.h>
 #include "pch.h"
+#include <Geometrics/ConvexFactor.h>
 #include <Geometrics/Intersections.h>
 #include <Geometrics/Segment.h>
 
-Barta::CircleAABBCheckCollisionVisitor::CircleAABBCheckCollisionVisitor(
+namespace Barta {
+CircleAABBCheckCollisionVisitor::CircleAABBCheckCollisionVisitor(
     const Circle& circle,
     const AABB& aabb,
     const DynamicsDifference& dynamicsDifference
@@ -11,22 +13,22 @@ Barta::CircleAABBCheckCollisionVisitor::CircleAABBCheckCollisionVisitor(
     circle(circle),
     aabb(aabb),
     dynamicsDifference(dynamicsDifference),
-    expandedAABB(AABB(
-        this->aabb.getLeftTop() - Vector2f(this->circle.getRadius(), this->circle.getRadius()),
-        this->aabb.getWidthHeight() + Vector2f(2.f * this->circle.getRadius(), 2.f * this->circle.getRadius())
+    expandedAABB(AABB( // TODO third dimention
+        this->aabb.getLeftTop() - Vector(this->circle.getRadius(), this->circle.getRadius()),
+        this->aabb.getWidthHeight() + 2.f * Vector(this->circle.getRadius(), this->circle.getRadius())
     )) {}
 
-Barta::CircleAABBCheckCollisionVisitor::~CircleAABBCheckCollisionVisitor() {}
+CircleAABBCheckCollisionVisitor::~CircleAABBCheckCollisionVisitor() {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateCollisionPoint() const {
-    Vector2f collisionPoint = {};
+Point CircleAABBCheckCollisionVisitor::calculateCollisionPoint() const {
+    Point collisionPoint = Point::Zero();
     float min = std::numeric_limits<float>::max();
     for (const auto& side: this->expandedAABB.getSides()) {
         auto perpVector = (side.getEnd() - side.getBeginning()).perp(this->circle.getCenter() - side.getBeginning());
-        auto distance = perpVector.normSquare();
+        auto distance = perpVector.squaredNorm();
         if (distance < min) {
             min = distance;
             collisionPoint = this->circle.getCenter() - 0.5 * perpVector;
@@ -36,7 +38,7 @@ Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateCollisionPoint(
     return collisionPoint;
 }
 
-Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkStaticCollision(
+CollisionTestResult CircleAABBCheckCollisionVisitor::checkStaticCollision(
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     std::stringstream ss;
@@ -71,7 +73,7 @@ Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkStaticCo
 
 #pragma GCC diagnostic pop
 
-Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkDynamicCollision(
+CollisionTestResult CircleAABBCheckCollisionVisitor::checkDynamicCollision(
     const float delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
@@ -81,26 +83,29 @@ Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkDynamicC
     }
 
     collisionTestResultBuilder.setStaticCollision(false)->setTimePassed(delta_time);
-    Vector2f A = this->circle.getCenter();
-    Vector2f B = A + ((this->dynamicsDifference.velocity + 0.5f * this->dynamicsDifference.acceleration * delta_time) * delta_time);
+    Point A = this->circle.getCenter();
+    Point B = A + (this->dynamicsDifference.velocity + 0.5f * this->dynamicsDifference.acceleration * delta_time) * delta_time;
     Segment L = Segment(A, B);
     auto tContainer = Intersections::segmentAndAABB(L, this->expandedAABB);
     if (!this->expandedAABB.isWithin(circle.getCenter()) && tContainer.empty()) {
         return collisionTestResultBuilder.setDebugInfo("Circle - AABB dynamic, NOT in expanded")->build();
     }
 
-    Vector2f P;
+    Point P;
     auto t = 0.f;
     if (!tContainer.empty()) {
         t = std::get<0>(tContainer[0]);
-        P = A * (1.f - t) + B * t;
+        P = ConvexFactor::convexCombination({
+            {1.f - t, A},
+            {t,       B}
+        });
     } else {
         P = this->circle.getCenter();
     }
 
     auto regionMask = this->aabb.findVoronoiRegionType(P);
     auto normVector = this->calculateNormVector(delta_time);
-    if (normVector == Vector2f()) {
+    if (normVector == Vector::Zero()) {
         throw "Incorrect normal vector found";
     }
 
@@ -126,7 +131,7 @@ Barta::CollisionTestResult Barta::CircleAABBCheckCollisionVisitor::checkDynamicC
         ->build();
 }
 
-Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::matchCornerCenter(
+Point CircleAABBCheckCollisionVisitor::matchCornerCenter(
     AABB::VoronoiRegion regionMask,
     const AABB& aabb
 ) const {
@@ -139,10 +144,10 @@ Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::matchCornerCenter(
     }
 }
 
-Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateNormVector(
+Vector CircleAABBCheckCollisionVisitor::calculateNormVector(
     const float delta_time
 ) const {
-    std::vector<Vector2f> possibleNormalVectors = {
+    std::vector<Vector> possibleNormalVectors = {
         {0.f,  -1.f},
         {1.f,  0.f },
         {0.f,  1.f },
@@ -165,9 +170,9 @@ Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateNormVector(
     return {};
 }
 
-Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateNormVectorForStatic() const {
+Vector CircleAABBCheckCollisionVisitor::calculateNormVectorForStatic() const {
     auto middle = this->aabb.getLeftTop() + 0.5f * this->aabb.getWidthHeight();
-    std::vector<Vector2f> possibleNormalVectors = {
+    std::vector<Vector> possibleNormalVectors = {
         {0.f,  -1.f},
         {1.f,  0.f },
         {0.f,  1.f },
@@ -186,4 +191,5 @@ Barta::Vector2f Barta::CircleAABBCheckCollisionVisitor::calculateNormVectorForSt
     }
 
     return {};
+}
 }

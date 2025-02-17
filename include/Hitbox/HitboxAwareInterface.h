@@ -1,8 +1,7 @@
 #pragma once
-#include "../Geometrics/TransformableInterface.h"
-#include "../pch.h"
-#include "HitboxAwareConcept.h"
-#include "HitboxInterface.h"
+#include <Hitbox/HitboxAwareConcept.h>
+#include <Hitbox/HitboxInterface.h>
+#include <pch.h>
 
 namespace Barta {
 

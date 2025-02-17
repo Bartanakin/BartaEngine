@@ -48,28 +48,28 @@ public:
     }
 
     SpriteBuilder* setVertex1(
-        Vector2f vertex
+        Point vertex
     ) {
         this->vertex1 = vertex;
         return this;
     }
 
     SpriteBuilder* setVertex2(
-        Vector2f vertex
+        Point vertex
     ) {
         this->vertex2 = vertex;
         return this;
     }
 
     SpriteBuilder* setVertex3(
-        Vector2f vertex
+        Point vertex
     ) {
         this->vertex3 = vertex;
         return this;
     }
 
     SpriteBuilder* setSize(
-        Vector2f size
+        Vector size
     ) {
         this->size = size;
         return this;
@@ -95,11 +95,11 @@ protected:
     Color color3;
     Color color4;
 
-    Vector2f vertex1;
-    Vector2f vertex2;
-    Vector2f vertex3;
+    Point vertex1;
+    Point vertex2;
+    Point vertex3;
 
-    Vector2f size;
+    Vector size;
     std::string string;
     int fontSize;
 };

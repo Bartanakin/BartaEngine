@@ -1,10 +1,10 @@
 #pragma once
 
-#include "BartaGraphicsBridgeInterface.h"
-#include "GraphicsDataAwareInterface.h"
-#include "SFML_Bridge/ResourceContainerInterface.h"
-#include "SFML_Bridge/ResourceMatcherInterface.h"
+#include <Graphics/BartaGraphicsBridgeInterface.h>
+#include <Graphics/GraphicsDataAwareInterface.h>
 #include <Graphics/SFML_Bridge/NullResourceContainer.h>
+#include <Graphics/SFML_Bridge/ResourceContainerInterface.h>
+#include <Graphics/SFML_Bridge/ResourceMatcherInterface.h>
 
 namespace Barta {
 class SFML_GraphicsBridge: public BartaGraphicsBridgeInterface {
@@ -25,9 +25,7 @@ public:
 
     bool logEvents(BartaEventLoggerInterface& eventLogger) override;
 
-    static const sf::Transformable convertTransformable(const TransformableInterface& myTransformable);
-
-    static std::unique_ptr<TransformableInterface> createNewTransformableInstance();
+    static const sf::Transform convertTransformation(const Transformation& myTransformation);
 
 private:
     void handleCustomResource(GraphicsData& graphicsData);

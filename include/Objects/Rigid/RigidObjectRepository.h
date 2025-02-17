@@ -10,9 +10,11 @@ class RigidObjectRepository {
 public:
     RigidObjectRepository(ListManager& listManager, ObjectManagerInterface& objectManagerInterface) noexcept;
 
-    RigidObjectInterface* addNewAABB(Vector2f size, Color color, bool infiniteMass = true);
+    RigidObjectInterface* addNewAABB(Vector size, Color color, bool infiniteMass = true);
 
-    RigidObjectInterface* addNewCircle(float radius, Color color);
+    RigidObjectInterface* addNewCircle(PrecisionType radius, Color color);
+
+    RigidObjectInterface* addNewOBB(Vector size, PrecisionType rotation, Color color);
 
 private:
     ListManager& listManager;

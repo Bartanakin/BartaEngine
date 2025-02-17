@@ -1,34 +1,35 @@
 #include <Geometrics/BartaShapes/AABB.h>
 #include "pch.h"
 
-Barta::AABB::AABB(
-    const Vector2f& leftTop,
-    const Vector2f& widthHeight
+namespace Barta {
+AABB::AABB(
+    const Point& leftTop,
+    const Vector& widthHeight
 ):
     leftTop(leftTop),
     widthHeight(widthHeight) {}
 
-Barta::Vector2f Barta::AABB::getLeftTop() const {
+Point AABB::getLeftTop() const {
     return this->leftTop;
 }
 
-Barta::Vector2f Barta::AABB::getRightTop() const {
-    return this->getLeftTop() + Vector2f(this->getWidthHeight().getX(), 0.f);
+Point AABB::getRightTop() const {
+    return this->getLeftTop() + Vector(this->getWidthHeight().x(), 0.f);
 }
 
-Barta::Vector2f Barta::AABB::getRightBottom() const {
+Point AABB::getRightBottom() const {
     return this->getLeftTop() + this->getWidthHeight();
 }
 
-Barta::Vector2f Barta::AABB::getLeftBottom() const {
-    return this->getLeftTop() + Vector2f(0.f, this->getWidthHeight().getY());
+Point AABB::getLeftBottom() const {
+    return this->getLeftTop() + Vector(0.f, this->getWidthHeight().y());
 }
 
-Barta::Vector2f Barta::AABB::getWidthHeight() const {
+Vector AABB::getWidthHeight() const {
     return this->widthHeight;
 }
 
-std::vector<Barta::Segment> Barta::AABB::getSides() const noexcept {
+std::vector<Segment> AABB::getSides() const noexcept {
     return {
         Segment(this->getLeftTop(), this->getRightTop()),
         Segment(this->getRightTop(), this->getRightBottom()),
@@ -37,7 +38,7 @@ std::vector<Barta::Segment> Barta::AABB::getSides() const noexcept {
     };
 }
 
-std::vector<Barta::Vector2f> Barta::AABB::getVertices() const noexcept {
+std::vector<Point> AABB::getVertices() const noexcept {
     return {
         this->getLeftTop(),
         this->getRightTop(),
@@ -46,19 +47,19 @@ std::vector<Barta::Vector2f> Barta::AABB::getVertices() const noexcept {
     };
 }
 
-bool Barta::AABB::isWithin(
-    const Vector2f& point
+bool AABB::isWithin(
+    const Point& point
 ) const noexcept {
-    return this->leftTop.getX() <= point.getX() && point.getX() <= this->leftTop.getX() + this->widthHeight.getX()
-           && this->leftTop.getY() <= point.getY() && point.getY() <= this->leftTop.getY() + this->widthHeight.getY();
+    return this->leftTop.x() <= point.x() && point.x() <= this->leftTop.x() + this->widthHeight.x() && this->leftTop.y() <= point.y()
+           && point.y() <= this->leftTop.y() + this->widthHeight.y();
 }
 
-Barta::AABB::PointDistance Barta::AABB::closestPointTo(
-    Vector2f p
+AABB::PointDistance AABB::closestPointTo(
+    Point p
 ) const noexcept {
     PointDistance q;
     q.distance = .0f;
-    for (size_t i = 0; i < p.size(); i++) {
+    for (int i = 0; i < p.size(); i++) {
         auto coord = p[i];
         if (coord < this->getLeftTop()[i]) {
             coord = this->getLeftTop()[i];
@@ -76,8 +77,8 @@ Barta::AABB::PointDistance Barta::AABB::closestPointTo(
     return q;
 }
 
-Barta::AABB::VoronoiRegion Barta::AABB::findVoronoiRegionType(
-    const Vector2f& point
+AABB::VoronoiRegion AABB::findVoronoiRegionType(
+    const Point& point
 ) const noexcept {
     auto sides = this->getSides();
     auto regionMask = VoronoiRegion::INSIDE;
@@ -89,4 +90,5 @@ Barta::AABB::VoronoiRegion Barta::AABB::findVoronoiRegionType(
     }
 
     return regionMask;
+}
 }

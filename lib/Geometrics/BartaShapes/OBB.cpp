@@ -4,61 +4,65 @@
 
 #include <Geometrics/BartaShapes/OBB.h>
 
-Barta::OBB::OBB(
-    const Vector2f& leftTop,
-    const Vector2f& widthHeight,
-    float rotation
+namespace Barta {
+OBB::OBB(
+    const Point& position,
+    const Vector& widthHeight,
+    PrecisionType rotation
 ):
-    AABB(leftTop, widthHeight),
-    rotation(rotation) {}
+    widthHeight(widthHeight),
+    transformation(Transformation::rotation(rotation, position) * Transformation::translation(position.toVector())) {}
 
-Barta::Vector2f Barta::OBB::getFirstVertex() const noexcept {
-    return AABB::getLeftTop();
+OBB::OBB(
+    const Vector& widthHeight,
+    Transformation transformation
+):
+    widthHeight(widthHeight),
+    transformation(std::move(transformation)) {}
+
+Point OBB::getFirstVertex() const noexcept {
+    return this->transformation.getTranslation() + Point::Zero();
 }
 
-std::vector<Barta::Segment> Barta::OBB::getSides() const noexcept {
-    auto rotatedSides = decltype(AABB::getSides())();
-    for (const auto& side: AABB::getSides()) {
-        rotatedSides.emplace_back(side.getBeginning().rotated(this->rotation), side.getEnd().rotated(this->rotation));
+std::vector<Segment> OBB::getSides() const noexcept {
+    auto aabb = AABB(Point::Zero(), this->widthHeight);
+    auto rotatedSides = decltype(aabb.getSides())();
+    for (const auto& side: aabb.getSides()) {
+        rotatedSides.emplace_back(this->transformation.getMatrix() * side.getBeginning(), this->transformation.getMatrix() * side.getEnd());
     }
 
     return rotatedSides;
 }
 
-Barta::Vector2f Barta::OBB::rebasePoint(
-    Vector2f p
-) const {
-    return (p - this->getLeftTop()).rotated(-this->rotation);
-}
-
-Barta::Vector2f Barta::OBB::rebaseVector(
-    Vector2f v
-) const {
-    return v.rotated(-this->rotation);
-}
-
-Barta::AABB::PointDistance Barta::OBB::closestPointTo(
-    Vector2f p
+AABB::PointDistance OBB::closestPointTo(
+    Point p
 ) const noexcept {
-    return AABB::closestPointTo((p - this->getLeftTop()).rotated(-this->getRotation()) + this->getLeftTop());
+    auto aabb = AABB(Point::Zero(), this->widthHeight);
+
+    return aabb.closestPointTo(this->transformation.getMatrix().inverse() * p);
 }
 
-Barta::Vector2f Barta::OBB::getCenter() const noexcept {
-    return this->getLeftTop() + (this->getWidthHeight() * 0.5f).rotated(this->rotation);
+Point OBB::getCenter() const noexcept {
+    return this->transformation.getMatrix() * (Point::Zero() + 0.5 * this->widthHeight);
 }
 
-std::vector<Barta::Vector2f> Barta::OBB::getVertices() const noexcept {
+const Transformation& OBB::getTransformation() const noexcept {
+    return this->transformation;
+}
+
+std::vector<Point> OBB::getVertices() const noexcept {
     return {this->getFirstVertex(), this->getSecondVertex(), this->getThirdVertex(), this->getFourthVertex()};
 }
 
-Barta::Vector2f Barta::OBB::getSecondVertex() const {
-    return Vector2f{this->getWidthHeight().x, 0.f}.rotated(this->rotation) + this->getFirstVertex();
+Point OBB::getSecondVertex() const {
+    return this->transformation.getMatrix() * (Point::Zero() + Vector(this->widthHeight.x(), 0.f));
 }
 
-Barta::Vector2f Barta::OBB::getThirdVertex() const {
-    return this->getWidthHeight().rotated(this->rotation) + this->getFirstVertex();
+Point OBB::getThirdVertex() const {
+    return this->transformation.getMatrix() * (Point::Zero() + Vector(this->widthHeight));
 }
 
-Barta::Vector2f Barta::OBB::getFourthVertex() const {
-    return Vector2f{0.f, this->getWidthHeight().y}.rotated(this->rotation) + this->getFirstVertex();
+Point OBB::getFourthVertex() const {
+    return this->transformation.getMatrix() * (Point::Zero() + Vector(0.f, this->widthHeight.y()));
+}
 }

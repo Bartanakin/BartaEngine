@@ -1,9 +1,8 @@
 #pragma once
-#include "../Collisions/CollisionDetectionStrategyInterface.h"
-#include "../Dynamics/DynamicsDifference.h"
-#include "../Geometrics/TransformableInterface.h"
-#include "../pch.h"
-#include "Geometrics/Ray.h"
+#include <Collisions/CollisionDetectionStrategyInterface.h>
+#include <Geometrics/BartaShapes/OBB.h>
+#include <Geometrics/Ray.h>
+#include <pch.h>
 
 namespace Barta {
 
@@ -12,7 +11,7 @@ public:
     HitboxInterface() = default;
     virtual ~HitboxInterface() = default;
 
-    virtual bool isWithin(const Vector2f& position) const = 0;
+    virtual bool isWithin(const Point& position) const = 0;
 
     virtual std::vector<float> intersectsWithRay(const Ray& ray) const = 0;
 
@@ -22,7 +21,7 @@ public:
         const DynamicsDifference& dynamicsDifference
     ) const = 0;
 
-    virtual std::unique_ptr<const HitboxInterface> getTransformedHitbox(const TransformableInterface& transformable) const = 0;
+    virtual std::unique_ptr<const HitboxInterface> getTransformedHitbox(const Transformation& transformation) const = 0;
 
     virtual CollisionTestResult intersectsWithCircle(
         const Circle& secondHitbox,

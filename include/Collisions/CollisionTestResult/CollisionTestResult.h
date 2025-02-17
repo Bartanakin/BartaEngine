@@ -1,39 +1,38 @@
 #pragma once
-#include "../../Geometrics/Vector2f.h"
-#include "../../pch.h"
+#include <Geometrics/Point.h>
+#include <pch.h>
 
 namespace Barta {
 
 struct CollisionTestResult {
     bool collisionDetected;
-    float timePassed;
+    PrecisionType timePassed;
     bool staticCollision;
-    Vector2f normVector;
-    Vector2f collisionPoint;
+    Vector normVector;
+    Point collisionPoint;
     std::string debugInfo;
 
     CollisionTestResult() noexcept:
         collisionDetected(false),
         timePassed(0.f),
         staticCollision(true),
-        normVector(Vector2f()),
-        collisionPoint(Vector2f()),
-        debugInfo("") {}
+        normVector(Vector::Zero()),
+        collisionPoint(Point::Zero()) {}
 
     CollisionTestResult(
         bool collisionDetected,
-        float timePassed,
+        PrecisionType timePassed,
         bool staticCollision = false,
-        Vector2f normVector = {},
-        Vector2f collisionPoint = {},
+        Vector normVector = Vector::Zero(),
+        Point collisionPoint = Point::Zero(),
         std::string debugInfo = ""
     ) noexcept:
         collisionDetected(collisionDetected),
         timePassed(timePassed),
         staticCollision(staticCollision),
-        normVector(normVector),
-        collisionPoint(collisionPoint),
-        debugInfo(debugInfo) {}
+        normVector(std::move(normVector)),
+        collisionPoint(std::move(collisionPoint)),
+        debugInfo(std::move(debugInfo)) {}
 
     bool operator==(
         const CollisionTestResult& second

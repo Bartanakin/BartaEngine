@@ -1,33 +1,32 @@
 #include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
-#include "pch.h"
+#include <pch.h>
 
-Barta::CollisionTestResultBuilder::CollisionTestResultBuilder() noexcept:
+namespace Barta {
+CollisionTestResultBuilder::CollisionTestResultBuilder() noexcept:
     collisionDetected(false),
     timePassed(0.f),
     staticCollision(false),
     normVector(0., 0.),
-    collisionPoint(0., 0.),
-    debugInfo(""),
-    objectsDebugInfo("") {}
+    collisionPoint(0., 0., 0.) {}
 
-Barta::CollisionTestResult Barta::CollisionTestResultBuilder::build() const noexcept {
+CollisionTestResult CollisionTestResultBuilder::build() const noexcept {
     std::stringstream ss;
     ss << this->debugInfo << " Objects: " << this->objectsDebugInfo << " Collision detected: " << this->collisionDetected
-       << " Time passed: " << this->timePassed << " Static Collision " << this->staticCollision << " Norm vector: " << this->normVector
-       << " collision point: " << this->normVector;
+       << " Time passed: " << this->timePassed << " Static Collision " << this->staticCollision << " Norm vector: " << this->normVector.toString()
+       << " collision point: " << this->normVector.toString();
 
-    return CollisionTestResult(this->collisionDetected, this->timePassed, this->staticCollision, this->normVector, this->collisionPoint, ss.str());
+    return {this->collisionDetected, this->timePassed, this->staticCollision, this->normVector, this->collisionPoint, ss.str()};
 }
 
-void Barta::CollisionTestResultBuilder::reset() noexcept {
+void CollisionTestResultBuilder::reset() noexcept {
     this->collisionDetected = false;
     this->timePassed = 0.f;
     this->staticCollision = false;
-    this->normVector = Vector2f(0., 0.);
-    this->collisionPoint = Vector2f(0., 0.);
+    this->normVector = Vector::Zero();
+    this->collisionPoint = Point::Zero();
 }
 
-Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setCollisionDetected(
+CollisionTestResultBuilder* CollisionTestResultBuilder::setCollisionDetected(
     bool data
 ) noexcept {
     this->collisionDetected = data;
@@ -35,7 +34,7 @@ Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setCollisi
     return this;
 }
 
-Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setTimePassed(
+CollisionTestResultBuilder* CollisionTestResultBuilder::setTimePassed(
     float data
 ) noexcept {
     this->timePassed = data;
@@ -43,7 +42,7 @@ Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setTimePas
     return this;
 }
 
-Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setStaticCollision(
+CollisionTestResultBuilder* CollisionTestResultBuilder::setStaticCollision(
     bool data
 ) noexcept {
     this->staticCollision = data;
@@ -51,23 +50,23 @@ Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setStaticC
     return this;
 }
 
-Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setNormVector(
-    Barta::Vector2f data
+CollisionTestResultBuilder* CollisionTestResultBuilder::setNormVector(
+    Vector data
 ) noexcept {
     this->normVector = data;
 
     return this;
 }
 
-Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setCollisionPoint(
-    Vector2f collisionPoint
+CollisionTestResultBuilder* CollisionTestResultBuilder::setCollisionPoint(
+    Point collisionPoint
 ) noexcept {
     this->collisionPoint = collisionPoint;
 
     return this;
 }
 
-Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setDebugInfo(
+CollisionTestResultBuilder* CollisionTestResultBuilder::setDebugInfo(
     std::string data
 ) noexcept {
     this->debugInfo = data;
@@ -75,10 +74,11 @@ Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setDebugIn
     return this;
 }
 
-Barta::CollisionTestResultBuilder* Barta::CollisionTestResultBuilder::setObjectsDebugInfo(
+CollisionTestResultBuilder* CollisionTestResultBuilder::setObjectsDebugInfo(
     std::string data
 ) noexcept {
     this->objectsDebugInfo = data;
 
     return this;
+}
 }

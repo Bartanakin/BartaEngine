@@ -1,24 +1,26 @@
 #pragma once
-#include "../../pch.h"
-#include "../../Geometrics/Vector2f.h"
-#include "../TemplateEventSubscriber.h"
+#include <Events/TemplateEventSubscriber.h>
+#include <Geometrics/Point.h>
+#include <pch.h>
 
-namespace Barta{
+namespace Barta {
 
-	class MouseMoveEvent {
-	public:
-		inline MouseMoveEvent(Vector2f position) noexcept : position(position) {};
+class MouseMoveEvent {
+public:
+    MouseMoveEvent(
+        Point position
+    ) noexcept:
+        position(position) {}
 
-		inline Vector2f getPosition() const noexcept { return this->position; };
+    Point getPosition() const noexcept { return this->position; }
 
-	private:
-		Vector2f position;
-	};
+private:
+    Point position;
+};
 }
 
 SUBSCRIBER_INTERFACE_DEFINITION(Barta::MouseMoveEvent);
 
-namespace Barta{
-    typedef EventSubscriber<MouseMoveEvent> MouseMoveSubscriberInterface;
+namespace Barta {
+typedef EventSubscriber<MouseMoveEvent> MouseMoveSubscriberInterface;
 }
-

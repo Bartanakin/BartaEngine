@@ -3,14 +3,14 @@
 //
 
 #pragma once
-#include "Vector2f.h"
+#include "Point.h"
 
 namespace Barta {
 
 struct Ray {
-    Vector2f origin;
-    Vector2f direction;
+    Point origin;
+    Vector direction;
 
-    Ray(Vector2f origin, Vector2f direction) noexcept;
+    Ray(Point origin, Vector direction) noexcept;
 };
 }

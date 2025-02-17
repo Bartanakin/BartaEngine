@@ -7,11 +7,11 @@
 #include <Hitbox/NullHitbox.h>
 
 Barta::RigidCompositeObject::RigidCompositeObject(
-    std::unique_ptr<TransformableInterface> transformable,
+    Transformation transformation,
     DynamicsDTO dynamicsDto,
     std::vector<RigidObjectInterface*> children
 ):
-    transformable(std::move(transformable)),
+    transformation(std::move(transformation)),
     dynamicsDtoCollection(dynamicsDto),
     children(std::move(children)) {}
 
@@ -21,7 +21,7 @@ bool Barta::RigidCompositeObject::isToBeDeleted() const {
 
 std::unique_ptr<const Barta::HitboxInterface> Barta::RigidCompositeObject::getHitbox() const {
     if (this->children.empty()) {
-        return std::unique_ptr<const HitboxInterface>(new NullHitbox());
+        return std::make_unique<const NullHitbox>();
     }
 
     HitboxComposite::HitboxesList list = {};
@@ -29,23 +29,23 @@ std::unique_ptr<const Barta::HitboxInterface> Barta::RigidCompositeObject::getHi
         list.push_back(child->getHitbox());
     }
 
-    return std::unique_ptr<const HitboxInterface>(new HitboxComposite(std::move(list)));
+    return std::make_unique<const HitboxComposite>(std::move(list));
 }
 
 void Barta::RigidCompositeObject::rotate(
     float angle,
-    Vector2f axis
+    const Point& origin
 ) {
-    this->transformable->rotate(angle, axis);
+    this->transformation = Transformation(Transformation::rotation(angle, origin) * this->transformation.getMatrix());
     for (auto& child: this->children) {
-        child->rotate(angle, axis);
+        child->rotate(angle, origin);
     }
 }
 
 void Barta::RigidCompositeObject::move(
-    const Vector2f& shift
+    const Vector& shift
 ) {
-    this->transformable->move(shift);
+    this->transformation = Transformation(Transformation::translation(shift) * this->transformation.getMatrix());
     for (auto& child: this->children) {
         child->move(shift);
     }

@@ -4,26 +4,27 @@
 #include <Collisions/CheckCollisionVisitors/CircleAABBCheckCollisionVisitor.h>
 #include <pch.h>
 
-Barta::AABB_Hitbox::AABB_Hitbox(
+namespace Barta {
+AABB_Hitbox::AABB_Hitbox(
     const AABB& aabb
 ):
     aabb(aabb) {}
 
-bool Barta::AABB_Hitbox::isWithin(
-    const Vector2f& position
+bool AABB_Hitbox::isWithin(
+    const Point& position
 ) const {
-    return this->getAABB().getLeftTop().getX() <= position.getX() && position.getX() <= this->getAABB().getRightBottom().getX()
-           && this->getAABB().getLeftTop().getY() <= position.getY() && position.getY() <= this->getAABB().getRightBottom().getY();
+    return this->getAABB().getLeftTop().x() <= position.x() && position.x() <= this->getAABB().getRightBottom().x()
+           && this->getAABB().getLeftTop().y() <= position.y() && position.y() <= this->getAABB().getRightBottom().y();
 }
 
-std::vector<float> Barta::AABB_Hitbox::intersectsWithRay(
+std::vector<float> AABB_Hitbox::intersectsWithRay(
     const Ray& ray
 ) const {
     // TODO
     return {};
 }
 
-Barta::CollisionTestResult Barta::AABB_Hitbox::intersects(
+CollisionTestResult AABB_Hitbox::intersects(
     const HitboxInterface& secondHitbox,
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
@@ -31,13 +32,13 @@ Barta::CollisionTestResult Barta::AABB_Hitbox::intersects(
     return secondHitbox.intersectsWithAABB(this->getAABB(), collisionDetector, dynamicsDifference);
 }
 
-std::unique_ptr<const Barta::HitboxInterface> Barta::AABB_Hitbox::getTransformedHitbox(
-    const TransformableInterface& transformable
+std::unique_ptr<const HitboxInterface> AABB_Hitbox::getTransformedHitbox(
+    const Transformation& transformation
 ) const {
-    return std::unique_ptr<const HitboxInterface>(new AABB_Hitbox(transformable.getTransformedAABB(this->getAABB())));
+    return std::make_unique<const AABB_Hitbox>(transformation.getMatrix() * this->getAABB());
 }
 
-Barta::CollisionTestResult Barta::AABB_Hitbox::intersectsWithCircle(
+CollisionTestResult AABB_Hitbox::intersectsWithCircle(
     const Circle& secondCircle,
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
@@ -48,7 +49,7 @@ Barta::CollisionTestResult Barta::AABB_Hitbox::intersectsWithCircle(
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-Barta::CollisionTestResult Barta::AABB_Hitbox::intersectsWithAABB(
+CollisionTestResult AABB_Hitbox::intersectsWithAABB(
     const AABB& secondAABB,
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
@@ -56,7 +57,7 @@ Barta::CollisionTestResult Barta::AABB_Hitbox::intersectsWithAABB(
     return collisionDetector.acceptCheckCollisionVisitor(AABB_AABBCheckCollisionVisitor(secondAABB, this->getAABB(), dynamicsDifference));
 }
 
-Barta::CollisionTestResult Barta::AABB_Hitbox::intersectsWithOBB(
+CollisionTestResult AABB_Hitbox::intersectsWithOBB(
     const OBB& secondShape,
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
@@ -64,12 +65,13 @@ Barta::CollisionTestResult Barta::AABB_Hitbox::intersectsWithOBB(
     return collisionDetector.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(secondShape, this->aabb, dynamicsDifference));
 }
 
-Barta::OBB Barta::AABB_Hitbox::getBoundingOBB() const {
+OBB AABB_Hitbox::getBoundingOBB() const {
     return {this->aabb.getLeftTop(), this->aabb.getWidthHeight(), 0.f};
 }
 
 #pragma GCC diagnostic pop
 
-const Barta::AABB& Barta::AABB_Hitbox::getAABB() const {
+const AABB& AABB_Hitbox::getAABB() const {
     return this->aabb;
+}
 }

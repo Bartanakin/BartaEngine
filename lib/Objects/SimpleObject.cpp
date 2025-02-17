@@ -10,9 +10,9 @@ Barta::SimpleObject::SimpleObject(
     graphicsData(std::move(graphicsData)) {}
 
 void Barta::SimpleObject::move(
-    Vector2f shift
+    const Vector& shift
 ) {
-    this->graphicsData.transformable->move(shift);
+    this->graphicsData.transformation = Transformation::translation(shift) * this->graphicsData.transformation;
 }
 
 Barta::GraphicsDataAwareInterface::GraphicsDataList Barta::SimpleObject::getGraphicsData() {

@@ -35,13 +35,13 @@ public:
         }
     }
 
-    Vector2f applyAllowedDirections(
-        const std::vector<Vector2f>& allowedDirections,
-        Vector2f newVector
+    Vector applyAllowedDirections(
+        const std::vector<Vector>& allowedDirections,
+        Vector newVector
     ) const {
-        if (newVector.zeroised() != Barta::Vector2f{}) {
+        if (newVector.zeroised() != Vector::Zero()) {
             for (auto& allowedDirection: allowedDirections) {
-                auto scalarProduct = allowedDirection.normalised() * newVector.normalised();
+                auto scalarProduct = allowedDirection.normalised().dot(newVector.normalised());
                 if (scalarProduct > 0.f || std::abs(scalarProduct) < 0.00005f) {
                     continue;
                 }
