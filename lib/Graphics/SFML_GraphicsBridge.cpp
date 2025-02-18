@@ -10,7 +10,7 @@ Barta::SFML_GraphicsBridge::SFML_GraphicsBridge(
     resourceMatcher(std::make_unique<SpriteResourceMatcher>(std::move(resourceContainer))),
     font(std::make_unique<sf::Font>()) {
     if (!fontPath.empty()) {
-        font->loadFromFile(fontPath);
+        font->loadFromFile(fontPath.string());
     }
 }
 

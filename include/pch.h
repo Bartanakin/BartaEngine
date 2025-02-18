@@ -19,6 +19,8 @@
 #include <SFML/Graphics.hpp>
 #pragma GCC diagnostic pop
 
+#define _USE_MATH_DEFINES
+
 // other headers
 #include <chrono>
 #include <math.h>
