@@ -14,7 +14,7 @@ public:
 
     bool handle(KeyPressedEvent& event) override;
 
-    bool isValid() const noexcept override;
+    bool isToBeDeleted() const noexcept override;
 
 private:
 };

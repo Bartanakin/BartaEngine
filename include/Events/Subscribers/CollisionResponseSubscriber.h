@@ -53,7 +53,7 @@ public:
         return true;
     }
 
-    bool isValid() const noexcept override { return true; }
+    bool isToBeDeleted() const noexcept override { return false; }
 
 private:
     void calculateNewVelocity(

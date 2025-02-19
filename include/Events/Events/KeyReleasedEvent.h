@@ -3,25 +3,27 @@
 #include "../BartaKeyMap.h"
 #include "../TemplateEventSubscriber.h"
 
-namespace Barta{
+namespace Barta {
 
-	class KeyReleasedEvent {
-	public:
-		inline KeyReleasedEvent(BartaKeyMap key) noexcept : key(key) {};
+class KeyReleasedEvent {
+public:
+    inline KeyReleasedEvent(
+        BartaKeyMap key
+    ) noexcept:
+        key(key) {}
 
-		BartaKeyMap key;
-	};
+    BartaKeyMap key;
+};
 
-	template<>
-	class EventSubscriber<KeyReleasedEvent> {
-		public:
-        virtual ~EventSubscriber() noexcept = default;
+template<>
+class EventSubscriber<KeyReleasedEvent> {
+public:
+    virtual ~EventSubscriber() noexcept = default;
 
-		virtual bool handle(KeyReleasedEvent& event) = 0;
+    virtual bool handle(KeyReleasedEvent& event) = 0;
 
-		virtual bool isValid() const noexcept = 0;
-	};
+    virtual bool isToBeDeleted() const noexcept = 0;
+};
 
-	typedef EventSubscriber<KeyReleasedEvent> KeyReleasedSubscriberInterface;
+typedef EventSubscriber<KeyReleasedEvent> KeyReleasedSubscriberInterface;
 }
-
