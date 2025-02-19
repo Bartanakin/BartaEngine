@@ -165,7 +165,9 @@ void Barta::SFML_GraphicsBridge::handleCustomResource(
                 transformation.getTranslation().x() + data[dataOffset] - data[dataOffset + 3],
                 transformation.getTranslation().y() + data[dataOffset + 1] - data[dataOffset + 3]
             ));
-            circleShape.setRotation(transformation.getRotation(Vector::Z_Axis()));
+            auto rotation = transformation.getRotation();
+
+            circleShape.setRotation(std::abs(rotation.z()) / rotation.z() * transformation.getRotation().w() * 180.f / M_PI);
             // circleShape.setScale(sf_transformable.getScale()); TODO
             circleShape.setFillColor(sf::Color(
                 static_cast<sf::Uint8>(data[dataOffset + 4]),

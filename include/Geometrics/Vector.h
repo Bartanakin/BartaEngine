@@ -8,6 +8,7 @@
 namespace Barta {
 using PrecisionType = float;
 using Matrix = Eigen::Matrix<PrecisionType, 4, 4>;
+using Quaternion = Eigen::Quaternion<PrecisionType>;
 using VectorBase = Eigen::Vector<PrecisionType, 4>;
 
 class Vector {
@@ -148,6 +149,19 @@ public:
         }
 
         return vector;
+    }
+
+    Matrix crossOperator() const noexcept {
+        Matrix M = Matrix::Zero(4, 4);
+
+        M(0, 1) = -this->z();
+        M(0, 2) = this->y();
+        M(1, 0) = this->z();
+        M(1, 2) = -this->x();
+        M(2, 0) = -this->y();
+        M(2, 1) = this->x();
+
+        return M;
     }
 
     bool operator==(const Vector& zero) const = default;

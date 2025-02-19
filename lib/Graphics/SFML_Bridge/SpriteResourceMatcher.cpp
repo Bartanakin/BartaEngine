@@ -45,7 +45,9 @@ const sf::Drawable& Barta::SpriteResourceMatcher::matchAndTransform(
 
     auto sprite = this->sf_spriteMap.at(hash);
     sprite->setPosition({transformation.getTranslation().x(), transformation.getTranslation().y()});
-    sprite->setRotation(transformation.getRotation(Vector::Z_Axis()) * 180.f / M_PI);
+    auto rotation = transformation.getRotation();
+
+    sprite->setRotation(std::abs(rotation.z()) / rotation.z() * rotation.w() * 180.f / M_PI);
 
     return *sprite;
 }

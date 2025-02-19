@@ -23,6 +23,7 @@
 
 // Eigen
 #include <Eigen/Dense>
+#include <Eigen/Geometry>
 #include <Eigen/src/Core/Matrix.h>
 
 // other headers

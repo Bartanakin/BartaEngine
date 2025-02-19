@@ -14,6 +14,14 @@ OBB::OBB(
     transformation(Transformation::rotation(rotation, position) * Transformation::translation(position.toVector())) {}
 
 OBB::OBB(
+    const Point& position,
+    const Vector& widthHeight,
+    Quaternion rotation
+):
+    widthHeight(widthHeight),
+    transformation(Transformation::rotation(rotation, position) * Transformation::translation(position.toVector())) {}
+
+OBB::OBB(
     const Vector& widthHeight,
     Transformation transformation
 ):

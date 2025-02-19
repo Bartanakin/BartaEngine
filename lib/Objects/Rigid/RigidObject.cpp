@@ -26,7 +26,8 @@ void RigidObject::rotate(
 
 // TODO move rotation to update strategy
 float RigidObject::getRotation() const {
-    return this->graphicsData.transformation.getRotation(Vector::Z_Axis());
+    // TODO change to Quaternion
+    return this->graphicsData.transformation.getRotation().w();
 }
 
 void RigidObject::rotate(

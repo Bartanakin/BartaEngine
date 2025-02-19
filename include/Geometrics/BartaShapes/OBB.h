@@ -10,6 +10,7 @@ namespace Barta {
 class OBB {
 public:
     OBB(const Point& position, const Vector& widthHeight, PrecisionType rotation);
+    OBB(const Point& position, const Vector& widthHeight, Quaternion rotation);
     // scale is always (1, 1, 1)
     OBB(const Vector& widthHeight, Transformation transformation);
 
@@ -19,11 +20,7 @@ public:
 
     bool isWithin(const Point&) const noexcept;
 
-    PrecisionType getRotation(
-        const Vector& axis = Vector::Z_Axis()
-    ) const noexcept {
-        return this->transformation.getRotation(axis);
-    }
+    Quaternion getRotationAngle() const noexcept { return this->transformation.getRotation(); }
 
     Vector getWidthHeight() const noexcept { return this->widthHeight; }
 
@@ -53,13 +50,13 @@ inline OBB operator*(
     // TODO scale
     auto T = Transformation(M);
 
-    return {M * obb.getFirstVertex(), obb.getWidthHeight(), obb.getRotation() + T.getRotation(obb.getFirstVertex().toVector())};
+    return {M * obb.getFirstVertex(), obb.getWidthHeight(), obb.getRotationAngle() * T.getRotation()};
 }
 
 inline std::ostream& operator<<(
     std::ostream& stream,
     const OBB& obb
 ) noexcept {
-    return stream << "(" << obb.getFirstVertex().toVector() << ", " << obb.getWidthHeight() << ", " << obb.getRotation() << ")";
+    return stream << "(" << obb.getFirstVertex().toVector() << ", " << obb.getWidthHeight() << ", " << obb.getRotationAngle() << ")";
 }
 }

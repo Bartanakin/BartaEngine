@@ -28,6 +28,18 @@ public:
     }
 
     static Matrix rotation(
+        Quaternion rotation,
+        Point p
+    ) {
+        rotation = rotation.normalized();
+        auto angle = 2.f * std::acos(rotation.w());
+        Vector axis = {rotation.x(), rotation.y(), rotation.z()};
+        axis = 1.f / std::sin(angle / 2.f) * axis;
+
+        return Transformation::rotation(angle, p, axis);
+    }
+
+    static Matrix rotation(
         PrecisionType angle,
         Point p,
         Vector axis = Vector::Z_Axis()
@@ -58,19 +70,44 @@ public:
 
     Vector getTranslation() const { return {this->M(0, 3), this->M(1, 3), this->M(2, 3)}; }
 
-    PrecisionType getRotation(
-        Vector axis
-    ) const {
-        auto pivot = Vector::X_Axis().cross(axis);
-        if (pivot == Vector::Zero()) {
-            pivot = Vector::Y_Axis().cross(axis);
+    Quaternion getRotation() const {
+        Vector axis = {
+            M(2, 1) - M(1, 2),
+            M(0, 2) - M(2, 0),
+            M(1, 0) - M(0, 1),
+        };
+        if (axis.zeroised() == Vector::Zero()) {
+            axis = Vector::Z_Axis();
         }
 
-        auto rotated = this->M * pivot;
-        auto cross = pivot.cross(rotated);
-        auto dot = pivot.dot(rotated);
+        axis = axis.normalised();
+        auto cos = (this->M.trace() - 2.f) / 2.f;
+        if (cos >= 1.f) {
+            cos = 1.f;
+        } else if (cos <= -1.f) {
+            cos = -1.f;
+        }
 
-        return std::atan2(cross.norm(), dot);
+        auto sin = -(axis.crossOperator() * this->M).trace() / 2.f;
+        if (sin >= 1.f) {
+            sin = 1.f;
+        } else if (sin <= -1.f) {
+            sin = -1.f;
+        }
+
+        return Quaternion(std::atan2(sin, cos), axis.x(), axis.y(), axis.z());
+    }
+
+    Vector getRotationAxis() const {
+        if (this->M.isIdentity(0.00001f)) {
+            return Vector::Z_Axis();
+        }
+
+        return {
+            M(2, 1) - M(1, 2),
+            M(0, 2) - M(2, 0),
+            M(1, 0) - M(0, 1),
+        };
     }
 
     // TODO scale
