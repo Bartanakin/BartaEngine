@@ -17,7 +17,7 @@ bool DebugGuardSubscriber::handle(
     return false;
 }
 
-bool DebugGuardSubscriber::isValid() const noexcept {
-    return true;
+bool DebugGuardSubscriber::isToBeDeleted() const noexcept {
+    return false;
 }
 } // Barta

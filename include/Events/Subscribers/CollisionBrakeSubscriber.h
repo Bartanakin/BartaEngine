@@ -32,7 +32,7 @@ public:
         return false;
     }
 
-    bool isValid() const noexcept { return true; }
+    bool isToBeDeleted() const noexcept { return false; }
 
 private:
 };

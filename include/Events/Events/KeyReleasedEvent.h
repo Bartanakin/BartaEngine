@@ -19,7 +19,7 @@ namespace Barta{
 
 		virtual bool handle(KeyReleasedEvent& event) = 0;
 
-		virtual bool isValid() const noexcept = 0;
+		virtual bool isToBeDeleted() const noexcept = 0;
 	};
 
 	typedef EventSubscriber<KeyReleasedEvent> KeyReleasedSubscriberInterface;

@@ -22,7 +22,7 @@ namespace Barta{
 
 		virtual bool handle(LeftClickEvent& event) = 0;
 
-		virtual bool isValid() const noexcept = 0;
+		virtual bool isToBeDeleted() const noexcept = 0;
 	};
 
 	typedef EventSubscriber<LeftClickEvent> LeftClickEventSubscriberInterface;

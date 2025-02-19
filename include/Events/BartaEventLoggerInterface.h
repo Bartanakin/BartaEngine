@@ -69,9 +69,8 @@ public:
     void removeInvalid() {
         auto iSub = this->subscribers.begin();
         while (iSub != this->subscribers.end()) {
-            if (!(*iSub)->isValid()) {
+            if ((*iSub)->isToBeDeleted()) {
                 iSub = this->subscribers.erase(iSub);
-
                 continue;
             }
 
@@ -95,7 +94,7 @@ public:
             bool subErased = false;
             auto iEv = this->events.begin();
             while (iEv != this->events.end()) {
-                if (!(*iSub)->isValid()) {
+                if ((*iSub)->isToBeDeleted()) {
                     iSub = this->subscribers.erase(iSub);
                     subErased = true;
 
