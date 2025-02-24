@@ -32,3 +32,8 @@
 
 // C++ 20+
 #include <concepts>
+
+
+#ifndef M_PI
+    #define M_PI 3.141592f
+#endif

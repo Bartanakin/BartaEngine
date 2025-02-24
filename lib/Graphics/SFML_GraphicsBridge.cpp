@@ -1,6 +1,7 @@
 #include <Graphics/SFML_GraphicsBridge.h>
 #include <Geometrics/SFML_Transformable.h>
 #include <Graphics/SFML_Bridge/SpriteResourceMatcher.h>
+#include <Geometrics/Vector2f.h>
 
 Barta::SFML_GraphicsBridge::SFML_GraphicsBridge(
     std::unique_ptr<ResourceContainerInterface> resourceContainer,
@@ -239,6 +240,57 @@ void Barta::SFML_GraphicsBridge::handleCustomResource(
 
             dataOffset += 3 * 3 + 4 * 3;
         }
+
+        if (type == SpriteType::ARROW) {
+
+            float posarr[2] = {data[dataOffset],data[dataOffset+1]};
+            float valuearr[2] = {data[dataOffset+2],data[dataOffset+3]};
+            float thikness = data[dataOffset+4];
+            float capSize = data[dataOffset+5];
+
+            Vector2f x={posarr[0],posarr[1]};
+            Vector2f dx={valuearr[0],valuearr[1]};
+            //dx=dx.rotated(1.0);
+
+            Vector2f dxNorm=dx.normalised();
+            Vector2f n = dx.perpendicular().normalised();
+
+            //coords line 
+            Vector2f x1=x-thikness*n*0.5;
+            Vector2f x2=x+thikness*n*0.5;
+            Vector2f x1v=x1+dx-capSize*dxNorm;//.rotated(0.2);
+            Vector2f x2v=x2+dx-capSize*dxNorm;//.rotated(0.2);
+            //
+            Vector2f C=x+dx;
+            Vector2f A=x-capSize*n+dx-capSize*dxNorm;
+            Vector2f B=x+capSize*n+dx-capSize*dxNorm;
+
+            sf::Color c=sf::Color(
+                    static_cast<sf::Uint8>(data[dataOffset + 6]),
+                    static_cast<sf::Uint8>(data[dataOffset + 7]),
+                    static_cast<sf::Uint8>(data[dataOffset + 8]),
+                    static_cast<sf::Uint8>(data[dataOffset + 9])
+            );
+
+            auto triangle = sf::VertexArray(sf::PrimitiveType::Triangles, 9);
+            
+            triangle[0]=sf::Vertex(transform.transformPoint(x1.x,x1.y),c);
+            triangle[1]=sf::Vertex(transform.transformPoint(x2.x,x2.y),c);
+            triangle[2]=sf::Vertex(transform.transformPoint(x1v.x,x1v.y),c);
+
+            triangle[3]=sf::Vertex(transform.transformPoint(x1v.x,x1v.y),c);
+            triangle[4]=sf::Vertex(transform.transformPoint(x2.x,x2.y),c);
+            triangle[5]=sf::Vertex(transform.transformPoint(x2v.x,x2v.y),c);
+
+            triangle[6]=sf::Vertex(transform.transformPoint(A.x,A.y),c);
+            triangle[7]=sf::Vertex(transform.transformPoint(B.x,B.y),c);
+            triangle[8]=sf::Vertex(transform.transformPoint(C.x,C.y),c);
+
+            this->sf_window->draw(triangle);
+
+            dataOffset += 2+2+1+1+4;
+        }
+        
     }
 }
 

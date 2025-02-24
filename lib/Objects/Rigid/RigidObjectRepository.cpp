@@ -28,6 +28,7 @@ Barta::RigidObjectInterface* Barta::RigidObjectRepository::addNewAABB(
     spriteBuilder.setAllColors(color);
     auto merger = SpriteMerger();
     merger.addRectangleWithColors(spriteBuilder.build());
+   // merger.add
     auto aabb = new RigidObject(
         {
             Barta::SFML_GraphicsBridge::createNewTransformableInstance(),
@@ -52,6 +53,8 @@ Barta::RigidObjectInterface* Barta::RigidObjectRepository::addNewCircle(
 ) {
     auto merger = SpriteMerger();
     merger.addCircleSprite(CircleSprite(Circle(radius, Vector2f(radius, radius)), color));
+    merger.addArrow(ArrowSprite(Vector2f(radius, radius),Vector2f(radius*0.5f,radius*3.5f),radius*0.2f,radius*0.5,
+        Color(255,255,255)));
     auto circle = new RigidObject(
         {
             Barta::SFML_GraphicsBridge::createNewTransformableInstance(),
