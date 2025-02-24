@@ -6,6 +6,7 @@
 #include "SpriteBuilder.h"
 #include "StringSprite.h"
 #include "TriangleSprite.h"
+#include "ArrowSprite.h"
 
 namespace Barta {
 class SpriteMerger {
@@ -19,6 +20,8 @@ public:
     SpriteMerger* addString(const StringSprite& stringSprite);
 
     SpriteMerger* addTriangle(const TriangleSprite& triangleSprite);
+
+    SpriteMerger* addArrow(const ArrowSprite& arrowSprite);
 
     BartaSprite merge(bool reloadCache);
 

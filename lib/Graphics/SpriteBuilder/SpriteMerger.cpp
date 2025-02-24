@@ -90,6 +90,29 @@ Barta::SpriteMerger* Barta::SpriteMerger::addTriangle(
     return this;
 }
 
+Barta::SpriteMerger* Barta::SpriteMerger::addArrow(
+        const ArrowSprite& arrowSprite
+) {
+    this->types.push_back(SpriteType::ARROW);
+
+    for (const auto& vector: {arrowSprite.ogrin,arrowSprite.value}) {
+        this->data.push_back(vector.getX());
+        this->data.push_back(vector.getY());
+    }   
+
+    this->data.push_back(arrowSprite.thickness);
+    this->data.push_back(arrowSprite.capSize);
+
+    for (const auto& color: {arrowSprite.color}) {
+        this->data.push_back(color.r);
+        this->data.push_back(color.g);
+        this->data.push_back(color.b);
+        this->data.push_back(color.a);
+    }
+
+    return this;
+}
+
 Barta::BartaSprite Barta::SpriteMerger::merge(
     bool reloadCache
 ) {

@@ -1,6 +1,6 @@
 #include <Geometrics/Vector2f.h>
 #include <pch.h>
-#include <strings.h>
+#include <string.h>
 
 Barta::Vector2f::Vector2f(
     const Vector2f& second

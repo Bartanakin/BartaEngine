@@ -29,7 +29,14 @@ enum class SpriteType {
      * color2 (rgba),
      * color3 (rgba)
      */
-    TRIANGLE
+    TRIANGLE,
+    /*
+        x,  y, z,    // orgin of vector
+        dx, dy, dz,  // delta of vector
+        thickness,
+        color(rgba)
+    */
+    ARROW
 };
 
 class BartaSprite {
