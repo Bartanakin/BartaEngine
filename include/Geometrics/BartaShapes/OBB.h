@@ -4,50 +4,59 @@
 
 #pragma once
 
-#include "AABB.h"
+#include <Geometrics/BartaShapes/AABB.h>
 
 namespace Barta {
-class OBB: protected AABB {
+class OBB {
 public:
-    OBB(const Vector2f& leftTop, const Vector2f& widthHeight, float rotation);
+    OBB(const Point& position, const Vector& widthHeight, PrecisionType rotation);
+    OBB(const Point& position, const Vector& widthHeight, Quaternion rotation);
+    // scale is always (1, 1, 1)
+    OBB(const Vector& widthHeight, Transformation transformation);
 
-    Vector2f getFirstVertex() const noexcept;
+    Point getFirstVertex() const noexcept;
 
     std::vector<Segment> getSides() const noexcept;
 
-    bool isWithin(const Vector2f&) const noexcept;
+    bool isWithin(const Point&) const noexcept;
 
-    float getRotation() const noexcept { return this->rotation; }
+    Quaternion getRotationAngle() const noexcept { return this->transformation.getRotation(); }
 
-    AABB getAABB() const { return *this; }
+    Vector getWidthHeight() const noexcept { return this->widthHeight; }
 
-    Vector2f rebasePoint(Vector2f) const;
+    Point getThirdVertex() const;
 
-    Vector2f getWidthHeight() const noexcept { return AABB::getWidthHeight(); }
+    std::vector<Point> getVertices() const noexcept;
 
-    Vector2f getThirdVertex() const;
+    Point getSecondVertex() const;
 
-    std::vector<Vector2f> getVertices() const noexcept;
+    Point getFourthVertex() const;
 
-    Vector2f getSecondVertex() const;
+    AABB::PointDistance closestPointTo(Point) const noexcept;
 
-    Vector2f getFourthVertex() const;
+    Point getCenter() const noexcept;
 
-    Vector2f rebaseVector(Vector2f v) const;
-
-    PointDistance closestPointTo(Vector2f) const noexcept;
-
-    Vector2f getCenter() const noexcept;
+    const Transformation& getTransformation() const noexcept;
 
 private:
-    // radians
-    float rotation;
+    Vector widthHeight;
+    Transformation transformation;
 };
+
+inline OBB operator*(
+    const Matrix& M,
+    const OBB& obb
+) noexcept {
+    // TODO scale
+    auto T = Transformation(M);
+
+    return {M * obb.getFirstVertex(), obb.getWidthHeight(), obb.getRotationAngle() * T.getRotation()};
+}
 
 inline std::ostream& operator<<(
     std::ostream& stream,
     const OBB& obb
 ) noexcept {
-    return stream << "(" << obb.getFirstVertex() << ", " << obb.getWidthHeight() << ", " << obb.getRotation() << ")";
+    return stream << "(" << obb.getFirstVertex().toVector() << ", " << obb.getWidthHeight() << ", " << obb.getRotationAngle() << ")";
 }
 }

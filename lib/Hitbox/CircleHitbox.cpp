@@ -37,36 +37,33 @@ CollisionTestResult CircleHitbox::intersectsWithOBB(
     const CollisionDetectionStrategyInterface& collisionDetector,
     const DynamicsDifference& dynamicsDifference
 ) const {
-    auto rebasedDynamicsDifference = DynamicsDifference(
-        obb.rebaseVector(dynamicsDifference.velocity),
-        obb.rebasePoint(dynamicsDifference.acceleration),
-        dynamicsDifference.rotationVelocity
-    );
+    auto rebaseMatrix = obb.getTransformation().getMatrix().inverse();
     auto collisionResult = collisionDetector.acceptCheckCollisionVisitor(CircleAABBCheckCollisionVisitor(
-        {this->circle.getRadius(), obb.rebasePoint(this->circle.getCenter())},
-        {obb.rebasePoint(obb.getFirstVertex()), obb.getWidthHeight()},
-        rebasedDynamicsDifference
+        rebaseMatrix * Circle(this->circle.getRadius(), this->circle.getCenter()),
+        rebaseMatrix * AABB(obb.getFirstVertex(), obb.getWidthHeight()),
+        -rebaseMatrix * dynamicsDifference
     ));
     if (collisionResult.collisionDetected) {
-        collisionResult.collisionPoint = collisionResult.collisionPoint.rotated(obb.getRotation()) + obb.getFirstVertex();
-        collisionResult.normVector = collisionResult.normVector.rotated(obb.getRotation());
+        collisionResult.collisionPoint = obb.getTransformation().getMatrix() * collisionResult.collisionPoint;
+        collisionResult.normVector = obb.getTransformation().getMatrix() * collisionResult.normVector;
     }
 
     return collisionResult;
 }
 
+// TODO third dimention
 OBB CircleHitbox::getBoundingOBB() const {
     return {
-        this->getCircle().getCenter() - this->getCircle().getRadius() * Vector2f(1.f, 1.f),
-        2.f * this->getCircle().getRadius() * Vector2f(1.f, 1.f),
+        this->getCircle().getCenter() - this->getCircle().getRadius() * Vector(1.f, 1.f),
+        2.f * this->getCircle().getRadius() * Vector(1.f, 1.f),
         0.f
     };
 }
 
 bool CircleHitbox::isWithin(
-    const Vector2f& position
+    const Point& position
 ) const {
-    return pow(position.getX() - this->circle.getCenter().getX(), 2) + pow(position.getY() - this->circle.getCenter().getY(), 2)
+    return pow(position.x() - this->circle.getCenter().x(), 2) + pow(position.y() - this->circle.getCenter().y(), 2)
            <= pow(this->circle.getRadius(), 2);
 }
 
@@ -85,8 +82,8 @@ CollisionTestResult CircleHitbox::intersects(
 }
 
 std::unique_ptr<const HitboxInterface> CircleHitbox::getTransformedHitbox(
-    const TransformableInterface& transformable
+    const Transformation& transformation
 ) const {
-    return std::make_unique<const CircleHitbox>(transformable.getTransformedCircle(this->circle));
+    return std::make_unique<const CircleHitbox>(transformation.getMatrix() * this->circle);
 }
 }

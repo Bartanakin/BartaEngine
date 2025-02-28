@@ -1,6 +1,4 @@
 #pragma once
-#include "Geometrics/TransformableInterface.h"
-#include "Graphics/BartaSprite.h"
 
 namespace Barta {
 

@@ -1,13 +1,14 @@
 #include <Hitbox/HitboxComposite.h>
 #include <pch.h>
 
+namespace Barta {
 Barta::HitboxComposite::HitboxComposite(
     HitboxesList children
 ):
     children(std::move(children)) {}
 
 bool Barta::HitboxComposite::isWithin(
-    const Vector2f& position
+    const Point& position
 ) const {
     for (const auto& child: this->children) {
         if (child->isWithin(position)) {
@@ -42,11 +43,11 @@ Barta::CollisionTestResult Barta::HitboxComposite::intersects(
 }
 
 std::unique_ptr<const Barta::HitboxInterface> Barta::HitboxComposite::getTransformedHitbox(
-    const TransformableInterface& transformable
+    const Transformation& transformation
 ) const {
     HitboxesList result = {};
     for (auto& child: this->children) {
-        result.push_back(std::move(child->getTransformedHitbox(transformable)));
+        result.push_back(std::move(child->getTransformedHitbox(transformation)));
     }
 
     return std::unique_ptr<const HitboxInterface>(new HitboxComposite(std::move(result)));
@@ -108,6 +109,7 @@ Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithOBB(
 
 Barta::OBB Barta::HitboxComposite::getBoundingOBB() const {
     return {{}, {}, 0.f}; // TODO
+}
 }
 
 #pragma GCC diagnostic pop

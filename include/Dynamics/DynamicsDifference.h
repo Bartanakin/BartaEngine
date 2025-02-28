@@ -1,17 +1,17 @@
 #pragma once
-#include "../Geometrics/Vector2f.h"
-#include "../pch.h"
+#include <Geometrics/Vector.h>
+#include <pch.h>
 
 namespace Barta {
 
 struct DynamicsDifference {
     DynamicsDifference(
-        Vector2f velocity,
-        Vector2f acceleration = {},
-        float rotationVelocity = 0.f
+        Vector velocity,
+        Vector acceleration = {},
+        PrecisionType rotationVelocity = 0.f
     ):
-        velocity(velocity),
-        acceleration(acceleration),
+        velocity(std::move(velocity)),
+        acceleration(std::move(acceleration)),
         rotationVelocity(rotationVelocity) {}
 
     DynamicsDifference& operator=(
@@ -27,8 +27,19 @@ struct DynamicsDifference {
 
     DynamicsDifference operator-() const { return {-this->velocity, -this->acceleration, this->rotationVelocity}; }
 
-    Vector2f velocity;
-    Vector2f acceleration;
-    float rotationVelocity;
+    Vector velocity;
+    Vector acceleration;
+    PrecisionType rotationVelocity;
 };
+
+inline DynamicsDifference operator*(
+    const Matrix& M,
+    const DynamicsDifference& dynamicsDifference
+) noexcept {
+    return {
+        M * dynamicsDifference.velocity,
+        M * dynamicsDifference.acceleration,
+        dynamicsDifference.rotationVelocity // TODO - rotation speed
+    };
+}
 }

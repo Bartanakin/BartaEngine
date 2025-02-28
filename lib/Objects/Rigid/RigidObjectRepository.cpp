@@ -3,6 +3,8 @@
 //
 
 #include <Objects/Rigid/RigidObjectRepository.h>
+#include "Graphics/GraphicsDataTransformer.h"
+#include "Hitbox/OBB_Hitbox.h"
 #include <Graphics/SFML_GraphicsBridge.h>
 #include <Graphics/SpriteBuilder/RectangleWithColorsSpriteBuilder.h>
 #include <Graphics/SpriteBuilder/SpriteMerger.h>
@@ -10,31 +12,32 @@
 #include <Hitbox/CircleHitbox.h>
 #include <Objects/Rigid/RigidObject.h>
 
-Barta::RigidObjectRepository::RigidObjectRepository(
+namespace Barta {
+RigidObjectRepository::RigidObjectRepository(
     ListManager& listManager,
     ObjectManagerInterface& objectManager
 ) noexcept:
     listManager(listManager),
     objectManager(objectManager) {}
 
-Barta::RigidObjectInterface* Barta::RigidObjectRepository::addNewAABB(
-    Vector2f size,
+RigidObjectInterface* RigidObjectRepository::addNewAABB(
+    Vector size,
     Color color,
     bool infiniteMass
 ) {
     auto spriteBuilder = RectangleWithColorsSpriteBuilder();
-    spriteBuilder.setVertex1({0.f, 0.f});
+    spriteBuilder.setVertex1({0.f, 0.f, 0.f});
     spriteBuilder.setSize(size);
     spriteBuilder.setAllColors(color);
     auto merger = SpriteMerger();
     merger.addRectangleWithColors(spriteBuilder.build());
     auto aabb = new RigidObject(
         {
-            Barta::SFML_GraphicsBridge::createNewTransformableInstance(),
+            Transformation::Identity(),
             merger.merge(false),
             4
     },
-        std::unique_ptr<HitboxInterface>(new AABB_Hitbox({{0.f, 0.f}, size})),
+        std::make_unique<AABB_Hitbox>(AABB({0.f, 0.f, 0.f}, size)),
         {{0., 0.}, infiniteMass, infiniteMass ? 0.f : 1.f}
     );
 
@@ -46,19 +49,19 @@ Barta::RigidObjectInterface* Barta::RigidObjectRepository::addNewAABB(
     return aabb;
 }
 
-Barta::RigidObjectInterface* Barta::RigidObjectRepository::addNewCircle(
+RigidObjectInterface* RigidObjectRepository::addNewCircle(
     float radius,
     Color color
 ) {
     auto merger = SpriteMerger();
-    merger.addCircleSprite(CircleSprite(Circle(radius, Vector2f(radius, radius)), color));
+    merger.addCircleSprite(CircleSprite(Circle(radius, Point(radius, radius, 0.f)), color));
     auto circle = new RigidObject(
         {
-            Barta::SFML_GraphicsBridge::createNewTransformableInstance(),
+            Transformation::Identity(),
             merger.merge(false),
             4
     },
-        std::unique_ptr<HitboxInterface>(new CircleHitbox({radius, {radius, radius}})),
+        std::make_unique<CircleHitbox>(Circle(radius, {radius, radius, 0.f})),
         {{0., 0.}, false, 1.f}
     );
 
@@ -68,4 +71,30 @@ Barta::RigidObjectInterface* Barta::RigidObjectRepository::addNewCircle(
     this->objectManager.addNewObject(circle);
 
     return circle;
+}
+
+RigidObjectInterface* RigidObjectRepository::addNewOBB(
+    Vector size,
+    PrecisionType rotation,
+    Color color
+) {
+    auto transformer = GraphicsDataTransformer(color);
+    auto obb = OBB{Point::Zero(), size, rotation};
+    auto obbObject = new RigidObject(
+        transformer.fromOBB(obb),
+        std::make_unique<OBB_Hitbox>(obb),
+        {
+            {0., 0.},
+            false,
+            1.f
+    }
+    );
+
+    this->listManager.addObject(obbObject);
+    this->objectManager.addGraphicsObject(obbObject);
+    this->objectManager.addDynamicsObject(obbObject);
+    this->objectManager.addNewObject(obbObject);
+
+    return obbObject;
+}
 }

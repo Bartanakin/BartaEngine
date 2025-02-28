@@ -1,23 +1,23 @@
 #pragma once
-#include "../Vector2f.h"
+#include <Geometrics/Point.h>
 
 namespace Barta {
 
 class Triangle {
 public:
-    Triangle(Vector2f p1, Vector2f p2, Vector2f p3);
+    Triangle(Point p1, Point p2, Point p3);
 
-    bool isWithin(Vector2f point) const noexcept;
+    bool isWithin(Point point) const noexcept;
 
-    const Vector2f p1;
-    const Vector2f p2;
-    const Vector2f p3;
+    const Point p1;
+    const Point p2;
+    const Point p3;
 };
 
 inline std::ostream& operator<<(
     std::ostream& stream,
     const Triangle& triangle
 ) noexcept {
-    return stream << "(" << triangle.p1 << ", " << triangle.p2 << ", " << triangle.p2 << ")";
+    return stream << "(" << triangle.p1.toVector() << ", " << triangle.p2.toVector() << ", " << triangle.p2.toVector() << ")";
 }
 }

@@ -1,17 +1,18 @@
 #pragma once
 #include "DynamicsDifference.h"
+#include <Geometrics/Point.h>
 
 namespace Barta {
 
 struct DynamicsDTO {
     DynamicsDTO(
-        Vector2f velocity,
+        Vector velocity,
         bool hasInfiniteMass = true,
-        float mass = 0.f,
-        Vector2f force = {},
-        float rotationVelocity = 0.f,
-        Vector2f massCenter = {},
-        std::vector<Vector2f> allowedDirections = {}
+        PrecisionType mass = 0.f,
+        Vector force = Vector::Zero(),
+        PrecisionType rotationVelocity = 0.f,
+        Point massCenter = Point::Zero(),
+        std::vector<Vector> allowedDirections = {}
     ):
         velocity(velocity),
         hasInfiniteMass(hasInfiniteMass),
@@ -30,7 +31,7 @@ struct DynamicsDTO {
     DynamicsDifference getDynamicsDifference(
         const DynamicsDTO& second
     ) const {
-        Vector2f acceleration{};
+        auto acceleration = Vector::Zero();
         if (!this->hasInfiniteMass) {
             acceleration += this->force * (1.f / this->mass);
         }
@@ -58,12 +59,12 @@ struct DynamicsDTO {
         };
     }
 
-    Vector2f velocity;
+    Vector velocity;
     bool hasInfiniteMass;
-    float mass;
-    Vector2f force;
-    float rotationVelocity;
-    Vector2f massCenter;
-    std::vector<Vector2f> allowedDirections;
+    PrecisionType mass;
+    Vector force;
+    PrecisionType rotationVelocity;
+    Point massCenter;
+    std::vector<Vector> allowedDirections;
 };
 }

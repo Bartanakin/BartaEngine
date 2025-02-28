@@ -1,8 +1,10 @@
 #include <Collisions/CheckCollisionVisitors/CircleCircleCheckCollisionVisitor.h>
 #include "pch.h"
+#include <Geometrics/ConvexFactor.h>
 #include <Utilities/MathUtilities.h>
 
-Barta::CircleCircleCheckCollisionVisitor::CircleCircleCheckCollisionVisitor(
+namespace Barta {
+CircleCircleCheckCollisionVisitor::CircleCircleCheckCollisionVisitor(
     const Circle& circle1,
     const Circle& circle2,
     const DynamicsDifference& dynamicsDifference
@@ -11,12 +13,12 @@ Barta::CircleCircleCheckCollisionVisitor::CircleCircleCheckCollisionVisitor(
     circle2(circle2),
     dynamicsDifference(dynamicsDifference) {}
 
-Barta::CircleCircleCheckCollisionVisitor::~CircleCircleCheckCollisionVisitor() {}
+CircleCircleCheckCollisionVisitor::~CircleCircleCheckCollisionVisitor() {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkStaticCollision(
+CollisionTestResult CircleCircleCheckCollisionVisitor::checkStaticCollision(
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     std::stringstream ss;
@@ -25,11 +27,14 @@ Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkStatic
     return collisionTestResultBuilder
         .setCollisionDetected(
             static_cast<float>(pow(circle1.getRadius() + circle2.getRadius(), 2))
-            >= this->circle1.getCenter().squareOfDistance(this->circle2.getCenter())
+            >= this->circle1.getCenter().squaredDistance(this->circle2.getCenter())
         )
         ->setStaticCollision(true)
         ->setNormVector(this->getNormalVector())
-        ->setCollisionPoint(0.5f * (this->circle1.getCenter() + this->circle2.getCenter()))
+        ->setCollisionPoint(ConvexFactor::convexCombination({
+            {0.5f, this->circle1.getCenter()},
+            {0.5f, this->circle2.getCenter()},
+    }))
         ->setDebugInfo("Circle - Circle static")
         ->setObjectsDebugInfo(ss.str())
         ->build();
@@ -37,7 +42,7 @@ Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkStatic
 
 #pragma GCC diagnostic pop
 
-Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkDynamicCollision(
+CollisionTestResult CircleCircleCheckCollisionVisitor::checkDynamicCollision(
     const float delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
@@ -51,7 +56,7 @@ Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkDynami
     auto v = dynamicsDifference.velocity + 0.5f * dynamicsDifference.acceleration * delta_time;
     auto r = circle1.getRadius() + circle2.getRadius();
 
-    auto eq = Utils::createQuadraticEquation(v * v, v * s * 2.f, s * s - r * r);
+    auto eq = Utils::createQuadraticEquation(v.squaredNorm(), 2.f * v.dot(s), s.squaredNorm() - r * r);
     eq.solve();
 
     if (eq.getState() != Utils::EquationInterface::State::FINITE_NO_SOLTIONS) {
@@ -67,6 +72,7 @@ Barta::CollisionTestResult Barta::CircleCircleCheckCollisionVisitor::checkDynami
         ->build();
 }
 
-Barta::Vector2f Barta::CircleCircleCheckCollisionVisitor::getNormalVector() const {
+Vector CircleCircleCheckCollisionVisitor::getNormalVector() const {
     return this->circle1.getCenter() - this->circle2.getCenter();
+}
 }

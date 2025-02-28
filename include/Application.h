@@ -28,9 +28,9 @@ public:
         collisionEventsLogger({}),
         collisionExecutor(CollisionCoreExecutor(std::move(collisionDetectionStrategy))),
         objectLists({}) {
-        // this->collisionEventsLogger.logSubscriber(std::unique_ptr<Subscribers::RigidObjectRigidObject>(
-        //     new Barta::StaticCollisionResponseSubscriberType<RigidObjectInterface, RigidObjectInterface>(*this->postDynamicsEventLogger)
-        // ));
+        this->collisionEventsLogger.logSubscriber(std::unique_ptr<Subscribers::RigidObjectRigidObject>(
+            new Barta::StaticCollisionResponseSubscriberType<RigidObjectInterface, RigidObjectInterface>()
+        ));
     }
 
     Application(const Application&) = delete;

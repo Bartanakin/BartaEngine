@@ -3,8 +3,9 @@
 //
 
 #pragma once
-#include "Color.h"
-#include "GraphicsData.h"
+#include <Geometrics/BartaShapes/OBB.h>
+#include <Graphics/Color.h>
+#include <Graphics/GraphicsData.h>
 
 namespace Barta {
 
@@ -12,7 +13,7 @@ class GraphicsDataTransformer {
 public:
     GraphicsDataTransformer(Color color1) noexcept;
 
-    Barta::GraphicsData fromOBB(const OBB& obb) const;
+    GraphicsData fromOBB(const OBB& obb) const;
 
 private:
     Color color1;

@@ -1,15 +1,14 @@
 #pragma once
-#include "../../Geometrics/BartaShapes/AABB.h"
-#include "../Color.h"
+#include <Geometrics/BartaShapes/AABB.h>
+#include <Graphics/Color.h>
 
 namespace Barta {
 struct RectangleWithColorsSprite {
-public:
     RectangleWithColorsSprite() noexcept = default;
 
     RectangleWithColorsSprite(
-        Vector2f origin,
-        Vector2f size,
+        Point origin,
+        Vector size,
         Color leftTopColor,
         Color rightTopColor,
         Color rightBottomColor,

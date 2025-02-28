@@ -1,6 +1,6 @@
 #pragma once
-#include "../BartaEventLoggerInterface.h"
-#include "Collisions/CollisionAwareInterface.h"
+#include <Collisions/CollisionAwareInterface.h>
+#include <Events/BartaEventLoggerInterface.h>
 
 namespace Barta {
 
@@ -45,8 +45,8 @@ public:
 
         auto realFirstVelocity = firstDynamics.velocity + testResult.timePassed * firstDynamics.force / firstDynamics.mass;
         auto realSecondVelocity = secondDynamics.velocity + testResult.timePassed * firstDynamics.force / firstDynamics.mass;
-        auto j = -(1.f + COEFFICIENT_OF_RESTITUTION) * ((realSecondVelocity - realFirstVelocity) * testResult.normVector)
-                 / (testResult.normVector * testResult.normVector * massInverted);
+        auto j = -(1.f + COEFFICIENT_OF_RESTITUTION) * (realSecondVelocity - realFirstVelocity).dot(testResult.normVector)
+                 / (testResult.normVector.dot(testResult.normVector) * massInverted);
         this->calculateNewVelocity(-j, firstObject, testResult.normVector);
         this->calculateNewVelocity(j, secondObject, testResult.normVector);
 
@@ -59,7 +59,7 @@ private:
     void calculateNewVelocity(
         float j,
         CollisionAwareInterface* dynamicsObject,
-        Vector2f normVector
+        Vector normVector
     ) const noexcept {
         const auto& oldDynamics = dynamicsObject->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
         if (oldDynamics.hasInfiniteMass) {

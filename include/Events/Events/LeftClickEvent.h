@@ -1,21 +1,21 @@
 #pragma once
-#include "../../Geometrics/Vector2f.h"
-#include "../../pch.h"
-#include "../TemplateEventSubscriber.h"
+#include <Events/TemplateEventSubscriber.h>
+#include <Geometrics/Point.h>
+#include <pch.h>
 
 namespace Barta {
 
 class LeftClickEvent {
 public:
-    inline LeftClickEvent(
-        Vector2f position
+    LeftClickEvent(
+        Point position
     ) noexcept:
         position(position) {}
 
-    inline Vector2f getPosition() const noexcept { return this->position; }
+    Point getPosition() const noexcept { return this->position; }
 
 private:
-    Vector2f position;
+    Point position;
 };
 
 template<>

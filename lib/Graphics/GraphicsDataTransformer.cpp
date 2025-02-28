@@ -3,6 +3,7 @@
 //
 
 #include <Graphics/GraphicsDataTransformer.h>
+#include <Geometrics/BartaShapes/OBB.h>
 #include <Graphics/SFML_GraphicsBridge.h>
 #include <Graphics/SpriteBuilder/SpriteMerger.h>
 
@@ -18,20 +19,20 @@ Barta::GraphicsData Barta::GraphicsDataTransformer::fromOBB(
 
     merger.addTriangle(Barta::TriangleSprite(
         {obb.getFirstVertex(),
-         Vector2f(obb.getWidthHeight().x, 0.f).rotated(obb.getRotation()) + obb.getFirstVertex(),
-         obb.getWidthHeight().rotated(obb.getRotation()) + obb.getFirstVertex()},
+         obb.getTransformation().getMatrix() * Point(obb.getWidthHeight().x(), 0.f, 0.f),
+         obb.getTransformation().getMatrix() * (obb.getWidthHeight() + Point::Zero())},
         this->color1,
         this->color1,
         this->color1
     ));
     merger.addTriangle(Barta::TriangleSprite(
         {obb.getFirstVertex(),
-         obb.getWidthHeight().rotated(obb.getRotation()) + obb.getFirstVertex(),
-         Vector2f(0.f, obb.getWidthHeight().y).rotated(obb.getRotation()) + obb.getFirstVertex()},
+         obb.getTransformation().getMatrix() * (obb.getWidthHeight() + Point::Zero()),
+         obb.getTransformation().getMatrix() * Point(0.f, obb.getWidthHeight().y(), 0.f)},
         this->color1,
         this->color1,
         this->color1
     ));
 
-    return {Barta::SFML_GraphicsBridge::createNewTransformableInstance(), merger.merge(false), 4};
+    return {Transformation::Identity(), merger.merge(false), 4};
 }

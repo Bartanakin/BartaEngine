@@ -1,11 +1,11 @@
 #include <Geometrics/Segment.h>
 #include <pch.h>
 
+// TODO third dimention
 Barta::Segment::Relation Barta::Segment::calculateRelationToPoint(
-    const Vector2f& point
+    const Point& point
 ) const noexcept {
-    auto result =
-        (this->beg.getX() - point.getX()) * (this->end.getY() - point.getY()) - (this->beg.getY() - point.getY()) * (this->end.getX() - point.getX());
+    auto result = (this->beg.x() - point.x()) * (this->end.y() - point.y()) - (this->beg.y() - point.y()) * (this->end.x() - point.x());
     if (result > 0.f) {
         return Relation::RIGHT;
     }
@@ -18,7 +18,7 @@ Barta::Segment::Relation Barta::Segment::calculateRelationToPoint(
 }
 
 float Barta::Segment::calculateSquareDistanceFrom(
-    const Vector2f& point
+    const Point& point
 ) const noexcept {
-    return (this->getEnd() - this->getBeginning()).perp(point - this->getBeginning()).normSquare();
+    return (this->getEnd() - this->getBeginning()).perp(point - this->getBeginning()).squaredNorm();
 }

@@ -17,9 +17,9 @@ public:
 
     using DynamicsAwareList = ReducibleList<std::list<DynamicsAwareInterface*>>;
 
-    virtual void move(const Vector2f& shift) = 0;
+    virtual void move(const Vector& shift) = 0;
 
-    virtual void rotate(float, Vector2f) = 0;
+    virtual void rotate(PrecisionType, const Point&) = 0;
 
     /**
      * @deprecated use getCurrentDynamicsData() or getNextDynamicsData() instead

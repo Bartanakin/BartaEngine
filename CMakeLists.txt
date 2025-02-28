@@ -23,12 +23,18 @@ FetchContent_Declare(SFML
         GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
+FetchContent_Declare(eigen
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen
+        GIT_TAG 3.4.0)
+FetchContent_MakeAvailable(eigen)
+
 add_subdirectory(lib)
 target_link_libraries(
         ${LIBRARY_NAME}
         PUBLIC
         sfml-graphics
 )
+target_link_libraries(${LIBRARY_NAME} PUBLIC eigen)
 target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
 
 #if(WIN32)

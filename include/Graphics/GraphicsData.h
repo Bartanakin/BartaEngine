@@ -1,23 +1,23 @@
 #pragma once
-#include "Geometrics/TransformableInterface.h"
 #include "Graphics/BartaSprite.h"
+#include <Geometrics/Transformation.h>
 
 namespace Barta {
 
 class GraphicsData {
 public:
-    std::unique_ptr<TransformableInterface> transformable;
+    Transformation transformation;
     BartaSprite resource;
     int z_index;
 
     GraphicsData() = default;
 
     GraphicsData(
-        std::unique_ptr<TransformableInterface> transformable,
+        Transformation transformation,
         BartaSprite resource,
         int z_index
     ):
-        transformable(std::move(transformable)),
+        transformation(std::move(transformation)),
         resource(resource),
         z_index(z_index) {}
 };

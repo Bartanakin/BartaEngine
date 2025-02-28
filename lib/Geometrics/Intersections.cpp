@@ -9,13 +9,13 @@ float Barta::Intersections::lineAndLineRespectToFirst(
     const Segment& I1,
     const Segment& I2
 ) noexcept {
-    auto perpendicular = (I2.getEnd() - I2.getBeginning()).perpendicular();
-    auto denom = (perpendicular * (I1.getEnd() - I1.getBeginning()));
+    auto perpendicular = (I2.getEnd() - I2.getBeginning()).cross(Vector::Z_Axis());
+    auto denom = perpendicular.dot(I1.getEnd() - I1.getBeginning());
     if (denom == 0.f) {
         return std::numeric_limits<float>::infinity();
     }
 
-    return (perpendicular * (I2.getBeginning() - I1.getBeginning())) / denom;
+    return perpendicular.dot(I2.getBeginning() - I1.getBeginning()) / denom;
 }
 
 std::vector<std::tuple<float, float>> Barta::Intersections::segmentAndAABB(
@@ -74,7 +74,7 @@ std::vector<float> Barta::Intersections::rayAndCircle(
 ) noexcept {
     auto d = ray.direction;
     auto m = ray.origin - c.getCenter();
-    auto eq = Utils::QuadraticEquation(d * d, m * d * 2.f, m * m - c.getRadius() * c.getRadius());
+    auto eq = Utils::QuadraticEquation(d.squaredNorm(), 2.f * m.dot(d), m.squaredNorm() - c.getRadius() * c.getRadius());
     eq.solve();
     auto sol = eq.getSolutions();
 

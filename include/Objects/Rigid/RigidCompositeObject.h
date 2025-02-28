@@ -7,11 +7,7 @@ namespace Barta {
 
 class RigidCompositeObject: public virtual RigidObjectInterface {
 public:
-    RigidCompositeObject(
-        std::unique_ptr<TransformableInterface> transformable,
-        DynamicsDTO dynamicsDto,
-        std::vector<RigidObjectInterface*> children = {}
-    );
+    RigidCompositeObject(Transformation transformation, DynamicsDTO dynamicsDto, std::vector<RigidObjectInterface*> children = {});
     ~RigidCompositeObject() noexcept override;
 
     bool isToBeDeleted() const override;
@@ -20,17 +16,17 @@ public:
 
     std::unique_ptr<const HitboxInterface> getHitbox() const override;
 
-    void move(const Vector2f& shift) override;
+    void move(const Vector& shift) override;
 
     DynamicsDTOCollection& getDynamicsDTOs() override;
 
-    inline void rotate(float, Vector2f) override;
+    inline void rotate(float, const Point&) override;
 
     inline void addNewChild(RigidObjectInterface*);
 
 protected:
     std::vector<RigidObjectInterface*> children;
     DynamicsDTOCollection dynamicsDtoCollection;
-    std::unique_ptr<TransformableInterface> transformable;
+    Transformation transformation;
 };
 }

@@ -1,13 +1,13 @@
 #pragma once
-#include "Vector2f.h"
+#include "Point.h"
 
 namespace Barta {
 
 class Segment {
 public:
     Segment(
-        Vector2f beg,
-        Vector2f end
+        Point beg,
+        Point end
     ):
         beg(beg),
         end(end) {}
@@ -18,25 +18,25 @@ public:
         RIGHT = 1
     };
 
-    inline Vector2f getBeginning() const noexcept { return this->beg; }
+    Point getBeginning() const noexcept { return this->beg; }
 
-    inline Vector2f getEnd() const noexcept { return this->end; }
+    Point getEnd() const noexcept { return this->end; }
 
-    inline float squareOfDistance() const noexcept { return beg.squareOfDistance(end); }
+    float squareOfDistance() const noexcept { return beg.squaredDistance(end); }
 
-    Relation calculateRelationToPoint(const Vector2f& point) const noexcept;
+    Relation calculateRelationToPoint(const Point& point) const noexcept;
 
-    float calculateSquareDistanceFrom(const Vector2f& point) const noexcept;
+    float calculateSquareDistanceFrom(const Point& point) const noexcept;
 
 private:
-    const Vector2f beg;
-    const Vector2f end;
+    const Point beg;
+    const Point end;
 };
 
 inline std::ostream& operator<<(
     std::ostream& stream,
     const Segment& I
 ) noexcept {
-    return stream << "(" << I.getBeginning() << ", " << I.getEnd() << ")";
+    return stream << "(" << I.getBeginning().toVector() << ", " << I.getEnd().toVector() << ")";
 }
 }

@@ -3,15 +3,15 @@
 //
 
 #pragma once
-#include "Geometrics/BartaShapes/OBB.h"
-#include "HitboxInterface.h"
+#include <Geometrics/BartaShapes/OBB.h>
+#include <Hitbox/HitboxInterface.h>
 
 namespace Barta {
 class OBB_Hitbox: public virtual HitboxInterface {
 public:
     OBB_Hitbox(const OBB& obb) noexcept;
 
-    bool isWithin(const Vector2f& position) const override;
+    bool isWithin(const Point& position) const override;
 
     std::vector<float> intersectsWithRay(const Ray& ray) const override;
 
@@ -21,7 +21,7 @@ public:
         const DynamicsDifference& dynamicsDifference
     ) const override;
 
-    std::unique_ptr<const HitboxInterface> getTransformedHitbox(const TransformableInterface& transformable) const override;
+    std::unique_ptr<const HitboxInterface> getTransformedHitbox(const Transformation& transformation) const override;
 
     CollisionTestResult intersectsWithCircle(
         const Circle& secondHitbox,

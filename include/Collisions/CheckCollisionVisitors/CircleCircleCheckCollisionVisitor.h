@@ -1,8 +1,8 @@
 #pragma once
-#include "../../Dynamics/DynamicsDTO.h"
-#include "../../Geometrics/BartaShapes/Circle.h"
-#include "../../pch.h"
-#include "../CheckCollisionVisitorInterface.h"
+#include <Collisions/CheckCollisionVisitorInterface.h>
+#include <Dynamics/DynamicsDTO.h>
+#include <Geometrics/BartaShapes/Circle.h>
+#include <pch.h>
 
 namespace Barta {
 class CircleCircleCheckCollisionVisitor: public CheckCollisionVisitorInterface {
@@ -19,6 +19,6 @@ private:
     const Circle circle2;
     const DynamicsDifference dynamicsDifference;
 
-    Vector2f getNormalVector() const;
+    Vector getNormalVector() const;
 };
 }

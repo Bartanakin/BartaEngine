@@ -1,25 +1,28 @@
 #pragma once
-#include"../Vector2f.h"
+#include <Geometrics/Point.h>
 
-namespace Barta{
+namespace Barta {
 
-	class Circle{
-	public:
-		Circle( float radius, Vector2f center );
+class Circle {
+public:
+    Circle(PrecisionType radius, Point center);
 
-		float getRadius() const;
+    PrecisionType getRadius() const;
 
-		Vector2f getCenter() const;
+    Point getCenter() const;
 
-		bool isWithin(Vector2f point) const noexcept;
+    bool isWithin(Point point) const noexcept;
 
-	private:
-		const float radius;
-		const Vector2f center;
-	};
+    const float radius;
+    const Point center;
+};
 
-	inline std::ostream& operator << (std::ostream& stream, const Circle& circle) noexcept {
-		return stream << "(" << circle.getCenter() << ", " << circle.getRadius() << ")";
-	}
+inline std::ostream& operator<<(
+    std::ostream& stream,
+    const Circle& circle
+) noexcept {
+    return stream << "(" << circle.getCenter().toVector() << ", " << circle.getRadius() << ")";
 }
 
+Circle operator*(const Matrix& M, const Circle& circle) noexcept;
+}

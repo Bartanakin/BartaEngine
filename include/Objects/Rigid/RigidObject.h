@@ -18,14 +18,13 @@ public:
 
     std::unique_ptr<const HitboxInterface> getHitbox() const override;
 
-    void move(const Vector2f& shift) override;
+    void move(const Vector& shift) override;
 
     DynamicsDTOCollection& getDynamicsDTOs() override;
 
-    void rotate(float, Vector2f) override;
-    void rotate(float);
+    void rotate(PrecisionType, const Point&) override;
+    void rotate(PrecisionType);
     float getRotation() const;
-    void setRotation(float angle);
 
 protected:
     GraphicsData graphicsData;

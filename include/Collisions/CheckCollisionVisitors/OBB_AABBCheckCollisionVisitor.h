@@ -3,9 +3,9 @@
 //
 
 #pragma once
-#include "Geometrics/BartaShapes/OBB.h"
 #include <Collisions/CheckCollisionVisitorInterface.h>
 #include <Dynamics/DynamicsDifference.h>
+#include <Geometrics/BartaShapes/OBB.h>
 
 namespace Barta {
 class OBB_AABBCheckCollisionVisitor: public CheckCollisionVisitorInterface {
@@ -15,7 +15,8 @@ public:
     CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
     CollisionTestResult checkDynamicCollision(float deltaTime, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
-    Vector2f calculateCollisionPoint() const;
+
+    Point calculateCollisionPoint() const;
 
 private:
     static bool checkStaticOneWay(const AABB& aabb, const OBB& obb);
