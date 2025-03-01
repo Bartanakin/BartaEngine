@@ -1,14 +1,19 @@
-//
-// Created by bartanakin on 2/12/25.
-//
-
 #pragma once
+#include <Geometrics/Quaternion.h>
 #include <pch.h>
 
 namespace Barta {
-using PrecisionType = float;
-using Matrix = Eigen::Matrix<PrecisionType, 4, 4>;
-using Quaternion = Eigen::Quaternion<PrecisionType>;
+
+inline void from_json(
+    const json& j,
+    Quaternion& q
+) {
+    j.at("x").get_to(q.x());
+    j.at("y").get_to(q.y());
+    j.at("z").get_to(q.z());
+    j.at("w").get_to(q.w());
+}
+
 using VectorBase = Eigen::Vector<PrecisionType, 4>;
 
 class Vector {
@@ -91,7 +96,7 @@ public:
     Vector perp(
         const Vector v
     ) const noexcept {
-        return *this - this->proj(v);
+        return v - this->proj(v);
     }
 
     std::string toString() const noexcept {
@@ -194,6 +199,25 @@ inline Vector operator*(
     auto p2 = M * v.base;
 
     return {p2.x(), p2.y(), p2.z()};
+}
+
+inline void to_json(
+    json& j,
+    const Vector& v
+) {
+    j = json{
+        {"x", v.x(), "y", v.y(), "z", v.z()}
+    };
+}
+
+inline void from_json(
+    const json& j,
+    Vector& v
+) {
+    j.at("x").get_to(v[0]);
+    j.at("y").get_to(v[1]);
+    j.at("z").get_to(v[2]);
+    v[3] = static_cast<PrecisionType>(0);
 }
 
 } // Barta

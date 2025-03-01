@@ -3,4 +3,5 @@ target_sources(${LIBRARY_NAME} PUBLIC
     CircleHitbox.cpp
     HitboxComposite.cpp
     NullHitbox.cpp
+    OBB_Hitbox.cpp
 )

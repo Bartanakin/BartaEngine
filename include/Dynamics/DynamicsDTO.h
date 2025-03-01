@@ -6,7 +6,7 @@ namespace Barta {
 
 struct DynamicsDTO {
     DynamicsDTO(
-        Vector velocity,
+        Vector velocity = Vector::Zero(),
         bool hasInfiniteMass = true,
         PrecisionType mass = 0.f,
         Vector force = Vector::Zero(),
@@ -67,4 +67,39 @@ struct DynamicsDTO {
     Point massCenter;
     std::vector<Vector> allowedDirections;
 };
+
+inline void from_json(
+    const json& j,
+    DynamicsDTO& d
+) {
+    d = DynamicsDTO();
+    if (j.contains("velocity")) {
+        d.velocity = j.at("velocity");
+    }
+
+    if (j.contains("hasInfiniteMass")) {
+        d.hasInfiniteMass = j.at("hasInfiniteMass");
+    }
+
+    if (j.contains("mass")) {
+        d.mass = j.at("mass");
+    }
+
+    if (j.contains("force")) {
+        d.force = j.at("force");
+    }
+
+    if (j.contains("rotationVelocity")) {
+        d.rotationVelocity = j.at("rotationVelocity");
+    }
+
+    if (j.contains("massCenter")) {
+        d.massCenter = j.at("massCenter");
+    }
+
+    if (j.contains("allowedDirections")) {
+        d.allowedDirections = j.at("allowedDirections");
+    }
+}
+
 }

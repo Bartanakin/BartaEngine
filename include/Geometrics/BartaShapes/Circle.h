@@ -1,10 +1,13 @@
 #pragma once
 #include <Geometrics/Point.h>
+#include <pch.h>
 
 namespace Barta {
 
 class Circle {
 public:
+    Circle() noexcept = default;
+
     Circle(PrecisionType radius, Point center);
 
     PrecisionType getRadius() const;
@@ -13,8 +16,8 @@ public:
 
     bool isWithin(Point point) const noexcept;
 
-    const float radius;
-    const Point center;
+    PrecisionType radius;
+    Point center;
 };
 
 inline std::ostream& operator<<(
@@ -25,4 +28,10 @@ inline std::ostream& operator<<(
 }
 
 Circle operator*(const Matrix& M, const Circle& circle) noexcept;
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    Circle,
+    radius,
+    center
+)
 }

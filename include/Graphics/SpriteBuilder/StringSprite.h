@@ -1,21 +1,21 @@
 #pragma once
+#include <Geometrics/Point.h>
+#include <pch.h>
 
-#include "Geometrics/Vector2f.h"
 namespace Barta {
 
 class StringSprite {
 public:
     StringSprite(
-        Barta::Vector2f origin,
+        Point origin,
         std::string string,
         int fontSize
-    ) noexcept
-        : origin(origin),
-          string(string),
-          fontSize(fontSize)
-    {}
+    ) noexcept:
+        origin(std::move(origin)),
+        string(std::move(string)),
+        fontSize(fontSize) {}
 
-    Barta::Vector2f origin;
+    Point origin;
     std::string string;
     int fontSize;
 };

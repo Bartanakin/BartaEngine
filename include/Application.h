@@ -27,11 +27,7 @@ public:
         dynamicsUpdateStrategy(std::move(dynamicsUpdateStrategy)),
         collisionEventsLogger({}),
         collisionExecutor(CollisionCoreExecutor(std::move(collisionDetectionStrategy))),
-        objectLists({}) {
-        this->collisionEventsLogger.logSubscriber(std::unique_ptr<Subscribers::RigidObjectRigidObject>(
-            new Barta::StaticCollisionResponseSubscriberType<RigidObjectInterface, RigidObjectInterface>()
-        ));
-    }
+        objectLists({}) {}
 
     Application(const Application&) = delete;
     Application(Application&&) = delete;

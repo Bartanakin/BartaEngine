@@ -71,7 +71,7 @@ void Barta::RigidCompositeObject::addNewChild(
     RigidObjectInterface* newChild
 ) {
     this->children.push_back(newChild);
-    newChild->getDynamicsDTOs() = DynamicsDTOCollection{DynamicsDTO({})};
+    newChild->getDynamicsDTOs() = DynamicsDTOCollection{DynamicsDTO()};
 }
 
 Barta::RigidCompositeObject::~RigidCompositeObject() noexcept {

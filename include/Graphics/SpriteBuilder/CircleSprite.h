@@ -1,20 +1,18 @@
 #pragma once
-#include "../Color.h"
-#include "../../Geometrics/BartaShapes/Circle.h"
+#include <Geometrics/BartaShapes/Circle.h>
+#include <Graphics/Color.h>
+#include <utility>
 
-namespace Barta{
-    struct CircleSprite {
-        public:
-        CircleSprite(
-            Circle circle,
-            Color color
-        ) noexcept :
-            circle(circle),
-            color(color)
-        {}
+namespace Barta {
+struct CircleSprite {
+    CircleSprite(
+        Circle circle,
+        Color color
+    ) noexcept:
+        circle(std::move(circle)),
+        color(color) {}
 
-        Circle circle;
-        Color color;
-    };
+    Circle circle;
+    Color color;
+};
 }
-

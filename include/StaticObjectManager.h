@@ -1,16 +1,8 @@
 #pragma once
-#include "ReduceableList.h"
-#include "pch.h"
-#include <concepts>
+#include <ListManagerConcept.h>
+#include <pch.h>
 
 namespace Barta {
-template<typename T>
-using ListType = ReducibleList<std::vector<T*>>;
-
-template<typename T>
-concept DeleteSettable = requires(T t) {
-    { t.isToBeDeleted() } -> std::same_as<bool>;
-};
 
 template<DeleteSettable T, DeleteSettable... Ts>
 class StaticObjectManager: public StaticObjectManager<T>, public StaticObjectManager<Ts...> {
@@ -29,7 +21,7 @@ public:
     using StaticObjectManager<Ts...>::getList;
 };
 
-template<typename T>
+template<DeleteSettable T>
 class StaticObjectManager<T> {
 public:
     StaticObjectManager() noexcept:
@@ -54,4 +46,6 @@ public:
 private:
     ListType<T> objects;
 };
+
+static_assert(ListManagerConcept<StaticObjectManager<BartaObjectInterface>, BartaObjectInterface>);
 }

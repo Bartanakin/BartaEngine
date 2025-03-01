@@ -1,5 +1,6 @@
 #pragma once
 #include <Collisions/CollisionDetectionStrategyInterface.h>
+#include <Dynamics/DynamicsDifference.h>
 #include <Geometrics/BartaShapes/OBB.h>
 #include <Geometrics/Ray.h>
 #include <pch.h>

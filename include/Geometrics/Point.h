@@ -1,7 +1,3 @@
-//
-// Created by bartanakin on 2/12/25.
-//
-
 #pragma once
 #include <Geometrics/Vector.h>
 #include <pch.h>
@@ -10,7 +6,6 @@ namespace Barta {
 using EigenBaseVector = Eigen::Vector<PrecisionType, 4>;
 
 class Point {
-private:
     VectorBase base;
 
 public:
@@ -132,6 +127,25 @@ inline Point operator*(
     auto p2 = M * p.base;
 
     return {p2.x(), p2.y(), p2.z()};
+}
+
+inline void to_json(
+    json& j,
+    const Point& v
+) {
+    j = json{
+        {"x", v.x(), "y", v.y(), "z", v.z()}
+    };
+}
+
+inline void from_json(
+    const json& j,
+    Point& v
+) {
+    j.at("x").get_to(v[0]);
+    j.at("y").get_to(v[1]);
+    j.at("z").get_to(v[2]);
+    v[3] = static_cast<PrecisionType>(1);
 }
 
 } // Barta

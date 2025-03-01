@@ -28,6 +28,11 @@ FetchContent_Declare(eigen
         GIT_TAG 3.4.0)
 FetchContent_MakeAvailable(eigen)
 
+FetchContent_Declare(json
+        URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+)
+FetchContent_MakeAvailable(json)
+
 add_subdirectory(lib)
 target_link_libraries(
         ${LIBRARY_NAME}
@@ -35,6 +40,7 @@ target_link_libraries(
         sfml-graphics
 )
 target_link_libraries(${LIBRARY_NAME} PUBLIC eigen)
+target_link_libraries(${LIBRARY_NAME} PUBLIC nlohmann_json::nlohmann_json)
 target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
 
 #if(WIN32)
