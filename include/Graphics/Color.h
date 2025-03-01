@@ -1,11 +1,10 @@
 #pragma once
-#include <cmath>
 #include <pch.h>
 
 namespace Barta {
 
 struct HSL {
-    unsigned char hue;
+    float hue;
     float saturation;
     float lightness;
 };
@@ -13,7 +12,7 @@ struct HSL {
 struct Color {
     constexpr Color() noexcept = default;
 
-    /// Default constructor using RGB values
+    /// Constructor using RGB values
     constexpr Color(
         unsigned char r,
         unsigned char g,
@@ -63,7 +62,7 @@ struct Color {
         //     throw std::invalid_argument("Lightness must be in the range [0, 1]");
         // }
 
-        hsl.hue = hsl.hue % 360;
+        hsl.hue = std::fmod(hsl.hue, 360.0f);
 
         const float chroma = (1.0f - std::abs(2.0f * hsl.lightness - 1.0f)) * hsl.saturation;
         const float huePrime = static_cast<float>(hsl.hue) / 60.0f;
@@ -98,17 +97,17 @@ struct Color {
             b_temp = x;
         }
 
-        r = static_cast<unsigned char>(std::round((r_temp + m) * 255.0f));
-        g = static_cast<unsigned char>(std::round((g_temp + m) * 255.0f));
-        b = static_cast<unsigned char>(std::round((b_temp + m) * 255.0f));
+        this->r = static_cast<unsigned char>(std::round((r_temp + m) * 255.0f));
+        this->g = static_cast<unsigned char>(std::round((g_temp + m) * 255.0f));
+        this->b = static_cast<unsigned char>(std::round((b_temp + m) * 255.0f));
     }
 
     ~Color() noexcept = default;
 
-    unsigned char r{};
-    unsigned char g{};
-    unsigned char b{};
-    unsigned char a{};
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
 };
 
 inline void from_json(
