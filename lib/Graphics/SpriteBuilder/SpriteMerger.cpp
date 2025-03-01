@@ -15,7 +15,7 @@ Barta::SpriteMerger* Barta::SpriteMerger::addRectangleWithColors(
          }) {
         this->data.push_back(vector.x());
         this->data.push_back(vector.y());
-        this->data.push_back(0.f);
+        this->data.push_back(vector.z());
     }
 
     for (const auto& color:
@@ -39,7 +39,7 @@ Barta::SpriteMerger* Barta::SpriteMerger::addCircleSprite(
 
     this->data.push_back(circleSprite.circle.getCenter().x());
     this->data.push_back(circleSprite.circle.getCenter().y());
-    this->data.push_back(0.f);
+    this->data.push_back(circleSprite.circle.getCenter().z());
     this->data.push_back(circleSprite.circle.getRadius());
 
     this->data.push_back(circleSprite.color.r);
@@ -54,9 +54,9 @@ Barta::SpriteMerger* Barta::SpriteMerger::addString(
     const Barta::StringSprite& stringSprite
 ) {
     this->types.push_back(SpriteType::VARCHAR256);
-    this->data.push_back(stringSprite.origin.x);
-    this->data.push_back(stringSprite.origin.y);
-    this->data.push_back(0.f);
+    this->data.push_back(stringSprite.origin.x());
+    this->data.push_back(stringSprite.origin.y());
+    this->data.push_back(stringSprite.origin.z());
     this->data.push_back(static_cast<float>(stringSprite.fontSize));
     size_t size = stringSprite.string.size();
     if (size > 256) {
@@ -77,7 +77,7 @@ Barta::SpriteMerger* Barta::SpriteMerger::addTriangle(
     for (const auto& vector: {triangleSprite.triangle.p1, triangleSprite.triangle.p2, triangleSprite.triangle.p3}) {
         this->data.push_back(vector.x());
         this->data.push_back(vector.y());
-        this->data.push_back(0.f);
+        this->data.push_back(vector.z());
     }
 
     for (const auto& color: {triangleSprite.color1, triangleSprite.color2, triangleSprite.color3}) {

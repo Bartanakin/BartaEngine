@@ -1,6 +1,6 @@
 target_sources(${LIBRARY_NAME} PUBLIC
     AABB.cpp
-    OBB.cpp
     Circle.cpp
+    OBB.cpp
     Triangle.cpp
 )

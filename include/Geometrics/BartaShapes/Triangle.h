@@ -3,15 +3,15 @@
 
 namespace Barta {
 
-class Triangle {
-public:
+struct Triangle {
+    Triangle() = default;
     Triangle(Point p1, Point p2, Point p3);
 
     bool isWithin(Point point) const noexcept;
 
-    const Point p1;
-    const Point p2;
-    const Point p3;
+    Point p1;
+    Point p2;
+    Point p3;
 };
 
 inline std::ostream& operator<<(
@@ -20,4 +20,11 @@ inline std::ostream& operator<<(
 ) noexcept {
     return stream << "(" << triangle.p1.toVector() << ", " << triangle.p2.toVector() << ", " << triangle.p2.toVector() << ")";
 }
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    Triangle,
+    p1,
+    p2,
+    p3
+)
 }

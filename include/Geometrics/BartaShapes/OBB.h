@@ -1,14 +1,10 @@
-//
-// Created by bartanakin on 10/26/24.
-//
-
 #pragma once
 
 #include <Geometrics/BartaShapes/AABB.h>
 
 namespace Barta {
-class OBB {
-public:
+struct OBB {
+    OBB() = default;
     OBB(const Point& position, const Vector& widthHeight, PrecisionType rotation);
     OBB(const Point& position, const Vector& widthHeight, Quaternion rotation);
     // scale is always (1, 1, 1)
@@ -38,7 +34,6 @@ public:
 
     const Transformation& getTransformation() const noexcept;
 
-private:
     Vector widthHeight;
     Transformation transformation;
 };
@@ -59,4 +54,6 @@ inline std::ostream& operator<<(
 ) noexcept {
     return stream << "(" << obb.getFirstVertex().toVector() << ", " << obb.getWidthHeight() << ", " << obb.getRotationAngle() << ")";
 }
+
+void from_json(const json& j, OBB& obb);
 }

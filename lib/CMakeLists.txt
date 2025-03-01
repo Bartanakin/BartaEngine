@@ -1,23 +1,5 @@
-add_library(${LIBRARY_NAME}
-        BartaObjectManager.cpp
-    pch.cpp
-        ../include/Dynamics/DynamicsAwareListConcept.h
-        ../include/Geometrics/BartaShapes/OBB.h
-        Geometrics/BartaShapes/OBB.cpp
-        ../include/Hitbox/OBB_Hitbox.h
-        Hitbox/OBB_Hitbox.cpp
-        ../include/Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h
-        Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.cpp
-        Graphics/GraphicsDataTransformer.cpp
-        ../include/Graphics/GraphicsDataTransformer.h
-        ../include/Events/Subscribers/CollisionBrakeSubscriber.h
-        ../include/Dynamics/DynamicsDTOCollection.h
-        ../include/Hitbox/HitboxAwareConcept.h
-        Debug/DebugGuardSubscriber.cpp
-        ../include/Debug/DebugGuardSubscriber.h
-        ../include/Geometrics/Ray.h
-        Geometrics/Ray.cpp
-        Geometrics/Intersections.cpp
+add_library(
+    ${LIBRARY_NAME} BartaObjectManager.cpp pch.cpp
 )
 
 # target_precompile_headers(${PROJECT_NAME} PUBLIC
@@ -30,6 +12,7 @@ add_subdirectory(Geometrics)
 add_subdirectory(Graphics)
 add_subdirectory(Hitbox)
 add_subdirectory(Objects)
+add_subdirectory(SceneLoader)
 add_subdirectory(Utilities)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/include")

@@ -1,7 +1,3 @@
-//
-// Created by bartanakin on 2/12/25.
-//
-
 #pragma once
 #include <Geometrics/Point.h>
 
@@ -9,6 +5,8 @@ namespace Barta {
 
 class Transformation {
 public:
+    Transformation() = default;
+
     explicit Transformation(
         const Matrix& M
     ):
@@ -115,6 +113,8 @@ public:
 
     static Transformation Identity() noexcept { return Transformation(Matrix::Identity()); }
 
+    friend inline void from_json(const json& json, Transformation& transformation);
+
 private:
     Matrix M;
 };
@@ -124,5 +124,21 @@ inline Transformation operator*(
     const Transformation& T
 ) noexcept {
     return Transformation(M.operator*(T.getMatrix()));
+}
+
+inline void from_json(
+    const json& json,
+    Transformation& transformation
+) {
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            std::string key = "a" + std::to_string(i + 1) + std::to_string(j + 1);
+            if (json.contains(key)) {
+                json.at(key).get_to(transformation.M(i, j));
+            } else {
+                transformation.M(i, j) = (i == j) ? 1. : 0.;
+            }
+        }
+    }
 }
 } // Barta

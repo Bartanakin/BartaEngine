@@ -2,6 +2,8 @@
 
 // STL
 #include <array>
+#include <concepts>
+#include <exception>
 #include <filesystem>
 #include <functional>
 #include <iostream>
@@ -37,3 +39,8 @@
 
 // C++ 20+
 #include <concepts>
+
+// json
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;

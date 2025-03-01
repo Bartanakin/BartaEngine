@@ -73,4 +73,12 @@ Point OBB::getThirdVertex() const {
 Point OBB::getFourthVertex() const {
     return this->transformation.getMatrix() * (Point::Zero() + Vector(0.f, this->widthHeight.y()));
 }
+
+void from_json(
+    const json& j,
+    OBB& obb
+) {
+    j.at("size").get_to(obb.widthHeight);
+    j.at("transformation").get_to(obb.transformation);
+}
 }

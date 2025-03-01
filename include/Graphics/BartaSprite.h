@@ -1,5 +1,5 @@
 #pragma once
-#include "../pch.h"
+#include <pch.h>
 
 namespace Barta {
 enum class SpriteType {
@@ -10,7 +10,7 @@ enum class SpriteType {
     // left-bottom-color (rgba)
     RECTANGLE_WITH_COLORS,
     /*
-        x, y, z, // ceter coordinates
+        x, y, z, // center coordinates
         radius,
         color (rgba)
     */
