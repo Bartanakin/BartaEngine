@@ -20,6 +20,7 @@ enum class SpriteType {
         font_size,
         char[256]
     */
+    /// Unsupported with OpenGL
     VARCHAR256,
     /*
      * x1, y1, z1
@@ -62,6 +63,19 @@ public:
     inline const std::vector<float>& getData() const { return this->data; }
 
     inline const std::vector<SpriteType>& getSpriteType() const { return this->spriteTypes; }
+
+    static unsigned int getSpriteTypeSize(
+        SpriteType type
+    ) {
+        switch (type) {
+        case SpriteType::RECTANGLE_WITH_COLORS: return 6 + 4 * 4;
+        case SpriteType::CIRCLE: return 8;
+        case SpriteType::VARCHAR256: return 256 / 4 + 4;
+        case SpriteType::TRIANGLE: return 9 + 3 * 4;
+        }
+
+        return 0;
+    }
 
 protected:
     int resource;

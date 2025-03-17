@@ -4,7 +4,6 @@
 
 #include <Graphics/GraphicsDataTransformer.h>
 #include <Geometrics/BartaShapes/OBB.h>
-#include <Graphics/SFML_GraphicsBridge.h>
 #include <Graphics/SpriteBuilder/SpriteMerger.h>
 
 Barta::GraphicsDataTransformer::GraphicsDataTransformer(
