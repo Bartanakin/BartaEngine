@@ -1,8 +1,11 @@
 #pragma once
 
+#define _USE_MATH_DEFINES
+
 // STL
 #include <array>
 #include <concepts>
+#include <cstring>
 #include <exception>
 #include <filesystem>
 #include <functional>
@@ -10,18 +13,25 @@
 #include <limits>
 #include <list>
 #include <memory>
+#include <regex>
 #include <sstream>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
 
 // SFML
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
-#include <SFML/Graphics.hpp>
-#pragma GCC diagnostic pop
+#if USE_SFML
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Weffc++"
+    #include <SFML/Graphics.hpp>
+    #pragma GCC diagnostic pop
+#endif
 
-#define _USE_MATH_DEFINES
+// OpenGL
+#if USE_OPEN_GL
+    #include <GLFW/glfw3.h>
+    #include <glad/glad.h>
+#endif
 
 // Eigen
 #include <Eigen/Dense>

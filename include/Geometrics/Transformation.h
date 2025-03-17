@@ -66,6 +66,17 @@ public:
         return R;
     }
 
+    static Matrix scale(
+        Vector factors
+    ) {
+        Matrix M = Matrix::Identity();
+        M(0, 0) = factors.x();
+        M(1, 1) = factors.y();
+        M(2, 2) = factors.z();
+
+        return M;
+    }
+
     Vector getTranslation() const { return {this->M(0, 3), this->M(1, 3), this->M(2, 3)}; }
 
     Quaternion getRotation() const {

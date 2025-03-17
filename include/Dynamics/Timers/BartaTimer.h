@@ -2,14 +2,10 @@
 #include <Dynamics/TimerInterface.h>
 #include <pch.h>
 
-namespace Barta {
-
-class FrameLimitTimerProxy: public TimerInterface {
+namespace Barta::Dynamics::Timers {
+class BartaTimer: public Barta::TimerInterface {
 public:
-    /*
-        Time in seconds
-    */
-    FrameLimitTimerProxy(std::unique_ptr<TimerInterface> timer, float frameTime);
+    BartaTimer();
 
     void restart() override;
 
@@ -24,8 +20,8 @@ public:
     bool finished() override;
 
 private:
-    std::unique_ptr<TimerInterface> timer;
-
-    const float frameTime;
+    std::chrono::steady_clock::time_point lastFrameRenderedTime;
+    float currentDeltaTime;
+    float remainingDeltaTime;
 };
 }

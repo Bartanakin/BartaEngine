@@ -1,8 +1,8 @@
 #pragma once
-#include "../Events/BartaEventLoggerInterface.h"
-#include "../Geometrics/Vector2f.h"
-#include "../pch.h"
-#include "GraphicsDataAwareInterface.h"
+#include <Events/BartaEventLoggerInterface.h>
+#include <Geometrics/Vector2f.h>
+#include <Graphics/GraphicsDataAwareInterface.h>
+#include <pch.h>
 
 namespace Barta {
 class BartaGraphicsBridgeInterface {

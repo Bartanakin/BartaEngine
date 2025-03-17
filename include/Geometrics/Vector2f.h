@@ -18,7 +18,6 @@ public:
         y(y) {}
 
     Vector2f(const Vector2f& second);
-    Vector2f(sf::Vector2f vector);
     Vector2f& operator=(const Vector2f&);
 
     float getX() const { return this->x; }
