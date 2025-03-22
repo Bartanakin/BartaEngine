@@ -1,6 +1,4 @@
 #include <Geometrics/BartaShapes/Circle.h>
-#include <pch.h>
-#include <utility>
 
 namespace Barta {
 Circle::Circle(

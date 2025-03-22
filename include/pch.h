@@ -28,10 +28,13 @@
 #endif
 
 // OpenGL
+// clang-format off
 #if USE_OPEN_GL
-    #include <GLFW/glfw3.h>
     #include <glad/glad.h>
+
+    #include <GLFW/glfw3.h>
 #endif
+// clang-format on
 
 // Eigen
 #include <Eigen/Dense>
