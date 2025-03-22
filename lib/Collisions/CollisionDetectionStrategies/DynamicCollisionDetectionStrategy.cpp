@@ -1,5 +1,4 @@
 #include <Collisions/CollisionDetectionStrategies/DynamicCollisionDetectionStrategy.h>
-#include "pch.h"
 
 Barta::DynamicCollisionDetectionStrategy::DynamicCollisionDetectionStrategy(
     const TimerInterface& timer

@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 3.16)
 set(LIBRARY_NAME "BartaEngine_lib")
 set(BARTA_ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(RUN_TEST_NAME "BartaEngine_runTest")
-set(USE_OPEN_GL 0)
-set(USE_SFML 1)
+set(USE_OPEN_GL 1)
+set(USE_SFML 0)
 
 project(
     ${LIBRARY_NAME}

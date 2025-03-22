@@ -1,5 +1,4 @@
 #include <Collisions/CheckCollisionVisitors/CircleCircleCheckCollisionVisitor.h>
-#include "pch.h"
 #include <Geometrics/ConvexFactor.h>
 #include <Utilities/MathUtilities.h>
 

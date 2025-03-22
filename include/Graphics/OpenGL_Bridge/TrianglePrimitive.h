@@ -1,5 +1,5 @@
 #pragma once
-#include <glad/glad.h>
+#include <pch.h>
 
 namespace Barta::Graphics::OpenGL_Bridge {
 struct TrianglePrimitive {

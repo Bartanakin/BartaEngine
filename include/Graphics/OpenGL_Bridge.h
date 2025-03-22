@@ -2,7 +2,7 @@
 #include <Graphics/BartaGraphicsBridgeInterface.h>
 #include <Graphics/OpenGL_Bridge/AttributeArray.h>
 #include <Graphics/OpenGL_Bridge/Shader.h>
-#include <Graphics/OpenGL_Bridge/ShaderUseGuard.h>
+#include <Graphics/OpenGL_Bridge/UniformBuffer.h>
 #include <Graphics/OpenGL_Bridge/VertexArray.h>
 #include <pch.h>
 
@@ -22,10 +22,10 @@ public:
 private:
     GLFWwindow* window;
     std::unique_ptr<Shader> shader;
-    ShaderUseGuard shaderUseGuard;
     std::unique_ptr<VertexArray> vertexArray;
     std::unique_ptr<AttributeArray> attributeArray;
-    Transformation camera2D;
+    std::unique_ptr<UniformBuffer> PB_uniformBuffer;
+    Transformation camera;
 };
 
 } // Barta
