@@ -1,5 +1,4 @@
 #include <Collisions/CollisionDetectionStrategies/StaticCollisionDetectionStrategy.h>
-#include "pch.h"
 #include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
 
 Barta::StaticCollisionDetectionStrategy::StaticCollisionDetectionStrategy() {}

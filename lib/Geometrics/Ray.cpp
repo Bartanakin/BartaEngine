@@ -2,7 +2,7 @@
 // Created by bartanakin on 11/15/24.
 //
 
-#include "Geometrics/Ray.h"
+#include <Geometrics/Ray.h>
 
 Barta::Ray::Ray(
     Point origin,

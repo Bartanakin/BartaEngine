@@ -1,5 +1,4 @@
 #include <Collisions/CollisionTestResult/CollisionTestResultBuilder.h>
-#include <pch.h>
 
 namespace Barta {
 CollisionTestResultBuilder::CollisionTestResultBuilder() noexcept:

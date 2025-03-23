@@ -1,5 +1,4 @@
 #include <BartaObjectManager.h>
-#include <pch.h>
 
 Barta::BartaObjectManager::BartaObjectManager() noexcept:
     objectList({}),

@@ -1,5 +1,4 @@
 #include <Geometrics/Segment.h>
-#include <pch.h>
 
 // TODO third dimention
 Barta::Segment::Relation Barta::Segment::calculateRelationToPoint(
