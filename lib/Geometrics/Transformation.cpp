@@ -19,6 +19,10 @@ Matrix Transformation::rotation(
 ) {
     rotation = rotation.normalized();
     auto angle = 2.f * std::acos(rotation.w());
+    if (std::abs(angle) < 0.001) {
+        return Matrix::Identity();
+    }
+
     Vector axis = {rotation.x(), rotation.y(), rotation.z()};
     axis = 1.f / std::sin(angle / 2.f) * axis;
 
@@ -30,6 +34,10 @@ Matrix Transformation::rotation(
     Point p,
     Vector axis
 ) {
+    if (axis.zeroised() == Vector::Zero()) {
+        return Matrix::Identity();
+    }
+
     Matrix R = Matrix::Identity(4, 4);
     auto sin = std::sin(angle);
     auto cos = std::cos(angle);

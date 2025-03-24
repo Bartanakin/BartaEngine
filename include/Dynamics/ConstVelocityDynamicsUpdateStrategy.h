@@ -21,17 +21,22 @@ public:
         const float deltaTime
     ) override {
         for (auto object: this->objectList) {
-            auto& dynamics = object->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
+            auto& dynamics = DynamicsAwareInterface::getCurrentDynamics(*object);
             if (dynamics.hasInfiniteMass) {
                 continue;
             }
 
             DynamicsDTO nextDynamics = dynamics;
-            auto acceleration = dynamics.force / dynamics.mass;
-            nextDynamics.velocity = dynamics.velocity + acceleration * deltaTime;
-            nextDynamics.massCenter = dynamics.massCenter + deltaTime * (nextDynamics.velocity + 0.5f * deltaTime * acceleration);
+            nextDynamics.massCenter = dynamics.massCenter + deltaTime * nextDynamics.velocity;
+            auto rotationChange = Quaternion(deltaTime * 0.5f, 0, 0, 0) * static_cast<Quaternion>(dynamics.angularVelocity) * dynamics.rotation;
+            nextDynamics.rotation = {
+                dynamics.rotation.w() + rotationChange.w(),
+                dynamics.rotation.x() + rotationChange.x(),
+                dynamics.rotation.y() + rotationChange.y(),
+                dynamics.rotation.z() + rotationChange.z(),
+            };
 
-            object->getDynamicsDTOs()[DynamicsDTOIteration::NEXT] = nextDynamics;
+            DynamicsAwareInterface::getNextDynamics(*object) = nextDynamics;
         }
     }
 
@@ -59,25 +64,20 @@ public:
         bool runForward = true
     ) override {
         for (auto object: this->objectList) {
-            auto& dynamics = object->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
-            auto& nextDynamics = object->getDynamicsDTOs()[DynamicsDTOIteration::NEXT];
+            auto& dynamics = DynamicsAwareInterface::getCurrentDynamics(*object);
+            auto& nextDynamics = DynamicsAwareInterface::getNextDynamics(*object);
             if (dynamics.hasInfiniteMass) {
                 continue;
             }
 
+            // TODO apply allowed directions for rotation velocity
             nextDynamics.velocity = applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.velocity).zeroised();
 
-            // TODO add response force handling
-            nextDynamics.force = applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.force).zeroised();
-
             auto shift = applyAllowedDirections(nextDynamics.allowedDirections, nextDynamics.massCenter - dynamics.massCenter).zeroised();
-            nextDynamics.massCenter = dynamics.massCenter + shift;
+            auto additionalRotation = nextDynamics.rotation * dynamics.rotation.inverse();
+
             object->move(shift);
-            // TODO
-            // object->rotate(
-            //     nextDynamics.rotationVelocity * object.deltaTime,
-            //     dynamics.massCenter
-            // );
+            object->rotate(additionalRotation);
 
             if (runForward) {
                 object->getDynamicsDTOs().forward();

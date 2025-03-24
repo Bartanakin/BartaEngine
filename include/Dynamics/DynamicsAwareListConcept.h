@@ -8,13 +8,11 @@
 #include "pch.h"
 
 template<typename T>
-concept DynamicsAwareConcept = requires(T t, Barta::Vector v, Barta::Point p, Barta::PrecisionType rotation) {
+concept DynamicsAwareConcept = requires(T t, Barta::Vector v, Barta::Quaternion rotation) {
     { t.getDynamicsDTOs() } -> std::same_as<Barta::DynamicsDTOCollection&>;
-    { t.getCurrentDynamicsData() } -> std::same_as<const Barta::DynamicsDTO&>;
-    { t.getNextDynamicsData() } -> std::same_as<Barta::DynamicsDTO&>;
     { t.isToBeDeleted() } -> std::same_as<bool>;
     { t.move(v) } -> std::same_as<void>;
-    { t.rotate(rotation, p) } -> std::same_as<void>;
+    { t.rotate(rotation) } -> std::same_as<void>;
 };
 
 template<typename T>

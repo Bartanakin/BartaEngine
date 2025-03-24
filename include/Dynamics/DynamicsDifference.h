@@ -5,41 +5,33 @@
 namespace Barta {
 
 struct DynamicsDifference {
+    /**
+     * @deprecated change to current/next state evaluation
+     */
     DynamicsDifference(
-        Vector velocity,
-        Vector acceleration = {},
-        PrecisionType rotationVelocity = 0.f
+        Vector velocity
     ):
-        velocity(std::move(velocity)),
-        acceleration(std::move(acceleration)),
-        rotationVelocity(rotationVelocity) {}
+        velocity(std::move(velocity)) {}
 
     DynamicsDifference& operator=(
         const DynamicsDifference& second
     ) {
         this->velocity = second.velocity;
-        this->rotationVelocity = second.rotationVelocity;
 
         return *this;
     }
 
     DynamicsDifference(const DynamicsDifference& second) = default;
 
-    DynamicsDifference operator-() const { return {-this->velocity, -this->acceleration, this->rotationVelocity}; }
+    DynamicsDifference operator-() const { return {-this->velocity}; }
 
     Vector velocity;
-    Vector acceleration;
-    PrecisionType rotationVelocity;
 };
 
 inline DynamicsDifference operator*(
     const Matrix& M,
     const DynamicsDifference& dynamicsDifference
 ) noexcept {
-    return {
-        M * dynamicsDifference.velocity,
-        M * dynamicsDifference.acceleration,
-        dynamicsDifference.rotationVelocity // TODO - rotation speed
-    };
+    return {M * dynamicsDifference.velocity};
 }
 }

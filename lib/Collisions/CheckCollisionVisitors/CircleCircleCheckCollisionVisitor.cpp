@@ -52,7 +52,7 @@ CollisionTestResult CircleCircleCheckCollisionVisitor::checkDynamicCollision(
 
     collisionTestResultBuilder.reset();
     auto s = circle1.getCenter() - circle2.getCenter();
-    auto v = dynamicsDifference.velocity + 0.5f * dynamicsDifference.acceleration * delta_time;
+    auto v = dynamicsDifference.velocity; // TODO change to current/next state evaluation
     auto r = circle1.getRadius() + circle2.getRadius();
 
     auto eq = Utils::createQuadraticEquation(v.squaredNorm(), 2.f * v.dot(s), s.squaredNorm() - r * r);

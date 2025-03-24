@@ -22,9 +22,7 @@ public:
 
     DynamicsDTOCollection& getDynamicsDTOs() override;
 
-    void rotate(PrecisionType, const Point&) override;
-    void rotate(PrecisionType);
-    float getRotation() const;
+    void rotate(const Quaternion& rotation) override;
 
 protected:
     GraphicsData graphicsData;

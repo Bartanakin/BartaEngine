@@ -23,4 +23,22 @@ public:
     ) noexcept:
         Eigen::Quaternion<PrecisionType>(base) {}
 };
+
+inline void from_json(
+    const nlohmann::json& j,
+    Quaternion& q
+) {
+    PrecisionType angle = j.at("angle");
+    Eigen::Vector3<PrecisionType> n;
+    n.x() = j.at("x");
+    n.y() = j.at("y");
+    n.z() = j.at("z");
+    n.normalize();
+    n *= std::sin(angle / 2.);
+
+    q.w() = std::cos(angle / 2.);
+    q.x() = n.x();
+    q.y() = n.y();
+    q.z() = n.z();
+}
 }

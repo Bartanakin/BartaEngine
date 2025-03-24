@@ -20,7 +20,7 @@ public:
 
     DynamicsDTOCollection& getDynamicsDTOs() override;
 
-    inline void rotate(float, const Point&) override;
+    void rotate(const Quaternion& rotation) override;
 
     inline void addNewChild(RigidObjectInterface*);
 

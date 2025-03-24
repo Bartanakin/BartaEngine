@@ -32,16 +32,6 @@ std::unique_ptr<const Barta::HitboxInterface> Barta::RigidCompositeObject::getHi
     return std::make_unique<const HitboxComposite>(std::move(list));
 }
 
-void Barta::RigidCompositeObject::rotate(
-    float angle,
-    const Point& origin
-) {
-    this->transformation = Transformation(Transformation::rotation(angle, origin) * this->transformation.getMatrix());
-    for (auto& child: this->children) {
-        child->rotate(angle, origin);
-    }
-}
-
 void Barta::RigidCompositeObject::move(
     const Vector& shift
 ) {
@@ -55,9 +45,21 @@ Barta::DynamicsDTOCollection& Barta::RigidCompositeObject::getDynamicsDTOs() {
     return this->dynamicsDtoCollection;
 }
 
+void Barta::RigidCompositeObject::rotate(
+    const Quaternion& rotation
+) {
+    for (auto& child: this->children) {
+        auto diff = DynamicsAwareInterface::getCurrentDynamics(*this).massCenter - DynamicsAwareInterface::getCurrentDynamics(*child).massCenter;
+
+        child->move(diff);
+        child->rotate(rotation);
+        child->move(-diff);
+    }
+}
+
 Barta::GraphicsDataAwareInterface::GraphicsDataList Barta::RigidCompositeObject::getGraphicsData() {
     GraphicsDataList list = {};
-    for (auto child: this->children) {
+    for (auto child: this->children) { // TODO transforms
         auto childList = child->getGraphicsData();
         list.reserve(list.size() + childList.size());
 
