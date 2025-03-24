@@ -1,11 +1,10 @@
 #pragma once
-#include "Graphics/BartaSprite.h"
 #include <Geometrics/Transformation.h>
+#include <Graphics/BartaSprite.h>
 
 namespace Barta {
 
-class GraphicsData {
-public:
+struct GraphicsData {
     Transformation transformation;
     BartaSprite resource;
     int z_index;

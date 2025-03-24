@@ -1,7 +1,3 @@
-//
-// Created by barta on 02/03/2024.
-//
-
 #include <Objects/Rigid/RigidObject.h>
 
 namespace Barta {
@@ -18,37 +14,27 @@ std::unique_ptr<const HitboxInterface> RigidObject::getHitbox() const {
     return this->hitbox->getTransformedHitbox(this->graphicsData.transformation);
 }
 
-void RigidObject::rotate(
-    float angle
-) {
-    this->rotate(angle, this->dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter);
-}
-
-// TODO move rotation to update strategy
-float RigidObject::getRotation() const {
-    // TODO change to Quaternion
-    return this->graphicsData.transformation.getRotation().w();
-}
-
-void RigidObject::rotate(
-    float angle,
-    const Point& origin
-) {
-    this->graphicsData.transformation = Transformation::rotation(angle, origin) * this->graphicsData.transformation;
-}
-
 void RigidObject::move(
     const Vector& shift
 ) {
-    this->graphicsData.transformation = Transformation::translation(shift) * this->graphicsData.transformation;
-    this->dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter += shift;
+    DynamicsAwareInterface::getCurrentDynamics(*this).massCenter += shift;
 }
 
 DynamicsDTOCollection& RigidObject::getDynamicsDTOs() {
     return this->dynamicsDTOCollection;
 }
 
+void RigidObject::rotate(
+    const Quaternion& rotation
+) {
+    DynamicsAwareInterface::getCurrentDynamics(*this).rotation *= rotation;
+}
+
 GraphicsDataAwareInterface::GraphicsDataList RigidObject::getGraphicsData() {
+    this->graphicsData.transformation = Transformation::translation(DynamicsAwareInterface::getCurrentDynamics(*this).massCenter.toVector())
+                                        * Transformation::rotation(DynamicsAwareInterface::getCurrentDynamics(*this).rotation)
+                                        * Transformation::Identity();
+
     return {&this->graphicsData};
 }
 }

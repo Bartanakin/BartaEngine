@@ -14,8 +14,6 @@ public:
 
     GraphicsDataList getGraphicsData() override;
 
-    void move(const Vector& shift);
-
 protected:
     GraphicsData graphicsData;
 };

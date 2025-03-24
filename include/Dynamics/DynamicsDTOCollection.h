@@ -14,7 +14,6 @@ enum DynamicsDTOIteration {
 };
 
 class DynamicsDTOCollection {
-private:
     static constexpr size_t NUMBER_OF_ITERATIONS = 2;
 
 public:

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <BartaObjectInterface.h>
 #include <Collisions/CollisionAwareInterface.h>
 #include <Graphics/GraphicsDataAwareInterface.h>
 

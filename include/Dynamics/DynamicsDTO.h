@@ -1,70 +1,70 @@
 #pragma once
-#include "DynamicsDifference.h"
+#include <Dynamics/DynamicsDifference.h>
 #include <Geometrics/Point.h>
+#include <Geometrics/Transformation.h>
 
 namespace Barta {
 
 struct DynamicsDTO {
     DynamicsDTO(
-        Vector velocity = Vector::Zero(),
-        bool hasInfiniteMass = true,
-        PrecisionType mass = 0.f,
-        Vector force = Vector::Zero(),
-        PrecisionType rotationVelocity = 0.f,
-        Point massCenter = Point::Zero(),
-        std::vector<Vector> allowedDirections = {}
+        // movement
+        const Point& massCenter = Point::Zero(),
+        const Vector& velocity = Vector::Zero(),
+        const PrecisionType& inverseMass = 1.f,
+        // rotation
+        const Quaternion& rotation = {1., 0., 0., 0.},
+        const Vector& angularVelocity = Vector::Zero(),
+        const Matrix& inverseInertia = Matrix::Identity(),
+        // others
+        const std::vector<Vector>& allowedDirections = {}
     ):
-        velocity(velocity),
-        hasInfiniteMass(hasInfiniteMass),
-        mass(mass),
-        force(force),
-        rotationVelocity(rotationVelocity),
-        massCenter(massCenter),
+        massCenter(std::move(massCenter)),
+        velocity(std::move(velocity)),
+        hasInfiniteMass(std::move(false)),
+        inverseMass(std::move(inverseMass)),
+        rotation(std::move(rotation)),
+        angularVelocity(std::move(angularVelocity)),
+        hasInfiniteInertia(std::move(false)),
+        inverseInertia(std::move(inverseInertia)),
         allowedDirections(std::move(allowedDirections)) {}
-
-    DynamicsDTO& operator=(const DynamicsDTO& second) = default;
-
-    DynamicsDTO(const DynamicsDTO& second) = default;
 
     ~DynamicsDTO() = default;
 
+    /**
+     * @deprecated use current/next state evaluation instead
+     */
     DynamicsDifference getDynamicsDifference(
         const DynamicsDTO& second
     ) const {
-        auto acceleration = Vector::Zero();
-        if (!this->hasInfiniteMass) {
-            acceleration += this->force * (1.f / this->mass);
-        }
-
-        if (!second.hasInfiniteMass) {
-            acceleration += -second.force * (1.f / second.mass);
-        }
-
-        return {
-            this->velocity - second.velocity,
-            acceleration,
-            this->rotationVelocity - second.rotationVelocity,
-        };
+        return {this->velocity - second.velocity};
     }
 
+    /**
+     * @deprecated use current/next state evaluation instead
+     */
     DynamicsDTO operator-() const {
         return {
+            this->massCenter,
             -this->velocity,
-            this->hasInfiniteMass,
-            -this->mass,
-            -this->force,
-            this->rotationVelocity,
-            -this->massCenter,
+            this->inverseMass,
+            this->rotation,
+            this->angularVelocity,
+            this->inverseInertia,
             this->allowedDirections
         };
     }
 
+    // movement
+    Point massCenter;
     Vector velocity;
     bool hasInfiniteMass;
-    PrecisionType mass;
-    Vector force;
-    PrecisionType rotationVelocity;
-    Point massCenter;
+    PrecisionType inverseMass;
+    // rotation
+    Quaternion rotation;
+    Vector angularVelocity;
+    bool hasInfiniteInertia;
+    Matrix inverseInertia;
+    // others
     std::vector<Vector> allowedDirections;
 };
 
@@ -73,28 +73,38 @@ inline void from_json(
     DynamicsDTO& d
 ) {
     d = DynamicsDTO();
+    if (j.contains("massCenter")) {
+        d.massCenter = j.at("massCenter");
+    }
+
     if (j.contains("velocity")) {
         d.velocity = j.at("velocity");
+    }
+
+    if (j.contains("inverseMass")) {
+        d.inverseMass = j.at("inverseMass");
     }
 
     if (j.contains("hasInfiniteMass")) {
         d.hasInfiniteMass = j.at("hasInfiniteMass");
     }
 
-    if (j.contains("mass")) {
-        d.mass = j.at("mass");
+    if (j.contains("rotation")) {
+        Quaternion rotation;
+        from_json(j.at("rotation"), rotation);
+        d.rotation = rotation;
     }
 
-    if (j.contains("force")) {
-        d.force = j.at("force");
+    if (j.contains("angularVelocity")) {
+        d.angularVelocity = j.at("angularVelocity");
     }
 
-    if (j.contains("rotationVelocity")) {
-        d.rotationVelocity = j.at("rotationVelocity");
+    if (j.contains("inverseInertia")) {
+        d.inverseInertia = static_cast<Transformation>(j.at("inverseInertia")).getMatrix();
     }
 
-    if (j.contains("massCenter")) {
-        d.massCenter = j.at("massCenter");
+    if (j.contains("hasInfiniteInertia")) {
+        d.hasInfiniteInertia = j.at("hasInfiniteInertia");
     }
 
     if (j.contains("allowedDirections")) {

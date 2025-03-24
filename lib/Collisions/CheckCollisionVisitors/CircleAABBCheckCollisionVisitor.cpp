@@ -84,7 +84,7 @@ CollisionTestResult CircleAABBCheckCollisionVisitor::checkDynamicCollision(
 
     collisionTestResultBuilder.setStaticCollision(false)->setTimePassed(delta_time);
     Point A = this->circle.getCenter();
-    Point B = A + (this->dynamicsDifference.velocity + 0.5f * this->dynamicsDifference.acceleration * delta_time) * delta_time;
+    Point B = A + this->dynamicsDifference.velocity * delta_time; // TODO change to current/next state comparison
     Segment L = Segment(A, B);
     auto tContainer = Intersections::segmentAndAABB(L, this->expandedAABB);
     if (!this->expandedAABB.isWithin(circle.getCenter()) && tContainer.empty()) {
@@ -157,7 +157,7 @@ Vector CircleAABBCheckCollisionVisitor::calculateNormVector(
     for (decltype(vertices)::size_type i = 0; i < 4; i++) {
         auto seg = Segment(
             this->circle.getCenter(),
-            this->circle.getCenter() + this->dynamicsDifference.velocity + 0.5f * this->dynamicsDifference.acceleration * delta_time
+            this->circle.getCenter() + this->dynamicsDifference.velocity // TODO change to current/next state evaulation
         );
         if (seg.calculateRelationToPoint(vertices[i]) == Segment::Relation::RIGHT) {
             auto relationToNext = seg.calculateRelationToPoint(vertices[(i + 1) % 4]);

@@ -4,16 +4,6 @@
 
 namespace Barta {
 
-inline void from_json(
-    const json& j,
-    Quaternion& q
-) {
-    j.at("x").get_to(q.x());
-    j.at("y").get_to(q.y());
-    j.at("z").get_to(q.z());
-    j.at("w").get_to(q.w());
-}
-
 using VectorBase = Eigen::Vector<PrecisionType, 4>;
 
 class Vector {
@@ -168,6 +158,13 @@ public:
 
         return M;
     }
+
+    explicit operator Quaternion() const noexcept { return {0, this->x(), this->y(), this->z()}; }
+
+    explicit Vector(
+        const Quaternion& q
+    ):
+        Vector(q.x(), q.y(), q.z()) {}
 
     bool operator==(const Vector& zero) const = default;
 

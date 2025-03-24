@@ -27,25 +27,20 @@ public:
             return true;
         }
 
-        const auto& firstDynamics = firstObject->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
-        const auto& secondDynamics = secondObject->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
+        const auto& firstDynamics = DynamicsAwareInterface::getCurrentDynamics(*firstObject);
+        const auto& secondDynamics = DynamicsAwareInterface::getCurrentDynamics(*secondObject);
 
         float massInverted = 0.f;
         if (!firstDynamics.hasInfiniteMass) {
-            massInverted += (1.f / firstDynamics.mass);
+            massInverted += firstDynamics.inverseMass;
         }
 
         if (!secondDynamics.hasInfiniteMass) {
-            massInverted += (1.f / secondDynamics.mass);
+            massInverted += secondDynamics.inverseMass;
         }
 
-        if (massInverted == 0.f) {
-            return true;
-        }
-
-        auto realFirstVelocity = firstDynamics.velocity + testResult.timePassed * firstDynamics.force / firstDynamics.mass;
-        auto realSecondVelocity = secondDynamics.velocity + testResult.timePassed * firstDynamics.force / firstDynamics.mass;
-        auto j = -(1.f + COEFFICIENT_OF_RESTITUTION) * (realSecondVelocity - realFirstVelocity).dot(testResult.normVector)
+        // TODO calculate real velocity from integration
+        auto j = -(1.f + COEFFICIENT_OF_RESTITUTION) * (firstDynamics.velocity - secondDynamics.velocity).dot(testResult.normVector)
                  / (testResult.normVector.dot(testResult.normVector) * massInverted);
         this->calculateNewVelocity(-j, firstObject, testResult.normVector);
         this->calculateNewVelocity(j, secondObject, testResult.normVector);
@@ -61,12 +56,12 @@ private:
         CollisionAwareInterface* dynamicsObject,
         Vector normVector
     ) const noexcept {
-        const auto& oldDynamics = dynamicsObject->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT];
+        const auto& oldDynamics = DynamicsAwareInterface::getCurrentDynamics(*dynamicsObject);
         if (oldDynamics.hasInfiniteMass) {
             return;
         }
 
-        dynamicsObject->getDynamicsDTOs()[DynamicsDTOIteration::NEXT].velocity += normVector * (j / oldDynamics.mass);
+        DynamicsAwareInterface::getNextDynamics(*dynamicsObject).velocity += normVector * (j * oldDynamics.inverseMass);
     }
 };
 

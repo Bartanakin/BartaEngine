@@ -16,7 +16,7 @@ public:
 
     static Matrix translation(Vector translation);
 
-    static Matrix rotation(Quaternion rotation, Point p);
+    static Matrix rotation(Quaternion rotation, Point p = Point::Zero());
 
     static Matrix rotation(PrecisionType angle, Point p, Vector axis = Vector::Z_Axis());
 
