@@ -5,21 +5,31 @@
 
 namespace Barta::SceneLoader {
 
-template<typename ObjectJsonDecoderManager, typename ListManager>
-    requires ObjectJsonDecoderManagerConcept<ObjectJsonDecoderManager, ListManager> class RootJsonDecoder {
+template<typename ObjectJsonDecoderManager, typename ListManager, typename EventsLogger>
+    requires ObjectJsonDecoderManagerConcept<ObjectJsonDecoderManager, ListManager>
+             && requires(EventsLogger EL, Events::Events::CameraTransformationEvent event) {
+                    { EL.logEvent(std::move(event)) };
+                } class RootJsonDecoder {
 public:
     RootJsonDecoder(
         ListManager& listManager,
-        ObjectManagerInterface& objectManager
+        ObjectManagerInterface& objectManager,
+        EventsLogger& eventsLogger
     ) noexcept:
         listManager(listManager),
-        objectManager(objectManager) {}
+        objectManager(objectManager),
+        eventsLogger(eventsLogger) {}
 
     void decode(
         const json& json
     ) {
-        const auto& objects = json.at("objects");
         JsonDecoderRepository repository;
+        const auto& camera = json.at("camera");
+        if (camera.is_object()) {
+            this->eventsLogger.logEvent(std::move(repository.decodeCamera(camera)));
+        }
+
+        const auto& objects = json.at("objects");
         if (objects.is_array()) {
             for (const auto& objectJson: objects) {
                 DynamicsDTO dynamicsData;
@@ -44,6 +54,7 @@ public:
 private:
     ListManager& listManager;
     ObjectManagerInterface& objectManager;
+    EventsLogger& eventsLogger;
 };
 
 }
