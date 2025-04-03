@@ -71,12 +71,12 @@ void OpenGL_Bridge::createWindow(
     //     * Transformation::Identity();
 
     // 3D
-    auto eye = Point(50.f, 50.f, 100.f);
+    auto eye = Point(100.f, 100.f, 100.f);
     this->camera = Transformation::perspective(0.1f, 2000.f, 1.f, std::tan(M_PI/4.f))
         * Transformation::lookAt(
             eye,
             Point(50.f, 50.f, 0.) - eye,
-            {0.f, 1.f, 0.f}
+            {0.f, 0.f, 1.f}
         )
         * Transformation::Identity();
 

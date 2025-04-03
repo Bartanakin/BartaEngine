@@ -43,9 +43,9 @@ GraphicsData JsonDecoderRepository::decodeGraphicsData(
         throw JsonDecodeException("Sprites should be an array");
     }
 
-    if (jsonSprites.empty()) {
-        throw JsonDecodeException("There should be at least one sprite");
-    }
+    // if (jsonSprites.empty()) { // Mesh objects have no sprites for now
+    //     throw JsonDecodeException("There should be at least one sprite");
+    // }
 
     for (const auto& jsonSprite: jsonSprites) {
         const auto& jsonType = jsonSprite.at("type");

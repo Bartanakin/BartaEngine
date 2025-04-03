@@ -9,6 +9,8 @@ struct Triangle {
 
     bool isWithin(Point point) const noexcept;
 
+    Vector getNormal() const noexcept;
+
     Point p1;
     Point p2;
     Point p3;
