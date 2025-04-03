@@ -17,6 +17,8 @@ public:
 
     bool logEvents(BartaEventLoggerInterface& eventLogger) override;
 
+    Transformation& getViewTransformation() noexcept override;
+
     ~OpenGL_Bridge() noexcept;
 
 private:
@@ -25,7 +27,8 @@ private:
     std::unique_ptr<VertexArray> vertexArray;
     std::unique_ptr<AttributeArray> attributeArray;
     std::unique_ptr<UniformBuffer> PB_uniformBuffer;
-    Transformation camera;
+    Transformation view;
+    Transformation projection;
 };
 
 } // Barta

@@ -11,7 +11,7 @@ class PV_BufferGuard: public AbstractBufferGuard {
 public:
     PV_BufferGuard(const UniformBuffer& uniformBuffer);
 
-    void bufferData(const Transformation& transformation) const;
+    void bufferData(const Matrix& transformation) const;
 
     ~PV_BufferGuard();
 };

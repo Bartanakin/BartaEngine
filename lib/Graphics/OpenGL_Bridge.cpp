@@ -17,9 +17,10 @@ void framebuffer_size_callback(
 
 OpenGL_Bridge::OpenGL_Bridge() noexcept:
     window(nullptr),
-    attributeArray(nullptr),
     vertexArray(nullptr),
-    camera(Transformation::Identity()) {}
+    attributeArray(nullptr),
+    view(Transformation::Identity()),
+    projection(Transformation::Identity()) {}
 
 void OpenGL_Bridge::createWindow(
     Vector2f size,
@@ -64,23 +65,7 @@ void OpenGL_Bridge::createWindow(
     this->attributeArray = std::make_unique<AttributeArray>();
     this->PB_uniformBuffer = std::make_unique<UniformBuffer>(UniformBinding::VIEW_PROJECTION_MATRIX);
 
-    // clang-format off
-    // 2D
-    // this->camera2D = Transformation::translation({-1.f, 1.f, 0.f})
-    //     * Transformation::scale({2.f / size.x, -2.f / size.y, 1.f})
-    //     * Transformation::Identity();
-
-    // 3D
-    auto eye = Point(100.f, 100.f, 100.f);
-    this->camera = Transformation::perspective(0.1f, 2000.f, 1.f, std::tan(M_PI/4.f))
-        * Transformation::lookAt(
-            eye,
-            Point(50.f, 50.f, 0.) - eye,
-            {0.f, 0.f, 1.f}
-        )
-        * Transformation::Identity();
-
-    // clang-format on
+    this->projection = Transformation::perspective(0.1f, 2000.f, 1.f, std::tan(M_PI / 4.f)) * Transformation::Identity();
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
@@ -191,7 +176,8 @@ void OpenGL_Bridge::drawObjects(
 
     {
         PV_BufferGuard PV_bufferGuard(*this->PB_uniformBuffer);
-        PV_bufferGuard.bufferData(this->camera);
+        Matrix PV = this->projection.getMatrix() * this->view.getMatrix();
+        PV_bufferGuard.bufferData(PV);
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -219,6 +205,10 @@ bool OpenGL_Bridge::logEvents(
     }
 
     return true;
+}
+
+Transformation& OpenGL_Bridge::getViewTransformation() noexcept {
+    return this->view;
 }
 
 OpenGL_Bridge::~OpenGL_Bridge() noexcept {

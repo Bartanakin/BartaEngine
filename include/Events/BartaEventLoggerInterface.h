@@ -1,9 +1,10 @@
 #pragma once
-#include "../pch.h"
-#include "Events/Events/MouseMoveEvent.h"
-#include "Events/KeyPressedEvent.h"
-#include "Events/KeyReleasedEvent.h"
-#include "Events/LeftClickEvent.h"
+#include <Events/Events/CameraTransformationEvent.h>
+#include <Events/Events/KeyPressedEvent.h>
+#include <Events/Events/KeyReleasedEvent.h>
+#include <Events/Events/LeftClickEvent.h>
+#include <Events/Events/MouseMoveEvent.h>
+#include <pch.h>
 
 namespace Barta {
 template<typename EventType, typename... OtherTypes>
@@ -137,5 +138,6 @@ class KeyPressedEvent;
 class KeyReleasedEvent;
 class MouseMoveEvent;
 
-typedef EventMatcher<LeftClickEvent, KeyPressedEvent, KeyReleasedEvent, MouseMoveEvent> BartaEventLoggerInterface;
+typedef EventMatcher<LeftClickEvent, KeyPressedEvent, KeyReleasedEvent, MouseMoveEvent, Events::Events::CameraTransformationEvent>
+    BartaEventLoggerInterface;
 }

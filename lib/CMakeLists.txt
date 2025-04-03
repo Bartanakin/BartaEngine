@@ -8,6 +8,7 @@ add_library(
 
 add_subdirectory(Collisions)
 add_subdirectory(Dynamics)
+add_subdirectory(Events)
 add_subdirectory(Geometrics)
 add_subdirectory(Graphics)
 add_subdirectory(Hitbox)

@@ -106,4 +106,30 @@ GraphicsData JsonDecoderRepository::decodeGraphicsData(
 
     return {transformation, merger.merge(false), z_index};
 }
+
+Events::Events::CameraTransformationEvent JsonDecoderRepository::decodeCamera(
+    const json& json
+) {
+    Events::Events::CameraTransformationEvent event;
+    const auto& eye = json.at("eye");
+    if (!eye.is_object()) {
+        throw JsonDecodeException("Camera has no eye position");
+    }
+
+    const auto& center = json.at("center");
+    if (!center.is_object()) {
+        throw JsonDecodeException("Camera has no center position");
+    }
+
+    const auto& up = json.at("up");
+    if (!up.is_object()) {
+        throw JsonDecodeException("Camera has no up vector");
+    }
+
+    event.eye = eye;
+    event.center = center;
+    event.up = up;
+
+    return event;
+}
 }

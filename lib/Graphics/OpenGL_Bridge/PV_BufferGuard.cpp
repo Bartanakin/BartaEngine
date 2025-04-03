@@ -19,7 +19,7 @@ PV_BufferGuard::PV_BufferGuard(
 }
 
 void PV_BufferGuard::bufferData(
-    const Transformation& transformation
+    const Matrix& transformation
 ) const {
     constexpr unsigned int BUFFER_SIZE = 16 * sizeof(PrecisionType);
 
@@ -29,7 +29,7 @@ void PV_BufferGuard::bufferData(
         throw std::runtime_error("Uniform buffer allocation error: " + error);
     }
 
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, BUFFER_SIZE, &transformation.getMatrix());
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, BUFFER_SIZE, &transformation);
     error = glGetError();
     if (error != GL_NO_ERROR) {
         throw std::runtime_error("Uniform buffer data loading error: " + error);

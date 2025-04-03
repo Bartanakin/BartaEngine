@@ -27,6 +27,8 @@ public:
 
     static const sf::Transform convertTransformation(const Transformation& myTransformation);
 
+    Transformation& getViewTransformation() noexcept override { throw std::runtime_error("Not implemented"); }
+
 private:
     void handleCustomResource(GraphicsData& graphicsData);
 

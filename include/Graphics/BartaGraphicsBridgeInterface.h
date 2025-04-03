@@ -13,5 +13,6 @@ public:
     virtual void createWindow(Vector2f size, std::string title) = 0;
     virtual void drawObjects(std::list<GraphicsDataAwareInterface*>& objects) = 0;
     virtual bool logEvents(BartaEventLoggerInterface& eventLogger) = 0;
+    virtual Transformation& getViewTransformation() noexcept = 0;
 };
 }
