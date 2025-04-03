@@ -30,4 +30,8 @@ bool Triangle::isWithin(
 
     return c1 >= 0.f && c2 >= 0.f && c1 + c2 <= 1.f;
 }
+
+Vector Triangle::getNormal() const noexcept {
+    return (this->p1 - this->p2).cross(this->p1 - this->p3);
+}
 }

@@ -1,10 +1,11 @@
 #pragma once
-#include <ObjectManagerInterface.h>
-// Important include to define the specialization for ObjectJsonDecoder
 #include <ListManagerConcept.h>
+#include <ObjectManagerInterface.h>
 #include <SceneLoader/ObjectJsonDecoderConcept.h>
 #include <SceneLoader/ObjectJsonDecoderManagerConcept.h>
+// Important include to define the specialization for ObjectJsonDecoder
 #include <SceneLoader/RigidObjectJsonDecoder.h>
+#include <SceneLoader/SoftObjectJsonDecoder.h>
 
 namespace Barta::SceneLoader {
 
@@ -18,11 +19,28 @@ public:
     template<typename ListManager>
     void decodeObjects(
         const json& json,
+        const GraphicsData& graphicsData,
+        std::unique_ptr<HitboxInterface> hitbox,
+        const DynamicsDTO& dynamicsDto,
         ListManager& listManager,
         ObjectManagerInterface& objectManager
     ) {
-        ObjectJsonDecoderManager<T>::template decodeObjects<ListManager>(json, listManager, objectManager);
-        ObjectJsonDecoderManager<Ts...>::template decodeObjects<ListManager>(json, listManager, objectManager);
+        ObjectJsonDecoderManager<T>::template decodeObjects<ListManager>(
+            json,
+            graphicsData,
+            std::move(hitbox),
+            dynamicsDto,
+            listManager,
+            objectManager
+        );
+        ObjectJsonDecoderManager<Ts...>::template decodeObjects<ListManager>(
+            json,
+            graphicsData,
+            std::move(hitbox),
+            dynamicsDto,
+            listManager,
+            objectManager
+        );
     }
 };
 
@@ -51,4 +69,4 @@ public:
 };
 
 static_assert(ObjectJsonDecoderManagerConcept<ObjectJsonDecoderManager<BartaObjectInterface>, StaticObjectManager<BartaObjectInterface>>);
-} // Barta::SceneLoader
+}
