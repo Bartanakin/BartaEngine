@@ -2,8 +2,6 @@
 
 #include "Graphics/GraphicsDataAwareInterface.h"
 #include "RigidObjectInterface.h"
-#include <BartaObjectInterface.h>
-#include <Collisions/CollisionAwareInterface.h>
 
 namespace Barta {
 
@@ -24,9 +22,13 @@ public:
 
     void rotate(const Quaternion& rotation) override;
 
+    Vector getForce(DynamicsDTOIteration positionIteration, DynamicsDTOIteration velocityIteration) override;
+
 protected:
     GraphicsData graphicsData;
     std::unique_ptr<HitboxInterface> hitbox;
     DynamicsDTOCollection dynamicsDTOCollection;
 };
+
+static_assert(Barta::Dynamics::UpdateStrategy::DynamicsAwareConcept<RigidObject>);
 }

@@ -1,4 +1,5 @@
 #include <Objects/Rigid/RigidObject.h>
+#include "Utilities/DynamicsIteration.h"
 
 namespace Barta {
 RigidObject::RigidObject(
@@ -17,7 +18,7 @@ std::unique_ptr<const HitboxInterface> RigidObject::getHitbox() const {
 void RigidObject::move(
     const Vector& shift
 ) {
-    DynamicsAwareInterface::getCurrentDynamics(*this).massCenter += shift;
+    Utils::extractCurrentDynamics(*this).massCenter += shift;
 }
 
 DynamicsDTOCollection& RigidObject::getDynamicsDTOs() {
@@ -27,13 +28,19 @@ DynamicsDTOCollection& RigidObject::getDynamicsDTOs() {
 void RigidObject::rotate(
     const Quaternion& rotation
 ) {
-    DynamicsAwareInterface::getCurrentDynamics(*this).rotation *= rotation;
+    Utils::extractCurrentDynamics(*this).rotation *= rotation;
+}
+
+Vector RigidObject::getForce(
+    DynamicsDTOIteration positionIteration,
+    DynamicsDTOIteration velocityIteration
+) {
+    return Vector::Zero();
 }
 
 GraphicsDataAwareInterface::GraphicsDataList RigidObject::getGraphicsData() {
-    this->graphicsData.transformation = Transformation::translation(DynamicsAwareInterface::getCurrentDynamics(*this).massCenter.toVector())
-                                        * Transformation::rotation(DynamicsAwareInterface::getCurrentDynamics(*this).rotation)
-                                        * Transformation::Identity();
+    this->graphicsData.transformation = Transformation::translation(Utils::extractCurrentDynamics(*this).massCenter.toVector())
+                                        * Transformation::rotation(Utils::extractCurrentDynamics(*this).rotation) * Transformation::Identity();
 
     return {&this->graphicsData};
 }

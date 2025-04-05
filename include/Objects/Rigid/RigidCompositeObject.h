@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Collisions/CollisionAwareInterface.h>
 #include <Objects/Rigid/RigidObjectInterface.h>
 
 namespace Barta {

@@ -1,8 +1,11 @@
 #pragma once
+#include "Dynamics/UpdateStrategy/ExplicitEulerStrategy.h"
+#include "Dynamics/UpdateStrategy/SoftBodyStrategy.h"
 #include "Objects/Soft/SoftObject.h"
 #include <Collisions/CollisionExecutors/CollisionTestExecutor.h>
 #include <Collisions/CollisionExecutors/FilterNoCollisionDecorator.h>
 #include <Collisions/CollisionLogger.h>
+#include <Dynamics/UpdateStrategy/UpdateStrategyManager.h>
 #include <Events/BartaEventLoggerInterface.h>
 #include <Objects/Rigid/RigidObjectCollisionSubscriber.h>
 #include <Objects/Rigid/RigidObjectInterface.h>
@@ -12,6 +15,7 @@
 
 namespace Barta {
 
+// clang-format off
 typedef FilterNoCollisionDecorator<CollisionTestExecutor> CollisionCoreExecutor;
 
 /**
@@ -26,4 +30,9 @@ typedef CollisionLogger<RigidObjectInterface, RigidObjectInterface> DefaultColli
 typedef EventMatcher<CollisionEvent<RigidObjectInterface, RigidObjectInterface>> CollisionEventsLogger; // <--
 
 typedef StaticObjectManager<RigidObjectInterface, Objects::Soft::SoftObject> ListManager; // <--
+
+typedef Dynamics::UpdateStrategy::UpdateStrategyManager<
+    Dynamics::UpdateStrategy::ExplicitEulerStrategy, RigidObjectInterface,
+    Dynamics::UpdateStrategy::SoftBodyStrategy, Objects::Soft::SoftObject
+> PredefinedUpdateStrategyManager;
 }

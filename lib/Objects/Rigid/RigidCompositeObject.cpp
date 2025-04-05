@@ -1,10 +1,7 @@
-//
-// Created by barta on 02/03/2024.
-//
-
 #include <Objects/Rigid/RigidCompositeObject.h>
-#include "Hitbox/HitboxComposite.h"
+#include <Hitbox/HitboxComposite.h>
 #include <Hitbox/NullHitbox.h>
+#include <Utilities/DynamicsIteration.h>
 
 Barta::RigidCompositeObject::RigidCompositeObject(
     Transformation transformation,
@@ -49,7 +46,7 @@ void Barta::RigidCompositeObject::rotate(
     const Quaternion& rotation
 ) {
     for (auto& child: this->children) {
-        auto diff = DynamicsAwareInterface::getCurrentDynamics(*this).massCenter - DynamicsAwareInterface::getCurrentDynamics(*child).massCenter;
+        auto diff = Utils::extractCurrentDynamics(*this).massCenter - Utils::extractCurrentDynamics(*child).massCenter;
 
         child->move(diff);
         child->rotate(rotation);

@@ -1,6 +1,7 @@
 #include <Objects/Soft/SoftObject.h>
-#include "Graphics/SpriteBuilder/SpriteMerger.h"
-#include "Hitbox/NullHitbox.h"
+#include <Graphics/SpriteBuilder/SpriteMerger.h>
+#include <Hitbox/NullHitbox.h>
+#include <Utilities/DynamicsIteration.h>
 
 namespace Barta::Objects::Soft {
 SoftObject::SoftObject(
@@ -17,7 +18,7 @@ bool SoftObject::isToBeDeleted() const {
 void SoftObject::move(
     const Vector& shift
 ) {
-    DynamicsAwareInterface::getCurrentDynamics(*this).massCenter += shift;
+    Utils::extractCurrentDynamics(*this).massCenter += shift;
 }
 
 DynamicsDTOCollection& SoftObject::getDynamicsDTOs() {
@@ -27,7 +28,7 @@ DynamicsDTOCollection& SoftObject::getDynamicsDTOs() {
 void SoftObject::rotate(
     const Quaternion& rotation
 ) {
-    DynamicsAwareInterface::getCurrentDynamics(*this).rotation *= rotation;
+    Utils::extractCurrentDynamics(*this).rotation *= rotation;
 }
 
 std::unique_ptr<const HitboxInterface> SoftObject::getHitbox() const {
@@ -35,9 +36,8 @@ std::unique_ptr<const HitboxInterface> SoftObject::getHitbox() const {
 }
 
 GraphicsDataAwareInterface::GraphicsDataList SoftObject::getGraphicsData() {
-    this->graphicsData.transformation = Transformation::translation(DynamicsAwareInterface::getCurrentDynamics(*this).massCenter.toVector())
-                                        * Transformation::rotation(DynamicsAwareInterface::getCurrentDynamics(*this).rotation)
-                                        * Transformation::Identity();
+    this->graphicsData.transformation = Transformation::translation(Utils::extractCurrentDynamics(*this).massCenter.toVector())
+                                        * Transformation::rotation(Utils::extractCurrentDynamics(*this).rotation) * Transformation::Identity();
 
     SpriteMerger merger;
     std::array<Color, 4> colors; // TODO manage colors in a nicer way
@@ -66,6 +66,13 @@ GraphicsDataAwareInterface::GraphicsDataList SoftObject::getGraphicsData() {
     this->graphicsData.resource = merger.merge(false);
 
     return {&this->graphicsData};
+}
+
+Vector SoftObject::getForce(
+    DynamicsDTOIteration positionIteration,
+    DynamicsDTOIteration velocityIteration
+) {
+    return Vector::Zero();
 }
 
 }

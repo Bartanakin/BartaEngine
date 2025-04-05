@@ -13,7 +13,7 @@ concept DeleteSettable = requires(T t) {
 };
 
 template<typename ListManager, typename T>
-concept ListManagerConcept = requires(ListManager listManager, T object) {
+concept ListManagerConcept = DeleteSettable<T> && requires(ListManager listManager, T object) {
     { listManager.getList(static_cast<T*>(nullptr)) } -> std::same_as<ListType<T>&>;
     { listManager.addObject(&object) };
 };

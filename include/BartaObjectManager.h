@@ -1,6 +1,6 @@
 #pragma once
-#include "ObjectManagerInterface.h"
-#include "pch.h"
+#include <ObjectManagerInterface.h>
+#include <pch.h>
 
 namespace Barta {
 class BartaObjectManager: public ObjectManagerInterface {
@@ -9,23 +9,18 @@ public:
 
     virtual ~BartaObjectManager();
 
-    virtual void addNewObject(BartaObjectInterface* newObject) override;
+    void addNewObject(BartaObjectInterface* newObject) override;
 
-    virtual ObjectList getList() noexcept override;
+    ObjectList getList() noexcept override;
 
-    virtual void addDynamicsObject(DynamicsAwareInterface* dynamicsObject) override;
+    void addGraphicsObject(GraphicsDataAwareInterface* graphicsObject) override;
 
-    virtual DynamicsAwareInterface::DynamicsAwareList& getDynamicsList() noexcept override;
+    GraphicsDataAwareInterface::GraphicsDataAwareList& getGraphicsList() noexcept override;
 
-    virtual void addGraphicsObject(GraphicsDataAwareInterface* dynamicsObject) override;
-
-    virtual GraphicsDataAwareInterface::GraphicsDataAwareList& getGraphicsList() noexcept override;
-
-    virtual void reduceDeleted() override;
+    void reduceDeleted() override;
 
 private:
     ObjectList objectList;
-    DynamicsAwareInterface::DynamicsAwareList dynamicsList;
     GraphicsDataAwareInterface::GraphicsDataAwareList graphicsList;
 };
 }
