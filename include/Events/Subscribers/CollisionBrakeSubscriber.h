@@ -1,15 +1,11 @@
-//
-// Created by bartanakin on 11/2/24.
-//
-
 #pragma once
-#include <Dynamics/DynamicsAwareListConcept.h>
+#include <Dynamics/UpdateStrategy/DynamicsAwareConcept.h>
 #include <Events/BartaEventLoggerInterface.h>
 #include <Events/Events/CollisionEvent.h>
 
 namespace Barta {
 
-template<DynamicsAwareConcept T1, DynamicsAwareConcept T2>
+template<Dynamics::UpdateStrategy::DynamicsAwareConcept T1, Dynamics::UpdateStrategy::DynamicsAwareConcept T2>
 class CollisionBrakeSubscriber: public virtual EventSubscriber<CollisionEvent<T1, T2>> {
 public:
     CollisionBrakeSubscriber() noexcept {}

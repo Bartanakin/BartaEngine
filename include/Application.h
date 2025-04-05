@@ -1,6 +1,5 @@
 #pragma once
 #include "Collisions/CollisionDetectionStrategyInterface.h"
-#include "Dynamics/DynamicsUpdateStrategyInterface.h"
 #include "Dynamics/TimerInterface.h"
 #include "Graphics/BartaGraphicsBridgeInterface.h"
 #include "pch.h"
@@ -9,25 +8,27 @@
 
 namespace Barta {
 
-template<typename CollisionLogger, typename EventLogger, typename ObjectManager, typename TestExecutor>
-class Application {
+template<typename CollisionLogger, typename EventLogger, typename ObjectManager, typename TestExecutor, typename UpdateStrategyManagerType>
+    requires Dynamics::UpdateStrategy::
+        UpdateStrategyManagerConcept<UpdateStrategyManagerType, ObjectManager, RigidObjectInterface> // TODO concepts for all typenames
+    class Application {
 public:
     Application(
         std::string windowName,
         std::unique_ptr<BartaGraphicsBridgeInterface> graphicsBridge,
         TimerInterface& timer,
-        std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy,
-        std::unique_ptr<Barta::CollisionDetectionStrategyInterface> collisionDetectionStrategy
+        std::unique_ptr<Barta::CollisionDetectionStrategyInterface> collisionDetectionStrategy,
+        UpdateStrategyManagerType updateStrategyManager
     ):
         windowName(std::move(windowName)),
         graphicsBridge(std::move(graphicsBridge)),
         eventLogger(std::make_unique<BartaEventLoggerInterface>()),
         objectManager(std::make_unique<BartaObjectManager>()),
         timer(timer),
-        dynamicsUpdateStrategy(std::move(dynamicsUpdateStrategy)),
         collisionEventsLogger({}),
         collisionExecutor(CollisionCoreExecutor(std::move(collisionDetectionStrategy))),
-        objectLists({}) {}
+        objectLists({}),
+        updateStrategyManager(std::move(updateStrategyManager)) {}
 
     Application(const Application&) = delete;
     Application(Application&&) = delete;
@@ -42,7 +43,7 @@ public:
                 this->checkLogic(); // inheritable
 
                 auto deltaBeforeCollisions = timer.getCurrentDeltaTime();
-                this->dynamicsUpdateStrategy->prepare(timer.getCurrentDeltaTime());
+                this->updateStrategyManager.prepare(this->objectLists, timer.getCurrentDeltaTime());
 
                 // Collisions
                 Barta::executeAndLog<CollisionLogger, EventLogger, ObjectManager, TestExecutor>(
@@ -53,7 +54,7 @@ public:
                 );
 
                 if (deltaBeforeCollisions != timer.getCurrentDeltaTime()) {
-                    this->dynamicsUpdateStrategy->prepare(timer.getCurrentDeltaTime());
+                    this->updateStrategyManager.prepare(this->objectLists, timer.getCurrentDeltaTime());
                 }
 
                 this->collisionEventsLogger.runSubscribers();
@@ -63,7 +64,7 @@ public:
 
                 this->postDynamicUpdate(); // inheritable
 
-                this->dynamicsUpdateStrategy->update();
+                this->updateStrategyManager.update(this->objectLists, true);
 
                 this->timer.forward();
             }
@@ -93,10 +94,10 @@ protected:
     std::unique_ptr<BartaEventLoggerInterface> eventLogger;
     std::unique_ptr<ObjectManagerInterface> objectManager;
     TimerInterface& timer;
-    std::unique_ptr<DynamicsUpdateStrategyInterface> dynamicsUpdateStrategy;
     EventLogger collisionEventsLogger;
     TestExecutor collisionExecutor;
     ObjectManager objectLists;
+    UpdateStrategyManagerType updateStrategyManager;
 };
 
 }

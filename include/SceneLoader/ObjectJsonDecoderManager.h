@@ -63,7 +63,6 @@ public:
 
         listManager.addObject(object);
         objectManager.addGraphicsObject(object);
-        objectManager.addDynamicsObject(object);
         objectManager.addNewObject(object);
     }
 };
