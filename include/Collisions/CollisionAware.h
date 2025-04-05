@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../Dynamics/DynamicsAwareInterface.h"
-#include "../Hitbox/HitboxAwareInterface.h"
-#include "../ReduceableList.h"
-#include "pch.h"
+#include <Dynamics/DynamicsDTOCollection.h>
+#include <Hitbox/HitboxAwareInterface.h>
+#include <pch.h>
 
 namespace Barta {
 

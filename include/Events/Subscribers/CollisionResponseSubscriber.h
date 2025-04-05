@@ -1,6 +1,6 @@
 #pragma once
-#include <Collisions/CollisionAwareInterface.h>
 #include <Events/BartaEventLoggerInterface.h>
+#include <Utilities/DynamicsIteration.h>
 
 namespace Barta {
 
@@ -27,8 +27,8 @@ public:
             return true;
         }
 
-        const auto& firstDynamics = DynamicsAwareInterface::getCurrentDynamics(*firstObject);
-        const auto& secondDynamics = DynamicsAwareInterface::getCurrentDynamics(*secondObject);
+        const auto& firstDynamics = Utils::extractCurrentDynamics(*firstObject);
+        const auto& secondDynamics = Utils::extractCurrentDynamics(*secondObject);
 
         float massInverted = 0.f;
         if (!firstDynamics.hasInfiniteMass) {
@@ -51,17 +51,18 @@ public:
     bool isToBeDeleted() const noexcept override { return false; }
 
 private:
+    template<typename ObjectType> // TODO add concepts
     void calculateNewVelocity(
         float j,
-        CollisionAwareInterface* dynamicsObject,
+        ObjectType* dynamicsObject,
         Vector normVector
     ) const noexcept {
-        const auto& oldDynamics = DynamicsAwareInterface::getCurrentDynamics(*dynamicsObject);
+        const auto& oldDynamics = Utils::extractCurrentDynamics(*dynamicsObject);
         if (oldDynamics.hasInfiniteMass) {
             return;
         }
 
-        DynamicsAwareInterface::getNextDynamics(*dynamicsObject).velocity += normVector * (j * oldDynamics.inverseMass);
+        Utils::extractNextDynamics(*dynamicsObject).velocity += normVector * (j * oldDynamics.inverseMass);
     }
 };
 

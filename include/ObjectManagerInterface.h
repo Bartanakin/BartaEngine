@@ -1,8 +1,7 @@
 #pragma once
-#include "BartaObjectInterface.h"
-#include "Collisions/CollisionAwareInterface.h"
-#include "Graphics/GraphicsDataAwareInterface.h"
-#include "pch.h"
+#include <BartaObjectInterface.h>
+#include <Graphics/GraphicsDataAwareInterface.h>
+#include <pch.h>
 
 namespace Barta {
 
@@ -15,10 +14,6 @@ public:
     virtual void addNewObject(BartaObjectInterface* newObject) = 0;
 
     virtual ObjectList getList() noexcept = 0;
-
-    virtual void addDynamicsObject(DynamicsAwareInterface* dynamicsObject) = 0;
-
-    virtual DynamicsAwareInterface::DynamicsAwareList& getDynamicsList() noexcept = 0;
 
     virtual void addGraphicsObject(GraphicsDataAwareInterface* dynamicsObject) = 0;
 

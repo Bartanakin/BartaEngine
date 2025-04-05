@@ -1,11 +1,12 @@
 #pragma once
-#include "Collisions/CollisionAwareInterface.h"
 #include "Graphics/GraphicsDataAwareInterface.h"
+#include "Hitbox/HitboxAwareInterface.h"
+#include <Dynamics/UpdateStrategy/DynamicsAwareConcept.h>
 #include <Objects/Soft/Mesh.h>
 #include <pch.h>
 
 namespace Barta::Objects::Soft {
-class SoftObject: public virtual GraphicsDataAwareInterface, public virtual CollisionAwareInterface {
+class SoftObject: public virtual GraphicsDataAwareInterface, public virtual HitboxAware {
     Mesh mesh;
     GraphicsData graphicsData;
     std::unique_ptr<HitboxInterface> hitbox;
@@ -16,14 +17,19 @@ public:
 
     bool isToBeDeleted() const override;
 
-    void move(const Vector& shift) override;
+    void move(const Vector& shift);
 
-    DynamicsDTOCollection& getDynamicsDTOs() override;
+    DynamicsDTOCollection& getDynamicsDTOs();
 
-    void rotate(const Quaternion& rotation) override;
+    void rotate(const Quaternion& rotation);
 
     std::unique_ptr<const HitboxInterface> getHitbox() const override;
 
     GraphicsDataList getGraphicsData() override;
+
+    Vector getForce(DynamicsDTOIteration positionIteration, DynamicsDTOIteration velocityIteration);
 };
+
+static_assert(Barta::Dynamics::UpdateStrategy::DynamicsAwareConcept<SoftObject>);
+
 }

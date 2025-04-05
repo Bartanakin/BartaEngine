@@ -2,7 +2,6 @@
 
 Barta::BartaObjectManager::BartaObjectManager() noexcept:
     objectList({}),
-    dynamicsList({}),
     graphicsList({}) {}
 
 Barta::BartaObjectManager::~BartaObjectManager() {
@@ -19,16 +18,6 @@ void Barta::BartaObjectManager::addNewObject(
     BartaObjectInterface* newObject
 ) {
     this->objectList.push_back(newObject);
-}
-
-void Barta::BartaObjectManager::addDynamicsObject(
-    DynamicsAwareInterface* dynamicsObject
-) {
-    this->dynamicsList.push_back(dynamicsObject);
-}
-
-Barta::DynamicsAwareInterface::DynamicsAwareList& Barta::BartaObjectManager::getDynamicsList() noexcept {
-    return this->dynamicsList;
 }
 
 void Barta::BartaObjectManager::addGraphicsObject(
@@ -50,7 +39,6 @@ Barta::GraphicsDataAwareInterface::GraphicsDataAwareList& Barta::BartaObjectMana
 }
 
 void Barta::BartaObjectManager::reduceDeleted() {
-    this->dynamicsList.reduce();
     this->graphicsList.reduce();
 
     auto newList = ObjectList();
