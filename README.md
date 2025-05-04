@@ -59,4 +59,23 @@ _The project is open to collaboration at my GitHub account as there are plenty o
 * You can join the development community: write to me on [Discord #Bartanakin](https://discord.com/)  or email me `Bartanakin.bak@student.uj.edu.pl`
 
 ## Examples
-to be written down :)
+### 1. Static simulation of a soft body
+We import mesh of a pyramid consisting of 10 nodes where 5 of them are in the base of the shape. The base is constrained by the Dirichlet condition, namely we set the displacement to 0 in advance. On the topmost node there is a force applied in the `x` direction given by the formula:
+$$
+    f_{\text{ext},x_0}(t) = 300(t - 3) \text{ for } t \in [0,3]
+$$
+where $t$ is the time of the simulation.
+The rest of the nodes are unconstrained.
+![sim1](examples/sim1.gif)
+
+### 2. Dynamic simulation of a soft body
+We import mesh of a pyramid consisting of 10 nodes where 5 of them are in the base of the shape. The base is constrained by the Dirichlet condition, namely we set the displacement to 0 in advance. On the topmost node there is a force applied in the `x` direction given by the formula:
+$$
+f_{\text{ext},x_0}(t) = \begin{cases}
+    -100 &\text{ for } t \in [0,3]\\
+    0 &\text{ for } t \in (3, 6]
+\end{cases}
+$$
+where $t$ is the time of the simulation.
+The rest of the nodes are unconstrained.
+![sim2](examples/sim2.gif)
