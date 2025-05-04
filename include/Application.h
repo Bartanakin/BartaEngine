@@ -37,6 +37,8 @@ public:
 
     virtual void run() {
         this->graphicsBridge->createWindow(Vector2f(700.f, 700.f), this->windowName);
+        this->timer.restart();
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
         while (this->isRunning() && this->graphicsBridge->logEvents(*(this->eventLogger))) {
             this->timer.restart();
             while (!timer.finished()) {

@@ -24,6 +24,12 @@ public:
 
     PrecisionType z() const noexcept { return this->base.z(); }
 
+    PrecisionType& x() noexcept { return this->base.x(); }
+
+    PrecisionType& y() noexcept { return this->base.y(); }
+
+    PrecisionType& z() noexcept { return this->base.z(); }
+
     PrecisionType& operator[](
         int i
     ) noexcept {
@@ -102,6 +108,15 @@ inline Point& operator+=(
     const Vector& v
 ) {
     p = p + v;
+
+    return p;
+}
+
+inline Point& operator-=(
+    Point& p,
+    const Vector& v
+) {
+    p = p - v;
 
     return p;
 }

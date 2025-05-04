@@ -1,7 +1,14 @@
 #pragma once
-#include "Objects/Soft/MeshLoader/MshDataParser.h"
-#include "Objects/Soft/MeshLoader/SurfaceFacesMshParserDecorator.h"
-#include <Objects/Soft/MeshLoader/MshDataLoader.h>
+#include "Objects/Soft/MshLoader/DirichletConditionPlugin.h"
+#include "Objects/Soft/MshLoader/ElementsPlugin.h"
+#include "Objects/Soft/MshLoader/EntitiesPlugin.h"
+#include "Objects/Soft/MshLoader/MeshFormatPlugin.h"
+#include "Objects/Soft/MshLoader/NodesPlugin.h"
+#include "Objects/Soft/MshParser/DirichletConditionParserDecorator.h"
+#include "Objects/Soft/MshParser/MshDataParser.h"
+#include "Objects/Soft/MshParser/SurfaceFacesMshParserDecorator.h"
+#include "Objects/Soft/MshParser/TetrahedralElementLoaderDecorator.h"
+#include <Objects/Soft/MshLoader/MshDataLoader.h>
 #include <Objects/Soft/SoftObject.h>
 #include <SceneLoader/ObjectJsonDecoder.h>
 #include <SceneLoader/ObjectJsonDecoderConcept.h>
@@ -33,13 +40,22 @@ public:
         }
 
         if (meshType.get<std::string>() == "msh") {
-            auto mshDecoder = Objects::Soft::MeshLoader::MshDataLoader();
-            auto meshParser = Objects::Soft::MeshLoader::MshDataParser();
-            auto meshParserDecorator = Objects::Soft::MeshLoader::SurfaceFacesMshParserDecorator(meshParser);
+            auto mshDecoder = Objects::Soft::MshLoader::MshDataLoader();
+
+            mshDecoder.registerPlugin(std::make_unique<Objects::Soft::MshLoader::MeshFormatPlugin>());
+            mshDecoder.registerPlugin(std::make_unique<Objects::Soft::MshLoader::DirichletConditionPlugin>());
+            mshDecoder.registerPlugin(std::make_unique<Objects::Soft::MshLoader::EntitiesPlugin>());
+            mshDecoder.registerPlugin(std::make_unique<Objects::Soft::MshLoader::NodesPlugin>());
+            mshDecoder.registerPlugin(std::make_unique<Objects::Soft::MshLoader::ElementsPlugin>());
+
+            auto meshParser = Objects::Soft::MshParser::MshDataParser();
+            auto meshParserDecorator1 = Objects::Soft::MshParser::DirichletConditionParserDecorator(meshParser);
+            auto meshParserDecorator2 = Objects::Soft::MshParser::TetrahedralElementLoaderDecorator(meshParserDecorator1);
+            auto meshParserDecorator3 = Objects::Soft::MshParser::SurfaceFacesMshParserDecorator(meshParserDecorator2);
             std::string fileName = json.at("sourceFileName");
 
             return new SoftObject(
-                meshParserDecorator.parse(mshDecoder.loadMshDataFromFile(std::filesystem::path("meshes") / std::filesystem::path(fileName))),
+                meshParserDecorator3.parse(mshDecoder.loadMshDataFromFile(std::filesystem::path("meshes") / std::filesystem::path(fileName))),
                 dynamicsDto
             );
         }

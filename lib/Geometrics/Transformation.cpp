@@ -51,7 +51,7 @@ Matrix Transformation::rotation(
 
     R(1, 0) = (1 - cos) * x * y + sin * z;
     R(1, 1) = cos + (1 - cos) * y * y;
-    R(2, 1) = (1 - cos) * y * z - sin * x;
+    R(1, 2) = (1 - cos) * y * z - sin * x;
 
     R(2, 0) = (1 - cos) * x * z - sin * y;
     R(2, 1) = (1 - cos) * y * z + sin * x;

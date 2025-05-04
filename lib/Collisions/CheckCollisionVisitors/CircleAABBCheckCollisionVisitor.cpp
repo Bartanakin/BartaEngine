@@ -74,7 +74,7 @@ CollisionTestResult CircleAABBCheckCollisionVisitor::checkStaticCollision(
 #pragma GCC diagnostic pop
 
 CollisionTestResult CircleAABBCheckCollisionVisitor::checkDynamicCollision(
-    const float delta_time,
+    const PrecisionType delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     auto staticResult = this->checkStaticCollision(collisionTestResultBuilder);
@@ -145,7 +145,7 @@ Point CircleAABBCheckCollisionVisitor::matchCornerCenter(
 }
 
 Vector CircleAABBCheckCollisionVisitor::calculateNormVector(
-    const float delta_time
+    const PrecisionType delta_time
 ) const {
     std::vector<Vector> possibleNormalVectors = {
         {0.f,  -1.f},

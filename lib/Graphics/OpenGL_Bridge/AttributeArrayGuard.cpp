@@ -24,7 +24,7 @@ AttributeArrayGuard::AttributeArrayGuard(
     AttributeArrayGuard&& other
 ):
     attributeArray(other.attributeArray) {
-    other.moved -= true;
+    other.moved = true;
 }
 
 void AttributeArrayGuard::defineAttributePointer() const {
@@ -40,7 +40,7 @@ void AttributeArrayGuard::defineAttributePointer() const {
         reinterpret_cast<GLvoid*>(offset)
     );
 
-    offset += sizeof(Point);
+    offset += 4 * sizeof(float);
     glEnableVertexAttribArray(static_cast<GLuint>(AttributeArray::AttributeEnum::COLOR));
     glVertexAttribPointer(
         static_cast<GLuint>(AttributeArray::AttributeEnum::COLOR),

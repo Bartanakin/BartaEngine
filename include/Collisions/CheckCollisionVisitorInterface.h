@@ -12,6 +12,6 @@ public:
 
     virtual CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const = 0;
 
-    virtual CollisionTestResult checkDynamicCollision(const float delta_time, CollisionTestResultBuilder& collisionTestResultBuilder) const = 0;
+    virtual CollisionTestResult checkDynamicCollision(PrecisionType delta_time, CollisionTestResultBuilder& collisionTestResultBuilder) const = 0;
 };
 }

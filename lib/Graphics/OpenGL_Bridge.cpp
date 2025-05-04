@@ -65,7 +65,7 @@ void OpenGL_Bridge::createWindow(
     this->attributeArray = std::make_unique<AttributeArray>();
     this->PB_uniformBuffer = std::make_unique<UniformBuffer>(UniformBinding::VIEW_PROJECTION_MATRIX);
 
-    this->projection = Transformation::perspective(0.1f, 2000.f, 1.f, std::tan(M_PI / 4.f)) * Transformation::Identity();
+    this->projection = Transformation::perspective(0.1f, 2000.f, size.y / size.x, std::tan(M_PI / 4.f)) * Transformation::Identity();
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
@@ -75,6 +75,7 @@ void OpenGL_Bridge::createWindow(
 void OpenGL_Bridge::drawObjects(
     std::list<GraphicsDataAwareInterface*>& objects
 ) {
+    auto xd = 0;
     for (const auto& object: objects) {
         for (auto graphicsData_ptr: object->getGraphicsData()) {
             if (graphicsData_ptr->resource.getResourceId() != 0) {
@@ -121,6 +122,7 @@ void OpenGL_Bridge::drawObjects(
                     this->vertexArray->addTrianglePrimitive(
                         {initialIndex, static_cast<GLubyte>(initialIndex + 1u), static_cast<GLubyte>(initialIndex + 2)}
                     );
+                    xd++;
                 } else if (type == SpriteType::RECTANGLE_WITH_COLORS) {
                     Point p1(data[0], data[1], data[2]);
                     Point p2(data[0] + data[3], data[1], data[2]);

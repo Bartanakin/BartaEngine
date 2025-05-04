@@ -36,6 +36,11 @@ FetchContent_Declare(json
 )
 FetchContent_MakeAvailable(json)
 
+FetchContent_Declare(googletest
+        URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+FetchContent_MakeAvailable(googletest)
+
 add_subdirectory(lib)
 
 if (USE_OPEN_GL)
@@ -53,10 +58,8 @@ if (USE_OPEN_GL)
     )
     FetchContent_MakeAvailable(glad)
 
-    link_libraries(OpenGL::GL glfw glm glad)
     target_link_libraries(${LIBRARY_NAME} PUBLIC glfw)
     target_link_libraries(${LIBRARY_NAME} PUBLIC glad)
-#    target_link_libraries(${LIBRARY_NAME} PUBLIC OpenGL::GL)
 endif ()
 
 
@@ -70,6 +73,7 @@ endif()
 
 target_link_libraries(${LIBRARY_NAME} PUBLIC eigen)
 target_link_libraries(${LIBRARY_NAME} PUBLIC nlohmann_json::nlohmann_json)
+target_include_directories(${LIBRARY_NAME} PUBLIC "${BARTA_ENGINE_DIR}/include")
 
 target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
 
@@ -86,12 +90,9 @@ install(
         LIBRARY DESTINATION lib
 )
 
-enable_testing()
-#add_subdirectory(test/run )
-#
-#install(
-#        TARGETS ${RUN_TEST_NAME}
-#        ARCHIVE DESTINATION lib
-#        LIBRARY DESTINATION lib
-#        RUNTIME DESTINATION bin
-#)
+set(TESTS_TARGET_NAME BartaTests)
+
+add_executable(${TESTS_TARGET_NAME}  test/main.cpp)
+add_subdirectory(test)
+
+gtest_discover_tests(${TESTS_TARGET_NAME})

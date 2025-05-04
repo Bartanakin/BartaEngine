@@ -28,6 +28,10 @@ public:
     GraphicsDataList getGraphicsData() override;
 
     Vector getForce(DynamicsDTOIteration positionIteration, DynamicsDTOIteration velocityIteration);
+
+    Mesh& getMesh() noexcept;
+
+    const Mesh& getMesh() const noexcept;
 };
 
 static_assert(Barta::Dynamics::UpdateStrategy::DynamicsAwareConcept<SoftObject>);

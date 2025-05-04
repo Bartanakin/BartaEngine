@@ -30,7 +30,7 @@ CollisionTestResult AABB_AABBCheckCollisionVisitor::checkStaticCollision(
 }
 
 CollisionTestResult AABB_AABBCheckCollisionVisitor::checkDynamicCollision(
-    const float delta_time,
+    const PrecisionType delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     auto staticCollisionResult = this->checkStaticCollision(collisionTestResultBuilder);

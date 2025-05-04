@@ -75,9 +75,9 @@ Barta::SpriteMerger* Barta::SpriteMerger::addTriangle(
     this->types.push_back(SpriteType::TRIANGLE);
 
     for (const auto& vector: {triangleSprite.triangle.p1, triangleSprite.triangle.p2, triangleSprite.triangle.p3}) {
-        this->data.push_back(vector.x());
-        this->data.push_back(vector.y());
-        this->data.push_back(vector.z());
+        this->data.push_back(static_cast<float>(vector.x()));
+        this->data.push_back(static_cast<float>(vector.y()));
+        this->data.push_back(static_cast<float>(vector.z()));
     }
 
     for (const auto& color: {triangleSprite.color1, triangleSprite.color2, triangleSprite.color3}) {

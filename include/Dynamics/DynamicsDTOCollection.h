@@ -20,6 +20,8 @@ public:
     using DynamicsDTOArray = std::array<DynamicsDTO, NUMBER_OF_ITERATIONS>;
     DynamicsDTOArray dynamicsDTOs;
 
+    DynamicsDTOCollection() noexcept = default;
+
     explicit DynamicsDTOCollection(
         std::array<DynamicsDTO, NUMBER_OF_ITERATIONS> dynamicsDTOs
     ):

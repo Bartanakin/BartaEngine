@@ -47,19 +47,30 @@ GraphicsDataAwareInterface::GraphicsDataList SoftObject::getGraphicsData() {
     colors[3] = {0, 255, 255};
     for (const auto& element: this->mesh.elements) {
         for (unsigned char i = 0; i < TetrahedralElement::FACE_INDICES_CONTAINER.size(); i++) {
-            if (!element.getIsFaceSurface(i)) {
+            if (!element.getIsFaceSurface(i)) { // possible optimization - loop through surface faces only
                 continue;
             }
 
             SpriteBuilder builder;
             // clang-format off
-            builder.vertex1 = element[TetrahedralElement::FACE_INDICES_CONTAINER[i][0]].dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter;
-            builder.vertex2 = element[TetrahedralElement::FACE_INDICES_CONTAINER[i][1]].dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter;
-            builder.vertex3 = element[TetrahedralElement::FACE_INDICES_CONTAINER[i][2]].dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter;
+            builder.vertex1 = this->mesh.nodes[element.getNodeIndices()[TetrahedralElement::FACE_INDICES_CONTAINER[i][0]]].dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter;
+            builder.vertex2 = this->mesh.nodes[element.getNodeIndices()[TetrahedralElement::FACE_INDICES_CONTAINER[i][1]]].dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter;
+            builder.vertex3 = this->mesh.nodes[element.getNodeIndices()[TetrahedralElement::FACE_INDICES_CONTAINER[i][2]]].dynamicsDTOCollection[DynamicsDTOIteration::CURRENT].massCenter;
             // clang-format on
-            builder.color = colors[i];
 
-            merger.addTriangle(builder.buildTriangleSprite());
+            // coloring TODO remove, this is just for tests
+            for (auto& [vertex, color]: std::vector<std::pair<Point&, Color&>>{
+                     {this->mesh.nodes[element.getNodeIndices()[TetrahedralElement::FACE_INDICES_CONTAINER[i][0]]].restPosition, builder.color1},
+                     {this->mesh.nodes[element.getNodeIndices()[TetrahedralElement::FACE_INDICES_CONTAINER[i][1]]].restPosition, builder.color2},
+                     {this->mesh.nodes[element.getNodeIndices()[TetrahedralElement::FACE_INDICES_CONTAINER[i][2]]].restPosition, builder.color3}
+            }) {
+                color.r = 255. * (20 + vertex.x()) / 40.;
+                color.g = 255. * (20 + vertex.y()) / 40.;
+                color.b = 255. * vertex.z() / 60.;
+                color.a = 0.;
+            }
+
+            merger.addTriangle(builder.buildTriangleWithColorsSprite());
         }
     }
 
@@ -73,6 +84,14 @@ Vector SoftObject::getForce(
     DynamicsDTOIteration velocityIteration
 ) {
     return Vector::Zero();
+}
+
+Mesh& SoftObject::getMesh() noexcept {
+    return this->mesh;
+}
+
+const Mesh& SoftObject::getMesh() const noexcept {
+    return this->mesh;
 }
 
 }

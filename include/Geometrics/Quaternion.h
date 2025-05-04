@@ -3,7 +3,7 @@
 
 namespace Barta {
 
-using PrecisionType = float;
+using PrecisionType = double;
 using Matrix = Eigen::Matrix<PrecisionType, 4, 4>;
 
 class Quaternion: public Eigen::Quaternion<PrecisionType> {
