@@ -29,6 +29,12 @@ public:
 
     PrecisionType z() const noexcept { return this->base.z(); }
 
+    PrecisionType& x() noexcept { return this->base.x(); }
+
+    PrecisionType& y() noexcept { return this->base.y(); }
+
+    PrecisionType& z() noexcept { return this->base.z(); }
+
     PrecisionType& operator[](
         int i
     ) noexcept {
@@ -121,6 +127,14 @@ public:
         const Vector& vector
     ) noexcept {
         *this = *this + vector;
+
+        return *this;
+    }
+
+    Vector& operator/=(
+        const PrecisionType& scalar
+    ) noexcept {
+        *this = *this / scalar;
 
         return *this;
     }

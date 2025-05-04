@@ -4,4 +4,5 @@ target_sources(${LIBRARY_NAME} PUBLIC
     SoftObject.cpp
 )
 
-add_subdirectory(MeshLoader)
+add_subdirectory(MshParser)
+add_subdirectory(MshLoader)

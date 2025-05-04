@@ -5,7 +5,8 @@
 namespace Barta::Graphics::OpenGL_Bridge {
 
 struct Vertex {
-    Point position;
+    float x, y, z;
+    float w = 1.f;
     float red;
     float green;
     float blue;
@@ -14,7 +15,9 @@ struct Vertex {
         Point position,
         Color color
     ) noexcept:
-        position(position),
+        x(position.x()),
+        y(position.y()),
+        z(position.z()),
         red(Vertex::convertColorFormat(color.r)),
         green(Vertex::convertColorFormat(color.g)),
         blue(Vertex::convertColorFormat(color.b)) {}
@@ -25,7 +28,9 @@ struct Vertex {
         float green,
         float blue
     ) noexcept:
-        position(position),
+        x(position.x()),
+        y(position.y()),
+        z(position.z()),
         red(red),
         green(green),
         blue(blue) {}
@@ -41,6 +46,8 @@ inline Vertex operator*(
     const Matrix& M,
     const Vertex& v
 ) noexcept {
-    return {M * v.position, v.red, v.green, v.blue};
+    Point p = {v.x, v.y, v.z};
+
+    return {M * p, v.red, v.green, v.blue};
 }
 }

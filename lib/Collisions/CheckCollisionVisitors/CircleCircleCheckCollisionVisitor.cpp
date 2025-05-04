@@ -42,7 +42,7 @@ CollisionTestResult CircleCircleCheckCollisionVisitor::checkStaticCollision(
 #pragma GCC diagnostic pop
 
 CollisionTestResult CircleCircleCheckCollisionVisitor::checkDynamicCollision(
-    const float delta_time,
+    const PrecisionType delta_time,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     auto staticResult = this->checkStaticCollision(collisionTestResultBuilder);

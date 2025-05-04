@@ -11,8 +11,8 @@ class UpdateStrategyManager: public UpdateStrategyManager<UpdateStrategy, Object
 public:
     template<typename UpdateStrategyForConstructor, typename... RestForConstructor>
         requires UpdateStrategyConcept<UpdateStrategyForConstructor, ObjectType> explicit UpdateStrategyManager(
-        UpdateStrategyForConstructor updateStrategyForConstructor,
-        RestForConstructor... restForConstructor
+        UpdateStrategyForConstructor&& updateStrategyForConstructor,
+        RestForConstructor&&... restForConstructor
     ) noexcept:
         UpdateStrategyManager<UpdateStrategy, ObjectType>(std::forward<UpdateStrategyForConstructor>(updateStrategyForConstructor)),
         UpdateStrategyManager<Rest...>(std::forward<RestForConstructor...>(restForConstructor...)) {}
@@ -40,9 +40,9 @@ template<typename UpdateStrategy, DynamicsAwareConcept ObjectType>
     requires UpdateStrategyConcept<UpdateStrategy, ObjectType> class UpdateStrategyManager<UpdateStrategy, ObjectType> {
 public:
     explicit UpdateStrategyManager(
-        UpdateStrategy updateStrategy
+        UpdateStrategy&& updateStrategy
     ) noexcept:
-        updateStrategy(std::move(updateStrategy)) {}
+        updateStrategy(std::forward<UpdateStrategy>(updateStrategy)) {}
 
     template<typename ListManager>
         requires ListManagerConcept<ListManager, ObjectType> void prepare(

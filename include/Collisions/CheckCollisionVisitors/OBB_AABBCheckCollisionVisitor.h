@@ -14,7 +14,7 @@ public:
 
     CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
-    CollisionTestResult checkDynamicCollision(float deltaTime, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
+    CollisionTestResult checkDynamicCollision(PrecisionType deltaTime, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
     Point calculateCollisionPoint() const;
 

@@ -12,7 +12,7 @@ public:
 
     CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
-    CollisionTestResult checkDynamicCollision(float delta_time, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
+    CollisionTestResult checkDynamicCollision(PrecisionType delta_time, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
 
 private:
     const Circle circle1;

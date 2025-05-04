@@ -15,6 +15,7 @@
 #include <memory>
 #include <regex>
 #include <sstream>
+#include <thread>
 #include <tuple>
 #include <unordered_map>
 #include <vector>

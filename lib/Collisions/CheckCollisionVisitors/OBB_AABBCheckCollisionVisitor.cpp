@@ -80,7 +80,7 @@ Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkStaticColl
 }
 
 Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkDynamicCollision(
-    float deltaTime,
+    PrecisionType deltaTime,
     CollisionTestResultBuilder& collisionTestResultBuilder
 ) const {
     // throw std::runtime_error("Not implemented");
