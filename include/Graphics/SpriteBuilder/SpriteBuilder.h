@@ -31,10 +31,13 @@ public:
     std::string string;
     int fontSize;
 
+    float meshDensity;
+
     CircleSprite buildCircleSprite() const {
         return {
             {this->radius, this->center},
             this->color,
+            this->meshDensity
         };
     }
 
@@ -127,6 +130,10 @@ inline void from_json(
 
     if (j.contains("fontSize")) {
         j.at("fontSize").get_to(sprite.fontSize);
+    }
+
+    if (j.contains("meshDensity")) {
+        j.at("meshDensity").get_to(sprite.meshDensity);
     }
 }
 }

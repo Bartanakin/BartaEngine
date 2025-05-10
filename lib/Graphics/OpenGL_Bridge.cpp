@@ -75,7 +75,6 @@ void OpenGL_Bridge::createWindow(
 void OpenGL_Bridge::drawObjects(
     std::list<GraphicsDataAwareInterface*>& objects
 ) {
-    auto xd = 0;
     for (const auto& object: objects) {
         for (auto graphicsData_ptr: object->getGraphicsData()) {
             if (graphicsData_ptr->resource.getResourceId() != 0) {
@@ -90,6 +89,7 @@ void OpenGL_Bridge::drawObjects(
                     Point center(data[0], data[1], data[2]);
                     float radius = data[3];
                     Color color(data[4], data[5], data[6], data[7]);
+                    float meshDensity = data[8]; // TODO
 
                     auto segmentCount = static_cast<unsigned int>(2.f * M_PI * radius);
                     auto initialIndex = this->vertexArray->getNextVertexIndex();
@@ -99,11 +99,69 @@ void OpenGL_Bridge::drawObjects(
                         float angle = 2.f * static_cast<float>(i) * M_PI / segmentCount;
                         vertices.emplace_back(center + Vector(radius * cos(angle), radius * sin(angle), 0.f), color);
 
-                        this->vertexArray->addTrianglePrimitive({
-                            initialIndex,
-                            static_cast<GLubyte>(initialIndex + 1u + i),
-                            static_cast<GLubyte>(initialIndex + 1u + (i + 1u) % segmentCount),
-                        });
+                        this->vertexArray->addTrianglePrimitive(initialIndex, initialIndex + 1u + i, initialIndex + 1u + (i + 1u) % segmentCount);
+                    }
+                } else if (type == SpriteType::BALL) {
+                    Point center(data[0], data[1], data[2]);
+                    float radius = data[3];
+                    Color color(data[4], data[5], data[6], data[7]);
+                    float meshDensity = data[8];
+
+                    auto latitudeLineCount = static_cast<unsigned int>(M_PI * radius * meshDensity) + 1u; // +1 is a UV seam
+                    auto longitudeLineCount = static_cast<unsigned int>(.5 * M_PI * radius * meshDensity) - 2u;
+                    auto totalVertexCount = latitudeLineCount * longitudeLineCount + 2u;
+                    auto initialIndex = this->vertexArray->getNextVertexIndex();
+                    Vertex northPole{
+                        center + Vector{0, 0, radius},
+                        color
+                    };
+                    vertices.push_back(northPole);
+                    for (int i = 0; i < longitudeLineCount; i++) {
+                        auto alpha = static_cast<double>(i + 1) * M_PI / static_cast<double>(longitudeLineCount + 1);
+                        auto cosAlpha = std::cos(alpha);
+                        auto sinAlpha = std::sin(alpha);
+                        for (int j = 0; j < latitudeLineCount; j++) {
+                            auto beta = 2. * static_cast<double>(j) * M_PI / static_cast<double>(latitudeLineCount - 1);
+                            Point p{
+                                radius * sinAlpha * std::cos(beta),
+                                radius * sinAlpha * std::sin(beta),
+                                radius * cosAlpha,
+                            };
+
+                            vertices.emplace_back(p, color);
+                        }
+                    }
+
+                    Vertex southPole{
+                        center + Vector{0, 0, -radius},
+                        color
+                    };
+                    vertices.push_back(southPole);
+
+                    for (int j = 0; j < latitudeLineCount - 1; j++) {
+                        this->vertexArray->addTrianglePrimitive(initialIndex, initialIndex + 1u + j, initialIndex + 2u + j);
+
+                        this->vertexArray->addTrianglePrimitive(
+                            initialIndex + totalVertexCount - 1u,
+                            initialIndex + totalVertexCount - 2u - j,
+                            initialIndex + totalVertexCount - 3u - j
+                        );
+                    }
+
+                    for (int i = 0; i < longitudeLineCount - 1; i++) {
+                        for (int j = 0; j < latitudeLineCount - 1; j++) {
+                            this->vertexArray->addTrianglePrimitive(
+                                initialIndex + 1u + i * latitudeLineCount + j,
+                                initialIndex + 1u + (i + 1u) * latitudeLineCount + j,
+                                initialIndex + 1u + i * latitudeLineCount + j + 1u
+                            );
+
+                            this->vertexArray->addTrianglePrimitive(
+                                initialIndex + 1u + (i + 1u) * latitudeLineCount + j,
+                                initialIndex + 1u + (i + 1u) * latitudeLineCount + j + 1u,
+                                initialIndex + 1u + i * latitudeLineCount + j + 1
+                            );
+                        }
                     }
                 } else if (type == SpriteType::TRIANGLE) {
                     Point p1(data[0], data[1], data[2]);
@@ -119,10 +177,7 @@ void OpenGL_Bridge::drawObjects(
                         {p3, c3}
                     };
 
-                    this->vertexArray->addTrianglePrimitive(
-                        {initialIndex, static_cast<GLubyte>(initialIndex + 1u), static_cast<GLubyte>(initialIndex + 2)}
-                    );
-                    xd++;
+                    this->vertexArray->addTrianglePrimitive(initialIndex, initialIndex + 1u, initialIndex + 2);
                 } else if (type == SpriteType::RECTANGLE_WITH_COLORS) {
                     Point p1(data[0], data[1], data[2]);
                     Point p2(data[0] + data[3], data[1], data[2]);
@@ -140,12 +195,8 @@ void OpenGL_Bridge::drawObjects(
                         {p4, c4}
                     };
 
-                    this->vertexArray->addTrianglePrimitive(
-                        {initialIndex, static_cast<GLubyte>(initialIndex + 1u), static_cast<GLubyte>(initialIndex + 2)}
-                    );
-                    this->vertexArray->addTrianglePrimitive(
-                        {initialIndex, static_cast<GLubyte>(initialIndex + 2u), static_cast<GLubyte>(initialIndex + 3)}
-                    );
+                    this->vertexArray->addTrianglePrimitive(initialIndex, initialIndex + 1u, initialIndex + 2);
+                    this->vertexArray->addTrianglePrimitive(initialIndex, initialIndex + 2u, initialIndex + 3);
                 }
 
                 for (auto& vertex: vertices) {
@@ -186,7 +237,7 @@ void OpenGL_Bridge::drawObjects(
 
     {
         AttributeArrayGuard attributeArrayGuard(*this->attributeArray);
-        glDrawElements(GL_TRIANGLES, 3 * this->vertexArray->getNextVertexIndex(), GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(0));
+        glDrawElements(GL_TRIANGLES, 3 * this->vertexArray->getNextVertexIndex(), GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(0));
     }
 
     glfwSwapBuffers(this->window);
