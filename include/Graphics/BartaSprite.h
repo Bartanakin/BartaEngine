@@ -12,9 +12,17 @@ enum class SpriteType {
     /*
         x, y, z, // center coordinates
         radius,
-        color (rgba)
+        color (rgba),
+        meshDensity
     */
     CIRCLE,
+    /*
+        x, y, z, // center coordinates
+        radius,
+        color (rgba),
+        meshDensity
+    */
+    BALL,
     /*
         x, y, z, // top-left coordinates
         font_size,
@@ -56,20 +64,21 @@ public:
     BartaSprite() = default;
     ~BartaSprite() = default;
 
-    inline int getResourceId() const { return this->resource; }
+    int getResourceId() const { return this->resource; }
 
-    inline bool reloadCache() const { return this->doReloadCache; }
+    bool reloadCache() const { return this->doReloadCache; }
 
-    inline const std::vector<float>& getData() const { return this->data; }
+    const std::vector<float>& getData() const { return this->data; }
 
-    inline const std::vector<SpriteType>& getSpriteType() const { return this->spriteTypes; }
+    const std::vector<SpriteType>& getSpriteType() const { return this->spriteTypes; }
 
     static unsigned int getSpriteTypeSize(
         SpriteType type
     ) {
         switch (type) {
         case SpriteType::RECTANGLE_WITH_COLORS: return 6 + 4 * 4;
-        case SpriteType::CIRCLE: return 8;
+        case SpriteType::CIRCLE: return 9;
+        case SpriteType::BALL: return 9;
         case SpriteType::VARCHAR256: return 256 / 4 + 4;
         case SpriteType::TRIANGLE: return 9 + 3 * 4;
         }

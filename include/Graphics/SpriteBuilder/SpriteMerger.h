@@ -16,6 +16,8 @@ public:
 
     SpriteMerger* addCircleSprite(const CircleSprite& circleSprite);
 
+    SpriteMerger* addBallSprite(const CircleSprite& ballSprite);
+
     SpriteMerger* addString(const StringSprite& stringSprite);
 
     SpriteMerger* addTriangle(const TriangleSprite& triangleSprite);

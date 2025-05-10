@@ -38,9 +38,15 @@ void VertexArray::clear() {
 }
 
 void VertexArray::addTrianglePrimitive(
-    TrianglePrimitive t
+    unsigned int i1,
+    unsigned int i2,
+    unsigned int i3
 ) noexcept {
-    this->triangles.push_back(t);
+    this->triangles.push_back({
+        static_cast<GLuint>(i1),
+        static_cast<GLuint>(i2),
+        static_cast<GLuint>(i3),
+    });
 }
 
 }

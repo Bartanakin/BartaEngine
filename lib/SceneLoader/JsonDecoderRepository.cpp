@@ -20,7 +20,7 @@ std::unique_ptr<HitboxInterface> JsonDecoderRepository::decodeHitbox(
     }
 
     const auto& type = jsonType.get<std::string>();
-    if (type == "CIRCLE") {
+    if (type == "CIRCLE" || type == "BALL") {
         return std::make_unique<CircleHitbox>(hitboxJson.get<Circle>());
     }
 
@@ -57,6 +57,12 @@ GraphicsData JsonDecoderRepository::decodeGraphicsData(
         auto type = jsonType.get<std::string>();
         if (type == "CIRCLE") {
             merger.addCircleSprite(spriteBuilder.buildCircleSprite());
+
+            continue;
+        }
+
+        if (type == "BALL") {
+            merger.addBallSprite(spriteBuilder.buildCircleSprite());
 
             continue;
         }

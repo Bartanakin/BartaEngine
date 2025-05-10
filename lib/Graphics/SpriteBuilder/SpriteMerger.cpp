@@ -47,6 +47,28 @@ Barta::SpriteMerger* Barta::SpriteMerger::addCircleSprite(
     this->data.push_back(circleSprite.color.b);
     this->data.push_back(circleSprite.color.a);
 
+    this->data.push_back(circleSprite.meshDensity);
+
+    return this;
+}
+
+Barta::SpriteMerger* Barta::SpriteMerger::addBallSprite(
+    const CircleSprite& ballSprite
+) {
+    this->types.push_back(SpriteType::BALL);
+
+    this->data.push_back(ballSprite.circle.getCenter().x());
+    this->data.push_back(ballSprite.circle.getCenter().y());
+    this->data.push_back(ballSprite.circle.getCenter().z());
+    this->data.push_back(ballSprite.circle.getRadius());
+
+    this->data.push_back(ballSprite.color.r);
+    this->data.push_back(ballSprite.color.g);
+    this->data.push_back(ballSprite.color.b);
+    this->data.push_back(ballSprite.color.a);
+
+    this->data.push_back(ballSprite.meshDensity);
+
     return this;
 }
 

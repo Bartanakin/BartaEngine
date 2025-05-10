@@ -7,12 +7,15 @@ namespace Barta {
 struct CircleSprite {
     CircleSprite(
         Circle circle,
-        Color color
+        Color color,
+        float meshDensity
     ) noexcept:
         circle(std::move(circle)),
-        color(color) {}
+        color(color),
+        meshDensity(meshDensity) {}
 
     Circle circle;
     Color color;
+    float meshDensity;
 };
 }
