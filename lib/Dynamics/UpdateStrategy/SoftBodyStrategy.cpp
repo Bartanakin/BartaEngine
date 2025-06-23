@@ -20,26 +20,8 @@ void Barta::Dynamics::UpdateStrategy::SoftBodyStrategy::prepare<Barta::Objects::
 ) {
     auto& mesh = object.getMesh();
     const auto NODAL_VECTOR_SIZE = mesh.getNodalVectorSize();
-    SoftBody::NodalVectorType initialPositions = SoftBody::NodalVectorType::Zero(NODAL_VECTOR_SIZE);
-    SoftBody::NodalVectorType initialVelocities = SoftBody::NodalVectorType::Zero(NODAL_VECTOR_SIZE);
-    unsigned int i = 0;
-    for (const auto& node: mesh.nodes) {
-        if (node.isZeroDirichlet) {
-            break;
-        }
-
-        const auto& dynamicsData = node.dynamicsDTOCollection.dynamicsDTOs[DynamicsDTOIteration::CURRENT];
-
-        initialPositions[3 * i] = dynamicsData.massCenter.x();
-        initialPositions[3 * i + 1] = dynamicsData.massCenter.y();
-        initialPositions[3 * i + 2] = dynamicsData.massCenter.z();
-
-        initialVelocities[3 * i] = dynamicsData.velocity.x();
-        initialVelocities[3 * i + 1] = dynamicsData.velocity.y();
-        initialVelocities[3 * i + 2] = dynamicsData.velocity.z();
-
-        ++i;
-    }
+    auto initialPositions = mesh.collectPositions();
+    auto initialVelocities = mesh.collectVelocities();
 
     SoftBody::NodalVectorType positions = initialPositions;
     SoftBody::StiffnessMatrixType massMatrixInverse = this->massCalculator->assembleInverseMassMatrix(mesh, positions);
@@ -75,27 +57,10 @@ void Barta::Dynamics::UpdateStrategy::SoftBodyStrategy::prepare<Barta::Objects::
     }
 
     SoftBody::NodalVectorType velocities = (positions - initialPositions) / time;
+    std::cout << "Iterations: " << iterCounter << std::endl;
 
     ExplicitEulerStrategy().prepare(object, time);
-    i = 0;
-    for (auto& node: mesh.nodes) {
-        if (node.isZeroDirichlet) {
-            continue;
-        }
-
-        auto& dynamicsData = node.dynamicsDTOCollection.dynamicsDTOs[DynamicsDTOIteration::NEXT];
-
-        dynamicsData.massCenter.x() = positions[3 * i];
-        dynamicsData.massCenter.y() = positions[3 * i + 1];
-        dynamicsData.massCenter.z() = positions[3 * i + 2];
-
-        dynamicsData.velocity.x() = velocities[3 * i];
-        dynamicsData.velocity.y() = velocities[3 * i + 1];
-        dynamicsData.velocity.z() = velocities[3 * i + 2];
-        dynamicsData.velocity = dynamicsData.velocity.zeroised();
-
-        ++i;
-    }
+    mesh.updateNextDynamics(positions, velocities);
 
     this->massCalculator->prepareMassDistribution(object);
 }

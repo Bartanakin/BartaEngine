@@ -1,0 +1,4 @@
+
+add_subdirectory(CheckCollisionVisitors)
+
+add_subdirectory(CollisionDetectionStrategies)

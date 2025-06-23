@@ -82,7 +82,17 @@ public:
         return {this->x() - v.x(), this->y() - v.y(), this->z() - v.z()};
     }
 
+    bool operator==(
+        const Point& v
+    ) const {
+        return this->x() == v.x() && this->y() == v.y() && this->z() == v.z();
+    }
+
     Point operator-() const { return {-this->x(), -this->y(), -this->z()}; }
+
+    Eigen::Vector3<PrecisionType> getVector3() const noexcept { return {this->x(), this->y(), this->z()}; }
+
+    bool isApprox(const Point& point) const { return this->base.isApprox(point.base, 0.001); }
 
     static Point Zero() noexcept { return {0, 0, 0}; }
 

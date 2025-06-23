@@ -43,6 +43,7 @@ public:
             this->timer.restart();
             while (!timer.finished()) {
                 this->checkLogic(); // inheritable
+                std::cout << "delta t" << timer.getCurrentDeltaTime() << std::endl;
 
                 auto deltaBeforeCollisions = timer.getCurrentDeltaTime();
                 this->updateStrategyManager.prepare(this->objectLists, timer.getCurrentDeltaTime());

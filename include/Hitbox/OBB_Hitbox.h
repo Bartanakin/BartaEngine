@@ -17,28 +17,29 @@ public:
 
     CollisionTestResult intersects(
         const HitboxInterface& secondHitbox,
-        const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDifference& dynamicsDifference
+        CollectionStrategyAggregator& collectionStrategyAggregator
     ) const override;
 
     std::unique_ptr<const HitboxInterface> getTransformedHitbox(const Transformation& transformation) const override;
 
     CollisionTestResult intersectsWithCircle(
         const Circle& secondHitbox,
-        const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDifference& dynamicsDifference
+        CollectionStrategyAggregator& collectionStrategyAggregator
     ) const override;
 
     CollisionTestResult intersectsWithAABB(
         const AABB& secondHitbox,
-        const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDifference& dynamicsDifference
+        CollectionStrategyAggregator& collectionStrategyAggregator
     ) const override;
 
     CollisionTestResult intersectsWithOBB(
         const OBB& secondShape,
-        const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDifference& dynamicsDifference
+        CollectionStrategyAggregator& collectionStrategyAggregator
+    ) const override;
+
+    CollisionTestResult intersectsWithTriangleAggregated(
+        const Geometrics::BartaShapes::TriangleSurface& secondShape,
+        CollectionStrategyAggregator& collectionStrategyAggregator
     ) const override;
 
     const OBB& getOBB() const noexcept { return this->obb; }

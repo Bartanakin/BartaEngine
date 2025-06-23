@@ -1,4 +1,5 @@
 #include <SceneLoader/JsonDecoderRepository.h>
+#include "Hitbox/NullHitbox.h"
 #include <Graphics/SpriteBuilder/SpriteMerger.h>
 #include <Hitbox/CircleHitbox.h>
 #include <Hitbox/OBB_Hitbox.h>
@@ -26,6 +27,10 @@ std::unique_ptr<HitboxInterface> JsonDecoderRepository::decodeHitbox(
 
     if (type == "OBB") {
         return std::make_unique<OBB_Hitbox>(hitboxJson.get<OBB>());
+    }
+
+    if (type == "NULL") { // dummy for soft objects
+        return std::make_unique<NullHitbox>();
     }
 
     throw JsonDecodeException("Unknown type = " + type + " for hitbox decode");

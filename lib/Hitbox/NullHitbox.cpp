@@ -17,8 +17,7 @@ std::vector<float> NullHitbox::intersectsWithRay(
 
 CollisionTestResult NullHitbox::intersects(
     const HitboxInterface& secondHitbox,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     return CollisionTestResult();
 }
@@ -31,8 +30,7 @@ std::unique_ptr<const HitboxInterface> NullHitbox::getTransformedHitbox(
 
 CollisionTestResult NullHitbox::intersectsWithCircle(
     const Circle& secondCircle,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     return CollisionTestResult();
 }
@@ -42,16 +40,21 @@ CollisionTestResult NullHitbox::intersectsWithCircle(
 
 CollisionTestResult NullHitbox::intersectsWithAABB(
     const AABB& secondAABB,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     return CollisionTestResult();
 }
 
 CollisionTestResult NullHitbox::intersectsWithOBB(
     const OBB& secondShape,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
+) const {
+    return CollisionTestResult();
+}
+
+CollisionTestResult NullHitbox::intersectsWithTriangleAggregated(
+    const Geometrics::BartaShapes::TriangleSurface& secondShape,
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     return CollisionTestResult();
 }

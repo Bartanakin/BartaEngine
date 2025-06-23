@@ -1,6 +1,7 @@
 #pragma once
 #include "BartaShapes/AABB.h"
 #include "BartaShapes/Circle.h"
+#include "BartaShapes/Triangle.h"
 #include "Ray.h"
 #include "Segment.h"
 
@@ -14,6 +15,8 @@ namespace Intersections {
     std::vector<std::tuple<float, float>> segmentAndAABB(const Segment& I, const AABB& aabb);
 
     std::vector<float> rayAndCircle(const Ray& ray, const Circle& c) noexcept;
+
+    std::vector<Barta::PrecisionType> rayAndTriangle(const Ray& ray, const Triangle& c) noexcept;
 
     std::vector<float> segmentAndCircle(const Segment& I, const Circle& c) noexcept;
 }

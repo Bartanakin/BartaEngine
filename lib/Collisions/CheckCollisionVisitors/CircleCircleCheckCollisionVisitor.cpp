@@ -1,16 +1,15 @@
 #include <Collisions/CheckCollisionVisitors/CircleCircleCheckCollisionVisitor.h>
+#include "Collisions/CollisionTestResult/CollisionTestResultBuilder.h"
 #include <Geometrics/ConvexFactor.h>
 #include <Utilities/MathUtilities.h>
 
 namespace Barta {
 CircleCircleCheckCollisionVisitor::CircleCircleCheckCollisionVisitor(
     const Circle& circle1,
-    const Circle& circle2,
-    const DynamicsDifference& dynamicsDifference
+    const Circle& circle2
 ):
     circle1(circle1),
-    circle2(circle2),
-    dynamicsDifference(dynamicsDifference) {}
+    circle2(circle2) {}
 
 CircleCircleCheckCollisionVisitor::~CircleCircleCheckCollisionVisitor() {}
 
@@ -18,10 +17,12 @@ CircleCircleCheckCollisionVisitor::~CircleCircleCheckCollisionVisitor() {}
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 CollisionTestResult CircleCircleCheckCollisionVisitor::checkStaticCollision(
-    CollisionTestResultBuilder& collisionTestResultBuilder
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
     std::stringstream ss;
-    ss << "circle1: " << this->circle1 << " circle2: " << this->circle2 << " velocity: " << this->dynamicsDifference.velocity;
+    ss << "circle1: " << this->circle1 << " circle2: " << this->circle2;
+    auto collisionTestResultBuilder = CollisionTestResultBuilder();
 
     return collisionTestResultBuilder
         .setCollisionDetected(
@@ -43,16 +44,12 @@ CollisionTestResult CircleCircleCheckCollisionVisitor::checkStaticCollision(
 
 CollisionTestResult CircleCircleCheckCollisionVisitor::checkDynamicCollision(
     const PrecisionType delta_time,
-    CollisionTestResultBuilder& collisionTestResultBuilder
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
-    auto staticResult = this->checkStaticCollision(collisionTestResultBuilder);
-    if (staticResult.collisionDetected) {
-        return staticResult;
-    }
-
-    collisionTestResultBuilder.reset();
+    auto collisionTestResultBuilder = CollisionTestResultBuilder();
     auto s = circle1.getCenter() - circle2.getCenter();
-    auto v = dynamicsDifference.velocity; // TODO change to current/next state evaluation
+    auto v = dynamicsOfFirstObject[DynamicsDTOIteration::CURRENT].velocity - dynamicsOfSecondObject[DynamicsDTOIteration::CURRENT].velocity;
     auto r = circle1.getRadius() + circle2.getRadius();
 
     auto eq = Utils::createQuadraticEquation(v.squaredNorm(), 2.f * v.dot(s), s.squaredNorm() - r * r);

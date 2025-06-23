@@ -18,7 +18,9 @@ public:
 
     void addVertices(const std::vector<Vertex>& vertices) noexcept;
 
-    GLuint getNextVertexIndex() const noexcept { return this->triangles.size(); }
+    GLuint getNextVertexIndex() const noexcept { return this->vertices.size(); }
+
+    GLuint getTriangleCount() const noexcept { return this->triangles.size(); }
 
     void addTrianglePrimitive(unsigned int i1, unsigned int i2, unsigned int i3) noexcept;
 

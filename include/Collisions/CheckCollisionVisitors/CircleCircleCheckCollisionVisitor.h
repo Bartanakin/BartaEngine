@@ -7,17 +7,21 @@
 namespace Barta {
 class CircleCircleCheckCollisionVisitor: public CheckCollisionVisitorInterface {
 public:
-    CircleCircleCheckCollisionVisitor(const Circle& circle1, const Circle& circle2, const DynamicsDifference& dynamicsDifference);
+    CircleCircleCheckCollisionVisitor(const Circle& circle1, const Circle& circle2);
     virtual ~CircleCircleCheckCollisionVisitor();
 
-    CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const override;
+    CollisionTestResult checkStaticCollision(const DynamicsDTOCollection& dynamicsOfFirstObject, const DynamicsDTOCollection& dynamicsOfSecondObject)
+        const override;
 
-    CollisionTestResult checkDynamicCollision(PrecisionType delta_time, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
+    CollisionTestResult checkDynamicCollision(
+        PrecisionType delta_time,
+        const DynamicsDTOCollection& dynamicsOfFirstObject,
+        const DynamicsDTOCollection& dynamicsOfSecondObject
+    ) const override;
 
 private:
     const Circle circle1;
     const Circle circle2;
-    const DynamicsDifference dynamicsDifference;
 
     Vector getNormalVector() const;
 };

@@ -86,7 +86,7 @@ public:
     Vector proj(
         const Vector v
     ) const noexcept {
-        return *this * (this->dot(v) / this->norm());
+        return *this * (this->dot(v) / this->squaredNorm());
     }
 
     Vector perp(
@@ -98,7 +98,7 @@ public:
     std::string toString() const noexcept {
         std::stringstream ss;
 
-        ss << "(" << this->x() << "," << this->y() << ")";
+        ss << "(" << this->x() << "," << this->y() << "," << this->z() << ")";
 
         return ss.str();
     }
@@ -127,6 +127,14 @@ public:
         const Vector& vector
     ) noexcept {
         *this = *this + vector;
+
+        return *this;
+    }
+
+    Vector& operator*=(
+        const PrecisionType& scalar
+    ) noexcept {
+        *this = *this * scalar;
 
         return *this;
     }
@@ -189,6 +197,8 @@ public:
     static Vector Y_Axis() { return {0.f, 1.f, 0.f}; }
 
     static Vector Z_Axis() { return {0.f, 0.f, 1.f}; }
+
+    Eigen::Vector3<PrecisionType> getVector3() const noexcept { return {this->x(), this->y(), this->z()}; }
 
     friend Vector operator*(const Matrix& M, const Vector& v);
 

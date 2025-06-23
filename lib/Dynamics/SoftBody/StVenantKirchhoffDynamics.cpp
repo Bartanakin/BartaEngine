@@ -8,6 +8,8 @@ namespace Barta::Dynamics::SoftBody {
 
 constexpr PrecisionType MU = 100.f;
 constexpr PrecisionType LAMBDA = 1000.f;
+// constexpr PrecisionType MU = 5.f;
+// constexpr PrecisionType LAMBDA = 10.f;
 // constexpr PrecisionType MU = 10.f;
 // constexpr PrecisionType LAMBDA = 100.f;
 

@@ -12,7 +12,7 @@ RigidObject::RigidObject(
     dynamicsDTOCollection(dynamicsDto) {}
 
 std::unique_ptr<const HitboxInterface> RigidObject::getHitbox() const {
-    return this->hitbox->getTransformedHitbox(this->graphicsData.transformation);
+    return this->hitbox->getTransformedHitbox(this->dynamicsDTOCollection[DynamicsDTOIteration::NEXT].getTransformation());
 }
 
 void RigidObject::move(

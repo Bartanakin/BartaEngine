@@ -1,4 +1,5 @@
 #pragma once
+#include "Events/Events/CollisionEvent.h"
 #include <Events/BartaEventLoggerInterface.h>
 #include <Utilities/DynamicsIteration.h>
 
@@ -68,4 +69,5 @@ private:
 
 template<typename T1, typename T2>
 using StaticCollisionResponseSubscriberType = CollisionResponseSubscriber<CollisionEvent<T1, T2>>;
+
 }

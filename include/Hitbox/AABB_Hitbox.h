@@ -1,5 +1,5 @@
 #pragma once
-#include <Dynamics/DynamicsDifference.h>
+#include "Geometrics/BartaShapes/TriangleSurface.h"
 #include <Geometrics/BartaShapes/OBB.h>
 #include <Hitbox/HitboxInterface.h>
 #include <pch.h>
@@ -15,30 +15,21 @@ public:
 
     std::vector<float> intersectsWithRay(const Ray& ray) const override;
 
-    CollisionTestResult intersects(
-        const HitboxInterface& secondHitbox,
-        const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDifference& dynamicsDifference
-    ) const override;
+    CollisionTestResult intersects(const HitboxInterface& secondHitbox, CollectionStrategyAggregator& collectionStrategyAggregator)
+        const override;
 
     std::unique_ptr<const HitboxInterface> getTransformedHitbox(const Transformation& transformation) const override;
 
-    CollisionTestResult intersectsWithCircle(
-        const Circle& secondCircle,
-        const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDifference& dynamicsDifference
-    ) const override;
+    CollisionTestResult intersectsWithCircle(const Circle& secondCircle, CollectionStrategyAggregator& collectionStrategyAggregator)
+        const override;
 
-    CollisionTestResult intersectsWithAABB(
-        const AABB& secondAABB,
-        const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDifference& dynamicsDifference
-    ) const override;
+    CollisionTestResult intersectsWithAABB(const AABB& secondAABB, CollectionStrategyAggregator& collectionStrategyAggregator) const override;
 
-    CollisionTestResult intersectsWithOBB(
-        const OBB& secondShape,
-        const CollisionDetectionStrategyInterface& collisionDetector,
-        const DynamicsDifference& dynamicsDifference
+    CollisionTestResult intersectsWithOBB(const OBB& secondShape, CollectionStrategyAggregator& collectionStrategyAggregator) const override;
+
+    CollisionTestResult intersectsWithTriangleAggregated(
+        const Geometrics::BartaShapes::TriangleSurface& secondShape,
+        CollectionStrategyAggregator& collectionStrategyAggregator
     ) const override;
 
     OBB getBoundingOBB() const override;

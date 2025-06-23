@@ -6,9 +6,14 @@ Barta::DynamicCollisionDetectionStrategy::DynamicCollisionDetectionStrategy(
     timer(timer) {}
 
 Barta::CollisionTestResult Barta::DynamicCollisionDetectionStrategy::acceptCheckCollisionVisitor(
-    const CheckCollisionVisitorInterface& checkCollisionVisitor
+    const CheckCollisionVisitorInterface& checkCollisionVisitor,
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
-    auto builder = CollisionTestResultBuilder();
+    auto staticTestResult = checkCollisionVisitor.checkStaticCollision(dynamicsOfFirstObject, dynamicsOfSecondObject);
+    if (staticTestResult.collisionDetected) {
+        return staticTestResult;
+    }
 
-    return checkCollisionVisitor.checkDynamicCollision(this->timer.getCurrentDeltaTime(), builder);
+    return checkCollisionVisitor.checkDynamicCollision(this->timer.getCurrentDeltaTime(), dynamicsOfFirstObject, dynamicsOfSecondObject);
 }

@@ -19,7 +19,7 @@ public:
         ObjectType& object,
         float time
     ) {
-        throw std::runtime_error("This method is for Soft Bodies only. Define you specialization in order to use it.");
+        throw std::runtime_error("This method is for Soft Bodies only. Define your specialization in order to use it.");
     }
 
     template<DynamicsAwareConcept ObjectType>
@@ -27,7 +27,7 @@ public:
         ObjectType& object,
         bool doForward
     ) {
-        throw std::runtime_error("This method is for Soft Bodies only. Define you specialization in order to use it.");
+        throw std::runtime_error("This method is for Soft Bodies only. Define your specialization in order to use it.");
     }
 
 private:

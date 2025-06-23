@@ -177,7 +177,7 @@ void OpenGL_Bridge::drawObjects(
                         {p3, c3}
                     };
 
-                    this->vertexArray->addTrianglePrimitive(initialIndex, initialIndex + 1u, initialIndex + 2);
+                    this->vertexArray->addTrianglePrimitive(initialIndex, initialIndex + 1u, initialIndex + 2u);
                 } else if (type == SpriteType::RECTANGLE_WITH_COLORS) {
                     Point p1(data[0], data[1], data[2]);
                     Point p2(data[0] + data[3], data[1], data[2]);
@@ -237,7 +237,7 @@ void OpenGL_Bridge::drawObjects(
 
     {
         AttributeArrayGuard attributeArrayGuard(*this->attributeArray);
-        glDrawElements(GL_TRIANGLES, 3 * this->vertexArray->getNextVertexIndex(), GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(0));
+        glDrawElements(GL_TRIANGLES, 3 * this->vertexArray->getTriangleCount(), GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(0));
     }
 
     glfwSwapBuffers(this->window);

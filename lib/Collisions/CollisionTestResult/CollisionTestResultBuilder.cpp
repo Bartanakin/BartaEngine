@@ -14,7 +14,16 @@ CollisionTestResult CollisionTestResultBuilder::build() const noexcept {
        << " Time passed: " << this->timePassed << " Static Collision " << this->staticCollision << " Norm vector: " << this->normVector.toString()
        << " collision point: " << this->normVector.toString();
 
-    return {this->collisionDetected, this->timePassed, this->staticCollision, this->normVector, this->collisionPoint, ss.str()};
+    return {
+        this->collisionDetected,
+        this->timePassed,
+        this->multipleCollisions,
+        this->staticCollision,
+        this->normVector,
+        this->collisionPoint,
+        std::move(this->contactPointDataArray),
+        ss.str()
+    };
 }
 
 void CollisionTestResultBuilder::reset() noexcept {
@@ -29,6 +38,14 @@ CollisionTestResultBuilder* CollisionTestResultBuilder::setCollisionDetected(
     bool data
 ) noexcept {
     this->collisionDetected = data;
+
+    return this;
+}
+
+CollisionTestResultBuilder* CollisionTestResultBuilder::setMultipleCollisions(
+    bool data
+) noexcept {
+    this->multipleCollisions = data;
 
     return this;
 }
@@ -77,6 +94,14 @@ CollisionTestResultBuilder* CollisionTestResultBuilder::setObjectsDebugInfo(
     std::string data
 ) noexcept {
     this->objectsDebugInfo = data;
+
+    return this;
+}
+
+CollisionTestResultBuilder* CollisionTestResultBuilder::addContactPointData(
+    ContactPointData data
+) noexcept {
+    this->contactPointDataArray.push_back(data);
 
     return this;
 }

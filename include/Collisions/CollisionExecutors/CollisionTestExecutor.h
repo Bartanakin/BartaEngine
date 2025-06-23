@@ -29,18 +29,11 @@ public:
         while (i != list1.end()) {
             auto j = list2.begin();
             while (j != list2.end()) {
-                collisionResults.push_back(
-                    {(*i)->getHitbox()->intersects(
-                         *((*j)->getHitbox()),
-                         *(this->collisionDetectionStrategy),
-                         (*i)->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT].getDynamicsDifference((*j)->getDynamicsDTOs(
-                         )[DynamicsDTOIteration::CURRENT])
-                     ),
-                     (*i),
-                     (*j)}
-                );
+                auto collisionStrategyAggregator =
+                    CollectionStrategyAggregator(*(this->collisionDetectionStrategy), (*i)->getDynamicsDTOs(), (*j)->getDynamicsDTOs());
+                collisionResults.push_back({(*i)->getHitbox()->intersects(*(*j)->getHitbox(), collisionStrategyAggregator), *i, *j});
 
-                j++;
+                ++j;
             }
 
             i++;
@@ -61,16 +54,9 @@ public:
             j_beg++;
             auto j = j_beg;
             while (j != list.end()) {
-                collisionResults.push_back(
-                    {(*i)->getHitbox()->intersects(
-                         *((*j)->getHitbox()),
-                         *(this->collisionDetectionStrategy),
-                         (*i)->getDynamicsDTOs()[DynamicsDTOIteration::CURRENT].getDynamicsDifference((*j)->getDynamicsDTOs(
-                         )[DynamicsDTOIteration::CURRENT])
-                     ),
-                     (*i),
-                     (*j)}
-                );
+                auto collisionStrategyAggregator =
+                    CollectionStrategyAggregator(*(this->collisionDetectionStrategy), (*i)->getDynamicsDTOs(), (*j)->getDynamicsDTOs());
+                collisionResults.push_back({(*i)->getHitbox()->intersects(*(*j)->getHitbox(), collisionStrategyAggregator), *i, *j});
 
                 j++;
             }

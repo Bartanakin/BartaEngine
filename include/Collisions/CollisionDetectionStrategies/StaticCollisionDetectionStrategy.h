@@ -10,6 +10,10 @@ public:
     StaticCollisionDetectionStrategy();
     virtual ~StaticCollisionDetectionStrategy() noexcept = default;
 
-    virtual CollisionTestResult acceptCheckCollisionVisitor(const CheckCollisionVisitorInterface& checkCollisionVisitor) const override;
+    CollisionTestResult acceptCheckCollisionVisitor(
+        const CheckCollisionVisitorInterface& checkCollisionVisitor,
+        const DynamicsDTOCollection& dynamicsOfFirstObject,
+        const DynamicsDTOCollection& dynamicsOfSecondObject
+    ) const override;
 };
 }

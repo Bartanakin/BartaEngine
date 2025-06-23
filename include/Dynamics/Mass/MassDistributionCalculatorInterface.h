@@ -15,6 +15,11 @@ public:
     virtual SoftBody::StiffnessMatrixType assembleInverseMassMatrix(
         const Objects::Soft::Mesh& mesh,
         const Objects::Soft::NodalVectorType& positions
+        ) = 0;
+
+    virtual SoftBody::StiffnessMatrixType assembleMassMatrix(
+        const Objects::Soft::Mesh& mesh,
+        const Objects::Soft::NodalVectorType& positions
     ) = 0;
 };
 }

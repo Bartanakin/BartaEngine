@@ -31,10 +31,9 @@ std::vector<float> OBB_Hitbox::intersectsWithRay(
 
 CollisionTestResult OBB_Hitbox::intersects(
     const HitboxInterface& secondHitbox,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return secondHitbox.intersectsWithOBB(this->obb, collisionDetector, dynamicsDifference);
+    return secondHitbox.intersectsWithOBB(this->obb, collectionStrategyAggregator);
 }
 
 std::unique_ptr<const HitboxInterface> OBB_Hitbox::getTransformedHitbox(
@@ -45,13 +44,12 @@ std::unique_ptr<const HitboxInterface> OBB_Hitbox::getTransformedHitbox(
 
 CollisionTestResult OBB_Hitbox::intersectsWithCircle(
     const Circle& circle,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     auto inversedMatrix = this->obb.getTransformation().getMatrix().inverse();
-    auto collisionResult = collisionDetector.acceptCheckCollisionVisitor(
-        CircleAABBCheckCollisionVisitor(inversedMatrix * circle, AABB(Point::Zero(), obb.getWidthHeight()), inversedMatrix * dynamicsDifference)
-    );
+    auto collisionResult =
+        collectionStrategyAggregator.applyTransform(inversedMatrix)
+            .acceptCheckCollisionVisitor(CircleAABBCheckCollisionVisitor(inversedMatrix * circle, AABB(Point::Zero(), obb.getWidthHeight())));
 
     if (collisionResult.collisionDetected) {
         collisionResult.normVector = this->obb.getTransformation().getMatrix() * collisionResult.normVector;
@@ -63,29 +61,34 @@ CollisionTestResult OBB_Hitbox::intersectsWithCircle(
 
 CollisionTestResult OBB_Hitbox::intersectsWithAABB(
     const AABB& aabb,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return collisionDetector.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(this->obb, aabb, dynamicsDifference));
+    return collectionStrategyAggregator.swapObjects().acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(this->obb, aabb));
 }
 
 CollisionTestResult OBB_Hitbox::intersectsWithOBB(
     const OBB& secondShape,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    auto rebasedDynamicsDifference = this->obb.getTransformation().getMatrix().inverse() * dynamicsDifference;
-
     auto aabb = AABB(Point::Zero(), secondShape.getWidthHeight());
     auto obb = secondShape.getTransformation().getMatrix().inverse() * this->obb;
 
-    auto collisionResult = collisionDetector.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(obb, aabb, rebasedDynamicsDifference));
+    auto collisionResult = collectionStrategyAggregator.applyTransform(this->obb.getTransformation().getMatrix().inverse())
+                               .swapObjects()
+                               .acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(obb, aabb));
     if (collisionResult.collisionDetected) {
         collisionResult.collisionPoint = secondShape.getTransformation().getMatrix() * collisionResult.collisionPoint;
         collisionResult.normVector = secondShape.getTransformation().getMatrix() * collisionResult.normVector;
     }
 
     return collisionResult;
+}
+
+CollisionTestResult OBB_Hitbox::intersectsWithTriangleAggregated(
+    const Geometrics::BartaShapes::TriangleSurface& secondShape,
+    CollectionStrategyAggregator& collectionStrategyAggregator
+) const {
+    throw std::runtime_error("Not implemented");
 }
 
 OBB OBB_Hitbox::getBoundingOBB() const {

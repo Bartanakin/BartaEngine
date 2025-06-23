@@ -1,4 +1,5 @@
 #pragma once
+#include "Geometrics/BartaShapes/Triangle.h"
 #include "Graphics/GraphicsDataAwareInterface.h"
 #include "Hitbox/HitboxAwareInterface.h"
 #include <Dynamics/UpdateStrategy/DynamicsAwareConcept.h>
@@ -8,6 +9,7 @@
 namespace Barta::Objects::Soft {
 class SoftObject: public virtual GraphicsDataAwareInterface, public virtual HitboxAware {
     Mesh mesh;
+    std::vector<std::array<unsigned int, 3>> surfaceTriangleIndices;
     GraphicsData graphicsData;
     std::unique_ptr<HitboxInterface> hitbox;
     DynamicsDTOCollection dynamicsDTOCollection;

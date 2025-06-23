@@ -11,16 +11,20 @@ namespace Barta {
 
 class AABB_AABBCheckCollisionVisitor: public CheckCollisionVisitorInterface {
 public:
-    AABB_AABBCheckCollisionVisitor(const AABB& aabb1, const AABB& aabb2, const DynamicsDifference& dynamicsDifference) noexcept;
+    AABB_AABBCheckCollisionVisitor(const AABB& aabb1, const AABB& aabb2) noexcept;
 
-    CollisionTestResult checkStaticCollision(CollisionTestResultBuilder& collisionTestResultBuilder) const override;
+    CollisionTestResult checkStaticCollision(const DynamicsDTOCollection& dynamicsOfFirstObject, const DynamicsDTOCollection& dynamicsOfSecondObject)
+        const override;
 
-    CollisionTestResult checkDynamicCollision(PrecisionType delta_time, CollisionTestResultBuilder& collisionTestResultBuilder) const override;
+    CollisionTestResult checkDynamicCollision(
+        PrecisionType delta_time,
+        const DynamicsDTOCollection& dynamicsOfFirstObject,
+        const DynamicsDTOCollection& dynamicsOfSecondObject
+    ) const override;
 
 private:
     const AABB aabb1;
     const AABB aabb2;
-    const DynamicsDifference dynamicsDifference;
 
     Point calculateCollisionPoint() const;
 };

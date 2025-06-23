@@ -7,7 +7,8 @@
 #include <Collisions/CollisionLogger.h>
 #include <Dynamics/UpdateStrategy/UpdateStrategyManager.h>
 #include <Events/BartaEventLoggerInterface.h>
-#include <Objects/Rigid/RigidObjectCollisionSubscriber.h>
+#include <Objects/CollisionSubscribers/RigidObjectCollisionSubscriber.h>
+#include <Objects/CollisionSubscribers/RigidObjectSoftObjectCollisionSubscriber.h>
 #include <Objects/Rigid/RigidObjectInterface.h>
 #include <ReduceableList.h>
 #include <StaticObjectManager.h>
@@ -22,12 +23,18 @@ typedef FilterNoCollisionDecorator<CollisionTestExecutor> CollisionCoreExecutor;
  * Always insert types in pairs. Each pair tells the logger which object types should be searched for collision.
  * This class runs collision test executors and logs the collisions to an event matcher.
  */
-typedef CollisionLogger<RigidObjectInterface, RigidObjectInterface> DefaultCollisionLogger;
+typedef CollisionLogger<
+    RigidObjectInterface, RigidObjectInterface,
+    RigidObjectInterface, Objects::Soft::SoftObject
+> DefaultCollisionLogger;
 
 /**
  * This class pairs the found collisions with respective subscribers.
  */
-typedef EventMatcher<CollisionEvent<RigidObjectInterface, RigidObjectInterface>> CollisionEventsLogger; // <--
+typedef EventMatcher<
+    CollisionEvent<RigidObjectInterface, RigidObjectInterface>,
+    CollisionEvent<RigidObjectInterface, Objects::Soft::SoftObject>
+> CollisionEventsLogger; // <--
 
 typedef StaticObjectManager<RigidObjectInterface, Objects::Soft::SoftObject> ListManager; // <--
 

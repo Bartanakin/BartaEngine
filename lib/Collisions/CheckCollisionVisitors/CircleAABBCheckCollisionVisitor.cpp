@@ -1,4 +1,5 @@
 #include <Collisions/CheckCollisionVisitors/CircleAABBCheckCollisionVisitor.h>
+#include "Collisions/CollisionTestResult/CollisionTestResultBuilder.h"
 #include "pch.h"
 #include <Geometrics/ConvexFactor.h>
 #include <Geometrics/Intersections.h>
@@ -7,12 +8,10 @@
 namespace Barta {
 CircleAABBCheckCollisionVisitor::CircleAABBCheckCollisionVisitor(
     const Circle& circle,
-    const AABB& aabb,
-    const DynamicsDifference& dynamicsDifference
+    const AABB& aabb
 ):
     circle(circle),
     aabb(aabb),
-    dynamicsDifference(dynamicsDifference),
     expandedAABB(AABB( // TODO third dimention
         this->aabb.getLeftTop() - Vector(this->circle.getRadius(), this->circle.getRadius()),
         this->aabb.getWidthHeight() + 2.f * Vector(this->circle.getRadius(), this->circle.getRadius())
@@ -39,10 +38,12 @@ Point CircleAABBCheckCollisionVisitor::calculateCollisionPoint() const {
 }
 
 CollisionTestResult CircleAABBCheckCollisionVisitor::checkStaticCollision(
-    CollisionTestResultBuilder& collisionTestResultBuilder
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
+    auto collisionTestResultBuilder = CollisionTestResultBuilder();
     std::stringstream ss;
-    ss << "circle " << this->circle << " aabb: " << this->aabb << " velocity: " << this->dynamicsDifference.velocity;
+    ss << "circle " << this->circle << " aabb: " << this->aabb;
 
     collisionTestResultBuilder.setStaticCollision(true)->setCollisionDetected(false)->setObjectsDebugInfo(ss.str())->setTimePassed(0.f);
     if (!this->expandedAABB.isWithin(this->circle.getCenter())) {
@@ -75,16 +76,16 @@ CollisionTestResult CircleAABBCheckCollisionVisitor::checkStaticCollision(
 
 CollisionTestResult CircleAABBCheckCollisionVisitor::checkDynamicCollision(
     const PrecisionType delta_time,
-    CollisionTestResultBuilder& collisionTestResultBuilder
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
-    auto staticResult = this->checkStaticCollision(collisionTestResultBuilder);
-    if (staticResult.collisionDetected) {
-        return staticResult;
-    }
+    auto collisionTestResultBuilder = CollisionTestResultBuilder();
 
     collisionTestResultBuilder.setStaticCollision(false)->setTimePassed(delta_time);
     Point A = this->circle.getCenter();
-    Point B = A + this->dynamicsDifference.velocity * delta_time; // TODO change to current/next state comparison
+    Point B = A
+              + (dynamicsOfFirstObject[DynamicsDTOIteration::CURRENT].velocity - dynamicsOfSecondObject[DynamicsDTOIteration::CURRENT].velocity)
+                    * delta_time;
     Segment L = Segment(A, B);
     auto tContainer = Intersections::segmentAndAABB(L, this->expandedAABB);
     if (!this->expandedAABB.isWithin(circle.getCenter()) && tContainer.empty()) {
@@ -104,7 +105,7 @@ CollisionTestResult CircleAABBCheckCollisionVisitor::checkDynamicCollision(
     }
 
     auto regionMask = this->aabb.findVoronoiRegionType(P);
-    auto normVector = this->calculateNormVector(delta_time);
+    auto normVector = this->calculateNormVector(dynamicsOfFirstObject[DynamicsDTOIteration::CURRENT].velocity - dynamicsOfSecondObject[DynamicsDTOIteration::CURRENT].velocity);
     if (normVector == Vector::Zero()) {
         throw "Incorrect normal vector found";
     }
@@ -145,7 +146,7 @@ Point CircleAABBCheckCollisionVisitor::matchCornerCenter(
 }
 
 Vector CircleAABBCheckCollisionVisitor::calculateNormVector(
-    const PrecisionType delta_time
+    const Vector& velocity
 ) const {
     std::vector<Vector> possibleNormalVectors = {
         {0.f,  -1.f},
@@ -157,7 +158,7 @@ Vector CircleAABBCheckCollisionVisitor::calculateNormVector(
     for (decltype(vertices)::size_type i = 0; i < 4; i++) {
         auto seg = Segment(
             this->circle.getCenter(),
-            this->circle.getCenter() + this->dynamicsDifference.velocity // TODO change to current/next state evaulation
+            this->circle.getCenter() + velocity
         );
         if (seg.calculateRelationToPoint(vertices[i]) == Segment::Relation::RIGHT) {
             auto relationToNext = seg.calculateRelationToPoint(vertices[(i + 1) % 4]);

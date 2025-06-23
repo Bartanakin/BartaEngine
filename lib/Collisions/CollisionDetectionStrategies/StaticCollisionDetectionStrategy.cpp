@@ -4,9 +4,9 @@
 Barta::StaticCollisionDetectionStrategy::StaticCollisionDetectionStrategy() {}
 
 Barta::CollisionTestResult Barta::StaticCollisionDetectionStrategy::acceptCheckCollisionVisitor(
-    const CheckCollisionVisitorInterface& checkCollisionVisitor
+    const CheckCollisionVisitorInterface& checkCollisionVisitor,
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
-    auto builder = CollisionTestResultBuilder();
-
-    return checkCollisionVisitor.checkStaticCollision(builder);
+    return checkCollisionVisitor.checkStaticCollision(dynamicsOfFirstObject, dynamicsOfSecondObject);
 }

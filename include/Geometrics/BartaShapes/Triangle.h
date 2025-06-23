@@ -4,16 +4,27 @@
 namespace Barta {
 
 struct Triangle {
-    Triangle() = default;
-    Triangle(Point p1, Point p2, Point p3);
+    Triangle() noexcept = default;
+    Triangle(Point p1, Point p2, Point p3) noexcept;
 
     bool isWithin(Point point) const noexcept;
 
     Vector getNormal() const noexcept;
 
+    Point getCenter() const;
+
+    Point operator[](unsigned int index) const noexcept;
+
+    Point closestPoint(Point point) const noexcept;
+
+    std::array<PrecisionType, 3> getConvexCoordinates(Point X) const noexcept;
+
     Point p1;
     Point p2;
     Point p3;
+
+    private:
+    bool belongsToUij(Point P, unsigned int i, unsigned int j) const;
 };
 
 inline std::ostream& operator<<(

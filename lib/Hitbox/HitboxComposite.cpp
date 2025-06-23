@@ -1,4 +1,5 @@
 #include <Hitbox/HitboxComposite.h>
+#include "Geometrics/BartaShapes/TriangleSurface.h"
 #include <pch.h>
 
 namespace Barta {
@@ -27,12 +28,11 @@ std::vector<float> Barta::HitboxComposite::intersectsWithRay(
 
 Barta::CollisionTestResult Barta::HitboxComposite::intersects(
     const HitboxInterface& secondHitbox,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
     for (auto& child: this->children) {
-        auto currentResult = child->intersects(secondHitbox, collisionDetector, dynamicsDifference);
+        auto currentResult = child->intersects(secondHitbox, collectionStrategyAggregator);
 
         if (currentResult.collisionDetected && currentResult.timePassed < result.timePassed) {
             result = currentResult;
@@ -55,12 +55,11 @@ std::unique_ptr<const Barta::HitboxInterface> Barta::HitboxComposite::getTransfo
 
 Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithCircle(
     const Circle& secondCircle,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
     for (auto& child: this->children) {
-        auto currentResult = child->intersectsWithCircle(secondCircle, collisionDetector, dynamicsDifference);
+        auto currentResult = child->intersectsWithCircle(secondCircle, collectionStrategyAggregator);
 
         if (currentResult.collisionDetected && currentResult.timePassed < result.timePassed) {
             result = currentResult;
@@ -75,12 +74,11 @@ Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithCircle(
 
 Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithAABB(
     const AABB& secondAABB,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
     for (auto& child: this->children) {
-        auto currentResult = child->intersectsWithAABB(secondAABB, collisionDetector, dynamicsDifference);
+        auto currentResult = child->intersectsWithAABB(secondAABB, collectionStrategyAggregator);
 
         if (currentResult.collisionDetected && currentResult.timePassed < result.timePassed) {
             result = currentResult;
@@ -92,12 +90,11 @@ Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithAABB(
 
 Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithOBB(
     const OBB& secondShape,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     auto result = CollisionTestResult(false, std::numeric_limits<float>::max());
     for (auto& child: this->children) {
-        auto currentResult = child->intersectsWithOBB(secondShape, collisionDetector, dynamicsDifference);
+        auto currentResult = child->intersectsWithOBB(secondShape, collectionStrategyAggregator);
 
         if (currentResult.collisionDetected && currentResult.timePassed < result.timePassed) {
             result = currentResult;
@@ -105,6 +102,13 @@ Barta::CollisionTestResult Barta::HitboxComposite::intersectsWithOBB(
     }
 
     return result;
+}
+
+CollisionTestResult HitboxComposite::intersectsWithTriangleAggregated(
+    const Geometrics::BartaShapes::TriangleSurface& secondShape,
+    CollectionStrategyAggregator& collectionStrategyAggregator
+) const {
+    throw std::runtime_error("Not implemented");
 }
 
 Barta::OBB Barta::HitboxComposite::getBoundingOBB() const {

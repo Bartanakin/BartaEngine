@@ -1,4 +1,5 @@
 #include <Hitbox/CircleHitbox.h>
+#include "Geometrics/BartaShapes/TriangleSurface.h"
 #include <Collisions/CheckCollisionVisitors/CircleAABBCheckCollisionVisitor.h>
 #include <Collisions/CheckCollisionVisitors/CircleCircleCheckCollisionVisitor.h>
 #include <Geometrics/Intersections.h>
@@ -18,37 +19,44 @@ const Circle& CircleHitbox::getCircle() const {
 
 CollisionTestResult CircleHitbox::intersectsWithCircle(
     const Circle& secondCircle,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return collisionDetector.acceptCheckCollisionVisitor(CircleCircleCheckCollisionVisitor(secondCircle, this->getCircle(), dynamicsDifference));
+    return collectionStrategyAggregator.acceptCheckCollisionVisitor(CircleCircleCheckCollisionVisitor(secondCircle, this->getCircle()));
 }
 
 CollisionTestResult CircleHitbox::intersectsWithAABB(
     const AABB& secondAABB,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return collisionDetector.acceptCheckCollisionVisitor(CircleAABBCheckCollisionVisitor(this->getCircle(), secondAABB, -dynamicsDifference));
+    return collectionStrategyAggregator.swapObjects()
+        .acceptCheckCollisionVisitor(CircleAABBCheckCollisionVisitor(this->getCircle(), secondAABB))
+        .swapObjects();
 }
 
 CollisionTestResult CircleHitbox::intersectsWithOBB(
     const OBB& obb,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
     auto rebaseMatrix = obb.getTransformation().getMatrix().inverse();
-    auto collisionResult = collisionDetector.acceptCheckCollisionVisitor(CircleAABBCheckCollisionVisitor(
-        rebaseMatrix * Circle(this->circle.getRadius(), this->circle.getCenter()),
-        rebaseMatrix * AABB(obb.getFirstVertex(), obb.getWidthHeight()),
-        -rebaseMatrix * dynamicsDifference
-    ));
+    auto collisionResult = collectionStrategyAggregator.applyTransform(rebaseMatrix)
+                               .swapObjects()
+                               .acceptCheckCollisionVisitor(CircleAABBCheckCollisionVisitor(
+                                   rebaseMatrix * Circle(this->circle.getRadius(), this->circle.getCenter()),
+                                   rebaseMatrix * AABB(obb.getFirstVertex(), obb.getWidthHeight())
+                               ));
     if (collisionResult.collisionDetected) {
         collisionResult.collisionPoint = obb.getTransformation().getMatrix() * collisionResult.collisionPoint;
         collisionResult.normVector = obb.getTransformation().getMatrix() * collisionResult.normVector;
     }
 
     return collisionResult;
+}
+
+CollisionTestResult CircleHitbox::intersectsWithTriangleAggregated(
+    const Geometrics::BartaShapes::TriangleSurface& secondShape,
+    CollectionStrategyAggregator& collectionStrategyAggregator
+) const {
+    throw std::runtime_error("Not implemented");
 }
 
 // TODO third dimention
@@ -75,10 +83,9 @@ std::vector<float> CircleHitbox::intersectsWithRay(
 
 CollisionTestResult CircleHitbox::intersects(
     const HitboxInterface& secondHitbox,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return secondHitbox.intersectsWithCircle(this->getCircle(), collisionDetector, dynamicsDifference);
+    return secondHitbox.intersectsWithCircle(this->getCircle(), collectionStrategyAggregator);
 }
 
 std::unique_ptr<const HitboxInterface> CircleHitbox::getTransformedHitbox(

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Events/Events/CollisionEvent.h>
-#include <Events/Subscribers/CollisionResponseSubscriber.h>
 #include <Events/TemplateEventSubscriber.h>
 #include <Objects/Rigid/RigidObject.h>
 

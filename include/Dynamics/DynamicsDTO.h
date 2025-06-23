@@ -1,5 +1,4 @@
 #pragma once
-#include <Dynamics/DynamicsDifference.h>
 #include <Geometrics/Point.h>
 #include <Geometrics/Transformation.h>
 
@@ -28,32 +27,6 @@ struct DynamicsDTO {
         inverseInertia(std::move(inverseInertia)),
         allowedDirections(std::move(allowedDirections)) {}
 
-    ~DynamicsDTO() = default;
-
-    /**
-     * @deprecated use current/next state evaluation instead
-     */
-    DynamicsDifference getDynamicsDifference(
-        const DynamicsDTO& second
-    ) const {
-        return {this->velocity - second.velocity};
-    }
-
-    /**
-     * @deprecated use current/next state evaluation instead
-     */
-    DynamicsDTO operator-() const {
-        return {
-            this->massCenter,
-            -this->velocity,
-            this->inverseMass,
-            this->rotation,
-            this->angularVelocity,
-            this->inverseInertia,
-            this->allowedDirections
-        };
-    }
-
     // movement
     Point massCenter;
     Vector velocity;
@@ -66,6 +39,10 @@ struct DynamicsDTO {
     Matrix inverseInertia;
     // others
     std::vector<Vector> allowedDirections;
+
+    Transformation getTransformation() const {
+        return Transformation::translation(this->massCenter.toVector()) * Transformation::rotation(this->rotation) * Transformation::Identity();
+    }
 };
 
 inline void from_json(
@@ -110,6 +87,21 @@ inline void from_json(
     if (j.contains("allowedDirections")) {
         d.allowedDirections = j.at("allowedDirections");
     }
+}
+
+inline DynamicsDTO operator*(
+    const Matrix& matrix,
+    const DynamicsDTO& dynamics
+) {
+    return {
+        matrix * dynamics.massCenter,
+        matrix * dynamics.velocity,
+        dynamics.inverseMass,
+        dynamics.rotation, // TODO define the transformation
+        matrix * dynamics.angularVelocity,
+        dynamics.inverseInertia,
+        dynamics.allowedDirections
+    };
 }
 
 }

@@ -1,4 +1,5 @@
 target_sources(${LIBRARY_NAME} PUBLIC
+    TriangleAggregateHitbox.cpp
     AABB_Hitbox.cpp
     CircleHitbox.cpp
     HitboxComposite.cpp

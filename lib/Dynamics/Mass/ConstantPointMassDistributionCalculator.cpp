@@ -56,4 +56,27 @@ SoftBody::StiffnessMatrixType ConstantPointMassDistributionCalculator::assembleI
     return massMatrix;
 }
 
+SoftBody::StiffnessMatrixType ConstantPointMassDistributionCalculator::assembleMassMatrix(
+    const Objects::Soft::Mesh& mesh,
+    const Objects::Soft::NodalVectorType& positions
+) {
+    SoftBody::StiffnessMatrixType massMatrix = SoftBody::StiffnessMatrixType::Zero(mesh.getNodalVectorSize(), mesh.getNodalVectorSize());
+    unsigned int i = 0;
+    for (const auto& node: mesh.nodes) {
+        if (node.isZeroDirichlet) {
+            continue;
+        }
+
+        auto dynamicsData = node.dynamicsDTOCollection.dynamicsDTOs[DynamicsDTOIteration::CURRENT];
+
+        massMatrix(3 * i, 3 * i) = 1. / dynamicsData.inverseMass;
+        massMatrix(3 * i + 1, 3 * i + 1) = 1. / dynamicsData.inverseMass;
+        massMatrix(3 * i + 2, 3 * i + 2) = 1. / dynamicsData.inverseMass;
+
+        ++i;
+    }
+
+    return massMatrix;
+}
+
 }

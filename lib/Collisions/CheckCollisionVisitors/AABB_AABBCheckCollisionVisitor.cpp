@@ -4,20 +4,19 @@
 namespace Barta {
 AABB_AABBCheckCollisionVisitor::AABB_AABBCheckCollisionVisitor(
     const AABB& aabb1,
-    const AABB& aabb2,
-    const DynamicsDifference& dynamicsDifference
+    const AABB& aabb2
 ) noexcept:
     aabb1(aabb1),
-    aabb2(aabb2),
-    dynamicsDifference(dynamicsDifference) {}
+    aabb2(aabb2) {}
 
 CollisionTestResult AABB_AABBCheckCollisionVisitor::checkStaticCollision(
-    CollisionTestResultBuilder& collisionTestResultBuilder
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
     std::stringstream ss;
-    ss << "aabb1 " << this->aabb1 << " aabb2: " << this->aabb2 << " velocity: " << this->dynamicsDifference.velocity;
+    ss << "aabb1 " << this->aabb1 << " aabb2: " << this->aabb2;
 
-    return collisionTestResultBuilder
+    return CollisionTestResultBuilder()
         .setCollisionDetected(
             this->aabb1.getLeftTop().x() <= this->aabb2.getRightTop().x() && this->aabb1.getRightTop().x() >= this->aabb2.getLeftTop().x()
             && this->aabb1.getLeftTop().y() <= this->aabb2.getLeftBottom().y() && this->aabb1.getLeftBottom().y() >= this->aabb2.getLeftTop().y()
@@ -31,15 +30,14 @@ CollisionTestResult AABB_AABBCheckCollisionVisitor::checkStaticCollision(
 
 CollisionTestResult AABB_AABBCheckCollisionVisitor::checkDynamicCollision(
     const PrecisionType delta_time,
-    CollisionTestResultBuilder& collisionTestResultBuilder
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
-    auto staticCollisionResult = this->checkStaticCollision(collisionTestResultBuilder);
-    if (staticCollisionResult.collisionDetected) {
-        return staticCollisionResult;
-    }
+    auto collisionTestResultBuilder = CollisionTestResultBuilder();
 
     collisionTestResultBuilder.setStaticCollision(false)->setCollisionDetected(false);
-    if (this->dynamicsDifference.velocity == Vector::Zero()) {
+    auto velocity = dynamicsOfFirstObject[DynamicsDTOIteration::CURRENT].velocity - dynamicsOfSecondObject[DynamicsDTOIteration::CURRENT].velocity;
+    if (velocity == Vector::Zero()) {
         return collisionTestResultBuilder.setDebugInfo("AABB - AABB zero velocity")->build();
     }
 
@@ -47,14 +45,14 @@ CollisionTestResult AABB_AABBCheckCollisionVisitor::checkDynamicCollision(
     float t_last = delta_time;
     Vector normVector = {};
     std::vector<std::tuple<const float, const float, const float, const float, const float, const Vector, std::string>> dataVector = {
-        {this->dynamicsDifference.velocity.x(),
+        {velocity.x(),
          this->aabb2.getLeftTop().x(),
          this->aabb2.getRightTop().x(),
          this->aabb1.getLeftTop().x(),
          this->aabb1.getRightTop().x(),
          Vector(1.f, 0.f),
          "x"},
-        {this->dynamicsDifference.velocity.y(),
+        {velocity.y(),
          this->aabb2.getLeftTop().y(),
          this->aabb2.getLeftBottom().y(),
          this->aabb1.getLeftTop().y(),

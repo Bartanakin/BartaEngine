@@ -12,5 +12,7 @@ public:
 
     SoftBody::StiffnessMatrixType assembleInverseMassMatrix(const Objects::Soft::Mesh& mesh, const Objects::Soft::NodalVectorType& positions)
         override;
+
+    SoftBody::StiffnessMatrixType assembleMassMatrix(const Objects::Soft::Mesh& mesh, const Objects::Soft::NodalVectorType& positions) override;
 };
 }

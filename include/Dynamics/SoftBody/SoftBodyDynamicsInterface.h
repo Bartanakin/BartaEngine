@@ -7,7 +7,7 @@
 
 namespace Barta::Dynamics::SoftBody {
 
-using StiffnessMatrixType = Eigen::MatrixX<PrecisionType>;
+using StiffnessMatrixType = Objects::Soft::StiffnessMatrixType;
 using NodalVectorType = Objects::Soft::NodalVectorType;
 
 class SoftBodyDynamicsInterface {

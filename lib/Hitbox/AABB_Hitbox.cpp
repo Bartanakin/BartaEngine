@@ -1,5 +1,6 @@
 #include <Hitbox/AABB_Hitbox.h>
 #include "Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h"
+#include "Geometrics/BartaShapes/TriangleSurface.h"
 #include <Collisions/CheckCollisionVisitors/AABB_AABBCheckCollisionVisitor.h>
 #include <Collisions/CheckCollisionVisitors/CircleAABBCheckCollisionVisitor.h>
 #include <pch.h>
@@ -26,10 +27,9 @@ std::vector<float> AABB_Hitbox::intersectsWithRay(
 
 CollisionTestResult AABB_Hitbox::intersects(
     const HitboxInterface& secondHitbox,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return secondHitbox.intersectsWithAABB(this->getAABB(), collisionDetector, dynamicsDifference);
+    return secondHitbox.intersectsWithAABB(this->getAABB(), collectionStrategyAggregator);
 }
 
 std::unique_ptr<const HitboxInterface> AABB_Hitbox::getTransformedHitbox(
@@ -40,10 +40,9 @@ std::unique_ptr<const HitboxInterface> AABB_Hitbox::getTransformedHitbox(
 
 CollisionTestResult AABB_Hitbox::intersectsWithCircle(
     const Circle& secondCircle,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return collisionDetector.acceptCheckCollisionVisitor(CircleAABBCheckCollisionVisitor(secondCircle, this->getAABB(), dynamicsDifference));
+    return collectionStrategyAggregator.acceptCheckCollisionVisitor(CircleAABBCheckCollisionVisitor(secondCircle, this->getAABB()));
 }
 
 #pragma GCC diagnostic push
@@ -51,18 +50,23 @@ CollisionTestResult AABB_Hitbox::intersectsWithCircle(
 
 CollisionTestResult AABB_Hitbox::intersectsWithAABB(
     const AABB& secondAABB,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return collisionDetector.acceptCheckCollisionVisitor(AABB_AABBCheckCollisionVisitor(secondAABB, this->getAABB(), dynamicsDifference));
+    return collectionStrategyAggregator.acceptCheckCollisionVisitor(AABB_AABBCheckCollisionVisitor(secondAABB, this->getAABB()));
 }
 
 CollisionTestResult AABB_Hitbox::intersectsWithOBB(
     const OBB& secondShape,
-    const CollisionDetectionStrategyInterface& collisionDetector,
-    const DynamicsDifference& dynamicsDifference
+    CollectionStrategyAggregator& collectionStrategyAggregator
 ) const {
-    return collisionDetector.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(secondShape, this->aabb, dynamicsDifference));
+    return collectionStrategyAggregator.acceptCheckCollisionVisitor(OBB_AABBCheckCollisionVisitor(secondShape, this->aabb));
+}
+
+CollisionTestResult AABB_Hitbox::intersectsWithTriangleAggregated(
+    const Geometrics::BartaShapes::TriangleSurface& secondShape,
+    CollectionStrategyAggregator& collectionStrategyAggregator
+) const {
+    throw std::runtime_error("Not implemented");
 }
 
 OBB AABB_Hitbox::getBoundingOBB() const {

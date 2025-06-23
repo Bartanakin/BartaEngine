@@ -1,6 +1,9 @@
 enable_testing()
 
+add_subdirectory(Collisions)
 add_subdirectory(Dynamics)
+add_subdirectory(Geometrics)
+add_subdirectory(Hitbox)
 add_subdirectory(Objects)
 add_subdirectory(Utilities)
 
@@ -15,3 +18,5 @@ target_link_libraries(
 )
 
 include(GoogleTest)
+
+add_subdirectory(Events)

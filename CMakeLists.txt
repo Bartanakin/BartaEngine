@@ -41,6 +41,12 @@ FetchContent_Declare(googletest
 )
 FetchContent_MakeAvailable(googletest)
 
+FetchContent_Declare(nlopt
+        GIT_REPOSITORY https://github.com/stevengj/nlopt.git
+        GIT_TAG v2.10.0
+)
+FetchContent_MakeAvailable(nlopt)
+
 add_subdirectory(lib)
 
 if (USE_OPEN_GL)
@@ -74,6 +80,7 @@ endif()
 target_link_libraries(${LIBRARY_NAME} PUBLIC eigen)
 target_link_libraries(${LIBRARY_NAME} PUBLIC nlohmann_json::nlohmann_json)
 target_include_directories(${LIBRARY_NAME} PUBLIC "${BARTA_ENGINE_DIR}/include")
+target_link_libraries(${LIBRARY_NAME} PUBLIC nlopt)
 
 target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
 

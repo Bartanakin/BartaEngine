@@ -82,3 +82,24 @@ std::vector<float> Barta::Intersections::rayAndCircle(
 
     return sol;
 }
+
+std::vector<Barta::PrecisionType> Barta::Intersections::rayAndTriangle(
+    const Ray& ray,
+    const Triangle& T
+) noexcept {
+    Eigen::Matrix3<PrecisionType> matrix;
+    matrix.block<3,1>(0, 0) = ray.direction.getVector3();
+    matrix.block<3,1>(0, 1) = (T.p1 - T.p2).getVector3();
+    matrix.block<3,1>(0, 2) = (T.p1 - T.p3).getVector3();
+
+    if (std::abs(matrix.determinant()) <= 0.0001) {
+        return {};
+    }
+
+    auto sol = matrix.colPivHouseholderQr().solve((T.p1 - ray.origin).getVector3());
+    if (sol[1] >= 0 && sol[2] >= 0 && sol[1] + sol[2] <= 1) {
+        return {sol[0]};
+    }
+
+    return {};
+}

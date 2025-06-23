@@ -1,18 +1,13 @@
-//
-// Created by bartanakin on 10/27/24.
-//
-
 #include <Collisions/CheckCollisionVisitors/OBB_AABBCheckCollisionVisitor.h>
+#include "Collisions/CollisionTestResult/CollisionTestResultBuilder.h"
 #include <Geometrics/ConvexFactor.h>
 
 Barta::OBB_AABBCheckCollisionVisitor::OBB_AABBCheckCollisionVisitor(
     const OBB& obb,
-    const AABB& aabb,
-    const DynamicsDifference& dynamicsDifference
+    const AABB& aabb
 ) noexcept:
     obb(obb),
-    aabb(aabb),
-    dynamicsDifference(dynamicsDifference) {}
+    aabb(aabb) {}
 
 bool Barta::OBB_AABBCheckCollisionVisitor::checkStaticOneWay(
     const AABB& aabb,
@@ -56,10 +51,12 @@ bool Barta::OBB_AABBCheckCollisionVisitor::checkStaticOneWay(
 }
 
 Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkStaticCollision(
-    CollisionTestResultBuilder& collisionTestResultBuilder
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
     std::stringstream ss;
-    ss << "obb " << this->obb << " aabb: " << this->obb << " velocity: " << this->dynamicsDifference.velocity;
+    ss << "obb " << this->obb << " aabb: " << this->obb;
+    auto collisionTestResultBuilder = CollisionTestResultBuilder();
     collisionTestResultBuilder.setStaticCollision(true)->setDebugInfo("OOB - AABB static")->setObjectsDebugInfo(ss.str());
 
     Matrix M = Transformation::translation(-this->aabb.getLeftTop().toVector()) * this->obb.getTransformation().getMatrix();
@@ -81,10 +78,11 @@ Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkStaticColl
 
 Barta::CollisionTestResult Barta::OBB_AABBCheckCollisionVisitor::checkDynamicCollision(
     PrecisionType deltaTime,
-    CollisionTestResultBuilder& collisionTestResultBuilder
+    const DynamicsDTOCollection& dynamicsOfFirstObject,
+    const DynamicsDTOCollection& dynamicsOfSecondObject
 ) const {
     // throw std::runtime_error("Not implemented");
-    return collisionTestResultBuilder.build();
+    return CollisionTestResultBuilder().build();
 }
 
 Barta::Point Barta::OBB_AABBCheckCollisionVisitor::calculateCollisionPoint() const {

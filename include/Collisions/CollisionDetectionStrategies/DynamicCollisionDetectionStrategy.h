@@ -9,7 +9,11 @@ public:
     DynamicCollisionDetectionStrategy(const TimerInterface& timer);
     virtual ~DynamicCollisionDetectionStrategy() noexcept = default;
 
-    virtual CollisionTestResult acceptCheckCollisionVisitor(const CheckCollisionVisitorInterface& checkCollisionVisitor) const override;
+     CollisionTestResult acceptCheckCollisionVisitor(
+        const CheckCollisionVisitorInterface& checkCollisionVisitor,
+        const DynamicsDTOCollection& dynamicsOfFirstObject,
+        const DynamicsDTOCollection& dynamicsOfSecondObject
+    ) const override;
 
 private:
     const TimerInterface& timer;
